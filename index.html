@@ -58,9 +58,9 @@ const settings={
   lineCount:30,        // amount
   pointSpacing:8,      // smoothness
   mouseRadius:120,     // size of mouse
-  mouseForce:1.6,      // strength of mouse 
+  mouseForce:1.30,      // strength of mouse 
   movementSpeed:.00045,// movement speed
-  lineWidth:1.15,      // thickness
+  lineWidth:1.20,      // thickness
   cycleLength:10000    // Draw and erase time
 };
 
@@ -121,13 +121,13 @@ createLines();
 // point On Line
 
 function getPoint(line,x,time){
-  // 1 flow
+  // 1 wave
   const wave1=Math.sin(x*line.frequency+line.phase+time*settings.movementSpeed*line.speed);
 
-  // 2 flow 
+  // 2 wave 
   const wave2=Math.sin(x*.003-time*settings.movementSpeed*.7+line.seed);
 
-  // 3 flow
+  // 3 wave
   const wave3=Math.sin(x*.0015+time*settings.movementSpeed*.25);
 
   let y=line.baseY+wave1*line.amplitude+wave2*15+wave3*10;

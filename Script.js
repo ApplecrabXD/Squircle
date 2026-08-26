@@ -59,7 +59,7 @@ function resize(){
   width=innerWidth;
   height=innerHeight;
 
-  dpr=Math.min(devicePixelRatio||1,2);
+  dpr=Math.min(devicePixelRatio||1,innerWidth<600 ? 1.5 :innerWidth<1000 ? 1.75 :2);
 
   canvas.width=width*dpr;
   canvas.height=height*dpr;
@@ -76,13 +76,13 @@ resize();
 // SETTINGS BE VERY CARFULL
 
 const settings={
-  lineCount:30,        // amount
-  pointSpacing:8,      // smoothness
-  mouseRadius:120,     // size of mouse
-  mouseForce:1.30,     // strength of mouse
-  movementSpeed:.00045,// movement speed
-  lineWidth:1.20,      // thickness
-  cycleLength:10000    // Draw and erase time
+  lineCount:innerWidth<600?18:innerWidth<1000?24:30,      // amount
+  pointSpacing:innerWidth<600?12:innerWidth<1000?10:8,    // smoothness
+  mouseRadius:innerWidth<600?90:innerWidth<1000?105:120,  // size of mouse
+  mouseForce:1.30,                                        // strength of mouse
+  movementSpeed:.00045,                                   // movement speed
+  lineWidth:1.20,                                         // thickness
+  cycleLength:10000                                       // Draw and erase time
 };
 
 // mouce
@@ -155,7 +155,7 @@ function getPoint(line,x,time){
 
   // Mouce Reaction
 
-  if(mouse.active){
+  if(mouse.active && !("ontouchstart" in window)){
     const dx=x-mouse.x;
     const dy=y-mouse.y;
 

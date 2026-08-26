@@ -1,0 +1,285 @@
+(() => {
+
+const splash=document.getElementById("splash");
+const loadingBar=document.querySelector(".loading-bar");
+
+if(splash && loadingBar){
+
+  const minimumTime=2500;
+  const startTime=performance.now();
+
+  let pageLoaded=false;
+  let loadingFinished=false;
+
+
+// loading
+  function updateLoading(){
+    if(pageLoaded){loadingBar.style.width="100%";return;}
+
+    const resources=performance.getEntriesByType("resource");
+    const total=resources.length+1;
+    const loaded=resources.filter(resource=>{return resource.responseEnd>0;}).length;
+    const progress=Math.min(95,(loaded/total)*100);
+
+    loadingBar.style.width=progress+"%";
+    requestAnimationFrame(updateLoading);
+
+ }
+  updateLoading();
+
+
+// finish
+  function finishSplash(){
+    if(!pageLoaded || loadingFinished)return;
+    loadingFinished=true;
+    
+    const elapsed=performance.now()-startTime;
+    const remaining=Math.max(0,minimumTime-elapsed);
+
+    loadingBar.style.width="100%";
+
+    setTimeout(()=>{splash.classList.add("loaded");},remaining);
+
+  }
+
+  window.addEventListener("load",()=>{pageLoaded=true;finishSplash();});
+
+}
+
+// Canvas
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+if(!ctx)return;
+
+let width,height,dpr;
+
+// Hight and width
+
+function resize(){
+  width=innerWidth;
+  height=innerHeight;
+
+  dpr=Math.min(devicePixelRatio||1,2);
+
+  canvas.width=width*dpr;
+  canvas.height=height*dpr;
+
+  canvas.style.width=width+"px";
+  canvas.style.height=height+"px";
+
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+addEventListener("resize",resize);
+resize();
+
+// SETTINGS BE VERY CARFULL
+
+const settings={
+  lineCount:30,        // amount
+  pointSpacing:8,      // smoothness
+  mouseRadius:120,     // size of mouse
+  mouseForce:1.30,     // strength of mouse
+  movementSpeed:.00045,// movement speed
+  lineWidth:1.20,      // thickness
+  cycleLength:10000    // Draw and erase time
+};
+
+// mouce
+
+const mouse={
+  x:width/2,
+  y:height/2,
+
+  targetX:width/2,
+  targetY:height/2,
+
+  active:false
+};
+
+addEventListener("mousemove",e=>{
+  mouse.targetX=e.clientX;
+  mouse.targetY=e.clientY;
+  mouse.active=true;
+});
+
+addEventListener("mouseleave",()=>{mouse.active=false;});
+
+// lines
+
+let lines=[];
+
+function createlines(){
+
+  lines=[];
+
+  for(let i=0;i<settings.lineCount;i++){
+    // lines across the screen
+    const y=(i/(settings.lineCount-1))*(height+120)-60;
+
+    lines.push({
+      baseY:y,
+      amplitude:15+Math.random()*30,
+      frequency:.0015+Math.random()*.002,
+      speed:.5+Math.random()*1.1,
+      phase:Math.random()*Math.PI*2,
+      seed:Math.random()*10000,
+
+      // stops drawing together
+      delay:Math.random()*settings.cycleLength,
+
+      // starting direction
+      direction:
+        Math.random()>.5
+    });
+
+  }
+
+}
+
+createlines();
+
+// point On Line
+
+function getPoint(line,x,time){
+  // 1 wave
+  const wave1=Math.sin(x*line.frequency+line.phase+time*settings.movementSpeed*line.speed);
+
+  // 2 wave
+  const wave2=Math.sin(x*.003-time*settings.movementSpeed*.7+line.seed);
+
+  // 3 wave
+  const wave3=Math.sin(x*.0015+time*settings.movementSpeed*.25);
+
+  let y=line.baseY+wave1*line.amplitude+wave2*15+wave3*10;
+
+  // Mouce Reaction
+
+  if(mouse.active){
+    const dx=x-mouse.x;
+    const dy=y-mouse.y;
+
+    const distance=
+      Math.hypot(dx,dy);
+
+    if(distance<settings.mouseRadius){
+      const force=1-distance/settings.mouseRadius;
+
+      const angle=Math.atan2(dy,dx);
+
+      const push=force*settings.mouseRadius*settings.mouseForce;
+
+      y+=Math.sin(angle)*push;
+    }
+  }
+
+  return{x,y};
+}
+
+// draw then erase
+
+function getProgress(line,time){
+  const local=(time+line.delay)%settings.cycleLength;
+  const draw=settings.cycleLength*.35;
+  const hold=settings.cycleLength*.12;
+  const erase=settings.cycleLength*.35;
+
+  // drawing
+  if(local<draw)
+    return local/draw;
+
+  // visible
+  if(local<draw+hold)
+    return 1;
+
+  // erase
+  if(local<draw+hold+erase)
+    return 1-
+      (local-draw-hold)/erase;
+
+  return 0;
+}
+
+// draw each line
+
+function drawLine(line,time){
+  const progress=
+    getProgress(line,time);
+
+  if(progress<=0)return;
+
+  const total=Math.ceil(width/settings.pointSpacing);
+  const visible=Math.floor(total*progress);
+
+  if(visible<2)return;
+
+  ctx.beginPath();
+
+  for(let i=0;i<visible;i++){
+    const x=line.direction ? i*settings.pointSpacing : width-i*settings.pointSpacing;
+    const point=getPoint(line,x,time);
+
+    if(i===0)
+      ctx.moveTo(point.x,point.y);
+    else
+      ctx.lineTo(point.x,point.y);
+  }
+
+  ctx.stroke();
+}
+
+// animate
+
+function animate(time){
+  // Smooth movement
+  mouse.x+=
+    (mouse.targetX-mouse.x)*.09;
+
+  mouse.y+=
+    (mouse.targetY-mouse.y)*.09;
+
+  ctx.fillStyle=
+    getComputedStyle(document.documentElement)
+    .getPropertyValue("--background");
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+  ctx.strokeStyle=
+    getComputedStyle(document.documentElement)
+    .getPropertyValue("--line");
+
+  ctx.lineWidth=settings.lineWidth;
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+
+  for(const line of lines)
+    drawLine(line,time);
+
+  // mouse boundary
+  if(mouse.active){
+    ctx.beginPath();
+
+    ctx.arc(
+      mouse.x,
+      mouse.y,
+      settings.mouseRadius,
+      0,
+      Math.PI*2
+    );
+
+    ctx.strokeStyle="rgba(0,0,0,.035)";
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+
+  requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
+
+})();

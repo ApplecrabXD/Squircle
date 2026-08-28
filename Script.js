@@ -7,7 +7,7 @@ const navLogo=document.querySelector(".nav-logo");
 const navBlocks=document.querySelector(".nav-building-blocks");
 
 
-// splash screem
+// splash screen
 
 if(splash && loadingBar){
   const minimumTime=2500;
@@ -33,47 +33,45 @@ if(splash && loadingBar){
   updateLoading();
 
 
-  // move aniamtion to nav
-  function moveAnimationToNavbar(){
-    if(!splashBlocks || !navLogo){ splash.classList.add("loaded"); return;}
+  // move animation to nav
+function moveAnimationToNavbar(){
+  if(!splashBlocks || !navBlocks){ splash.classList.add("loaded"); splash.style.display="none"; return; }
 
+  const loadContainer=document.querySelector(".loading-container");
+  if(loadContainer) loadContainer.style.opacity="0";
 
-    // center of splash animation & center of navbar
-    const splashRect=splashBlocks.getBoundingClientRect();
-    const navRect=navLogo.getBoundingClientRect();
-    const splashX=splashRect.left+splashRect.width/2;
-    const splashY=splashRect.top+splashRect.height/2;
-    const navX=navRect.left+navRect.height/2;
-    const navY=navRect.top+navRect.height/2;
-    const deltaX=navX-splashX;
-    const deltaY=navY-splashY;
-    const scale=navRect.height/splashRect.height;
+  const splashRect=splashBlocks.getBoundingClientRect();
+  const navRect=navBlocks.getBoundingClientRect();
 
+  const splashX=splashRect.left+splashRect.width/2;
+  const splashY=splashRect.top+splashRect.height/2;
+  const navX=navRect.left+navRect.width/2;
+  const navY=navRect.top+navRect.height/2;
 
-    // stop animation then travel
-    const orange=splashBlocks.querySelector(".block-orange");
-    const purple=splashBlocks.querySelector(".block-purple");
-    
-    if(orange)orange.style.animation="none";
-    if(purple) purple.style.animation="none";
+  const deltaX=navX-splashX;
+  const deltaY=navY-splashY;
+  const scale=navRect.width/splashRect.width;
 
+  const orange=splashBlocks.querySelector(".block-orange");
+  const purple=splashBlocks.querySelector(".block-purple");
+  if(orange) orange.style.animation="none";
+  if(purple) purple.style.animation="none";
 
-    // animate loding into nav bar
-    splashBlocks.style.transform=`translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
+  // fly to the nav icon's exact position
+  splashBlocks.style.transform=`translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
 
+  setTimeout(()=>{ splash.style.background="transparent"; },350);
 
-    // fade
-    setTimeout(()=>{splash.style.background="transparent";},350);
-  
+  setTimeout(()=>{
+    splash.classList.add("loaded");
+    splashBlocks.style.opacity="0";
+  },1050);
 
-    // new nav bar vrs
-    setTimeout(()=>{splash.classList.add("loaded");
-      if(navBlocks){navBlocks.style.opacity="1"; navBlocks.style.transform="scale(1)"; }
-
-      splashBlocks.style.opacity="0";
-
-    },1050);
-  }
+  // hard cleanup
+  setTimeout(()=>{
+    splash.style.display="none";
+  },1600);
+}
 
 
   // end splash screen
@@ -91,7 +89,7 @@ if(splash && loadingBar){
   window.addEventListener("load",()=>{pageLoaded=true; finishSplash();});
 }
 
-// canvas
+// canvas background
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
@@ -122,7 +120,7 @@ addEventListener("resize",()=>{
 
 resize();
 
-// setting 
+// settings 
 const settings={
   lineCount:innerWidth<600?18:innerWidth<1000?24:30,
   pointSpacing:innerWidth<600?12:innerWidth<1000?10:8,
@@ -152,7 +150,7 @@ addEventListener("mousemove",e=>{
 addEventListener("mouseleave",()=>{mouse.active=false;});
 
 
-// Lines boi things lmao
+// lines
 let lines=[];
 function createlines(){
   lines=[];
@@ -173,7 +171,7 @@ function createlines(){
 createlines();
 
 
-// Waves
+// waves
 function getPoint(line,x,time){
   const wave1=Math.sin(x*line.frequency+line.phase+time*settings.movementSpeed*line.speed);
   const wave2=Math.sin(x*.003-time*settings.movementSpeed*.7+line.seed);
@@ -198,7 +196,7 @@ function getPoint(line,x,time){
 }
 
 
-// Draw and erase
+// draw and erase progress
 function getProgress(line,time){
   const local=(time+line.delay)%settings.cycleLength;
   const draw=settings.cycleLength*.35;
@@ -213,8 +211,7 @@ function getProgress(line,time){
 }
 
 
-//draw fr this time
-// i have no cule what im doing or why this works :(
+// draw lines
 function drawLine(line,time){
   const progress=getProgress(line,time);
   
@@ -242,7 +239,7 @@ function drawLine(line,time){
 }
 
 
-// animation
+// animation loop
 function animate(time){
   mouse.x+=(mouse.targetX-mouse.x)*.09;
   mouse.y+=(mouse.targetY-mouse.y)*.09;

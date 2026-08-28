@@ -89,6 +89,31 @@ function moveAnimationToNavbar(){
   window.addEventListener("load",()=>{pageLoaded=true; finishSplash();});
 }
 
+// sliding nav indicator pill
+const navLinksContainer = document.querySelector(".nav-links");
+const navIndicator = document.querySelector(".nav-indicator");
+const navItems = document.querySelectorAll(".nav-links a");
+
+if (navLinksContainer && navIndicator && navItems.length > 0) {
+  navItems.forEach(link => {
+    link.addEventListener("mouseenter", () => {
+      const linkRect = link.getBoundingClientRect();
+      const containerRect = navLinksContainer.getBoundingClientRect();
+
+      const left = linkRect.left - containerRect.left;
+      const width = linkRect.width;
+
+      navIndicator.style.left = `${left}px`;
+      navIndicator.style.width = `${width}px`;
+      navIndicator.style.opacity = "1";
+    });
+  });
+
+  navLinksContainer.addEventListener("mouseleave", () => {
+    navIndicator.style.opacity = "0";
+  });
+}
+
 // canvas background
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");

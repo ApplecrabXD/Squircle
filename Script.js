@@ -2,9 +2,14 @@
 
 const splash=document.getElementById("splash");
 const loadingBar=document.querySelector(".loading-bar");
+const splashBlocks=document.querySelector(".building-blocks");
+const navLogo=document.querySelector(".nav-logo");
+const navBlocks=document.querySelector(".nav-building-blocks");
+
+
+// splash screem
 
 if(splash && loadingBar){
-
   const minimumTime=2500;
   const startTime=performance.now();
 
@@ -12,9 +17,9 @@ if(splash && loadingBar){
   let loadingFinished=false;
 
 
-// loading
+  // Loading
   function updateLoading(){
-    if(pageLoaded){loadingBar.style.width="100%";return;}
+    if(pageLoaded){loadingBar.style.width="100%"; return;}
 
     const resources=performance.getEntriesByType("resource");
     const total=resources.length+1;
@@ -22,80 +27,116 @@ if(splash && loadingBar){
     const progress=Math.min(95,(loaded/total)*100);
 
     loadingBar.style.width=progress+"%";
-    requestAnimationFrame(updateLoading);
 
- }
+    requestAnimationFrame(updateLoading);
+  }
   updateLoading();
 
 
-// finish
+  // move aniamtion to nav
+  function moveAnimationToNavbar(){
+    if(!splashBlocks || !navLogo){ splash.classList.add("loaded"); return;}
+
+
+    // center of splash animation & center of navbar
+    const splashRect=splashBlocks.getBoundingClientRect();
+    const navRect=navLogo.getBoundingClientRect();
+    const splashX=splashRect.left+splashRect.width/2;
+    const splashY=splashRect.top+splashRect.height/2;
+    const navX=navRect.left+navRect.height/2;
+    const navY=navRect.top+navRect.height/2;
+    const deltaX=navX-splashX;
+    const deltaY=navY-splashY;
+    const scale=navRect.height/splashRect.height;
+
+
+    // stop animation then travel
+    const orange=splashBlocks.querySelector(".block-orange");
+    const purple=splashBlocks.querySelector(".block-purple");
+    
+    if(orange)orange.style.animation="none";
+    if(purple) purple.style.animation="none";
+
+
+    // animate loding into nav bar
+    splashBlocks.style.transform=`translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
+
+
+    // fade
+    setTimeout(()=>{splash.style.background="transparent";},350);
+  
+
+    // new nav bar vrs
+    setTimeout(()=>{splash.classList.add("loaded");
+      if(navBlocks){navBlocks.style.opacity="1"; navBlocks.style.transform="scale(1)"; }
+
+      splashBlocks.style.opacity="0";
+
+    },1050);
+  }
+
+
+  // end splash screen
   function finishSplash(){
-    if(!pageLoaded || loadingFinished)return;
-    loadingFinished=true;
+    if(!pageLoaded || loadingFinished)return; loadingFinished=true;
     
     const elapsed=performance.now()-startTime;
     const remaining=Math.max(0,minimumTime-elapsed);
 
     loadingBar.style.width="100%";
 
-    setTimeout(()=>{splash.classList.add("loaded");},remaining);
-
+    setTimeout(()=>{moveAnimationToNavbar();},remaining);
   }
 
-  window.addEventListener("load",()=>{pageLoaded=true;finishSplash();});
-
+  window.addEventListener("load",()=>{pageLoaded=true; finishSplash();});
 }
 
-// Canvas
+// canvas
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
+
 if(!ctx)return;
 
 let width,height,dpr;
 
-// Hight and width
 
+// resize
 function resize(){
   width=innerWidth;
   height=innerHeight;
 
-  dpr=Math.min(devicePixelRatio||1,innerWidth<600 ? 1.5 :innerWidth<1000 ? 1.75 :2);
+  dpr=Math.min(devicePixelRatio||1,innerWidth<600?1.5:innerWidth<1000?1.75:2);
 
-  canvas.width=width*dpr;
+  canvas.width= width*dpr;
   canvas.height=height*dpr;
-
   canvas.style.width=width+"px";
-  canvas.style.height=height+"px";
+  canvas.style.height= height+"px";
 
   ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 
-// change in screen size
-addEventListener("resize",()=>{resize();
-  if(lines.length)
-    createlines();
+addEventListener("resize",()=>{
+  resize();
+  if(lines.length)createlines();
 });
 
 resize();
 
-// SETTINGS BE VERY CARFULL
-
+// setting 
 const settings={
-  lineCount:innerWidth<600?18:innerWidth<1000?24:30,      // amount
-  pointSpacing:innerWidth<600?12:innerWidth<1000?10:8,    // smoothness
-  mouseRadius:innerWidth<600?90:innerWidth<1000?105:120,  // size of mouse
-  mouseForce:1.30,                                        // strength of mouse
-  movementSpeed:.00045,                                   // movement speed
-  lineWidth:1.20,                                         // thickness
-  cycleLength:10000                                       // Draw and erase time
+  lineCount:innerWidth<600?18:innerWidth<1000?24:30,
+  pointSpacing:innerWidth<600?12:innerWidth<1000?10:8,
+  mouseRadius:innerWidth<600?90:innerWidth<1000?105:120,
+  mouseForce:1.30,
+  movementSpeed:.00045,
+  lineWidth:1.20,
+  cycleLength:10000
 };
 
-// mouce
-
+// mouse track
 const mouse={
   x:width/2,
   y:height/2,
-
   targetX:width/2,
   targetY:height/2,
 
@@ -110,18 +151,12 @@ addEventListener("mousemove",e=>{
 
 addEventListener("mouseleave",()=>{mouse.active=false;});
 
-// lines
 
+// Lines boi things lmao
 let lines=[];
-
 function createlines(){
-
   lines=[];
-
-  for(let i=0;i<settings.lineCount;i++){
-    // lines across the screen
-    const y=(i/(settings.lineCount-1))*(height+120)-60;
-
+  for(let i=0;i<settings.lineCount;i++){const y=(i/(settings.lineCount-1))*(height+120)-60;
     lines.push({
       baseY:y,
       amplitude:15+Math.random()*30,
@@ -129,88 +164,60 @@ function createlines(){
       speed:.5+Math.random()*1.1,
       phase:Math.random()*Math.PI*2,
       seed:Math.random()*10000,
-
-      // stops drawing together
       delay:Math.random()*settings.cycleLength,
-
-      // starting direction
-      direction:
-        Math.random()>.5
+      direction:Math.random()>.5
     });
-
   }
-
 }
 
 createlines();
 
-// point On Line
 
+// Waves
 function getPoint(line,x,time){
-  // 1 wave
   const wave1=Math.sin(x*line.frequency+line.phase+time*settings.movementSpeed*line.speed);
-
-  // 2 wave
   const wave2=Math.sin(x*.003-time*settings.movementSpeed*.7+line.seed);
-
-  // 3 wave
   const wave3=Math.sin(x*.0015+time*settings.movementSpeed*.25);
-
   let y=line.baseY+wave1*line.amplitude+wave2*15+wave3*10;
 
-  // Mouce Reaction
 
-  if(mouse.active && !("ontouchstart" in window)){
+  /* Mouse reaction */
+  if(mouse.active &&!("ontouchstart" in window)){
     const dx=x-mouse.x;
     const dy=y-mouse.y;
-
-    const distance=
-      Math.hypot(dx,dy);
+    const distance=Math.hypot(dx,dy);
 
     if(distance<settings.mouseRadius){
       const force=1-distance/settings.mouseRadius;
-
       const angle=Math.atan2(dy,dx);
-
-      const push=force*settings.mouseRadius*settings.mouseForce;
-
-      y+=Math.sin(angle)*push;
+      const push=force*settings.mouseRadius*settings.mouseForce; y+=Math.sin(angle)*push;
     }
   }
 
   return{x,y};
 }
 
-// draw then erase
 
+// Draw and erase
 function getProgress(line,time){
   const local=(time+line.delay)%settings.cycleLength;
   const draw=settings.cycleLength*.35;
   const hold=settings.cycleLength*.12;
   const erase=settings.cycleLength*.35;
-
-  // drawing
-  if(local<draw)
-    return local/draw;
-
-  // visible
-  if(local<draw+hold)
-    return 1;
-
-  // erase
-  if(local<draw+hold+erase)
-    return 1-
-      (local-draw-hold)/erase;
+  
+  if(local<draw)return local/draw;
+  if(local<draw+hold) return 1;
+  if(local<draw+hold+erase){return 1-(local-draw-hold)/erase;}
 
   return 0;
 }
 
-// draw each line
 
+//draw fr this time
+// i have no cule what im doing or why this works :(
 function drawLine(line,time){
-  const progress=
-    getProgress(line,time);
-
+  const progress=getProgress(line,time);
+  
   if(progress<=0)return;
 
   const total=Math.ceil(width/settings.pointSpacing);
@@ -221,11 +228,12 @@ function drawLine(line,time){
   ctx.beginPath();
 
   for(let i=0;i<visible;i++){
-    const x=line.direction ? i*settings.pointSpacing : width-i*settings.pointSpacing;
+    const x=line.direction ?i*settings.pointSpacing:width-i*settings.pointSpacing;
     const point=getPoint(line,x,time);
 
     if(i===0)
       ctx.moveTo(point.x,point.y);
+
     else
       ctx.lineTo(point.x,point.y);
   }
@@ -233,31 +241,15 @@ function drawLine(line,time){
   ctx.stroke();
 }
 
-// animate
 
+// animation
 function animate(time){
-  // Smooth movement
-  mouse.x+=
-    (mouse.targetX-mouse.x)*.09;
+  mouse.x+=(mouse.targetX-mouse.x)*.09;
+  mouse.y+=(mouse.targetY-mouse.y)*.09;
 
-  mouse.y+=
-    (mouse.targetY-mouse.y)*.09;
-
-  ctx.fillStyle=
-    getComputedStyle(document.documentElement)
-    .getPropertyValue("--background");
-
-  ctx.fillRect(
-    0,
-    0,
-    width,
-    height
-  );
-
-  ctx.strokeStyle=
-    getComputedStyle(document.documentElement)
-    .getPropertyValue("--line");
-
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue("--background");
+  ctx.fillRect(0,0,width,height);
+  ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue("--line");
   ctx.lineWidth=settings.lineWidth;
   ctx.lineCap="round";
   ctx.lineJoin="round";
@@ -265,18 +257,11 @@ function animate(time){
   for(const line of lines)
     drawLine(line,time);
 
+  
   // mouse boundary
   if(mouse.active){
     ctx.beginPath();
-
-    ctx.arc(
-      mouse.x,
-      mouse.y,
-      settings.mouseRadius,
-      0,
-      Math.PI*2
-    );
-
+    ctx.arc(mouse.x,mouse.y,settings.mouseRadius,0,Math.PI*2);
     ctx.strokeStyle="rgba(0,0,0,.035)";
     ctx.lineWidth=1;
     ctx.stroke();
@@ -286,5 +271,4 @@ function animate(time){
 }
 
 requestAnimationFrame(animate);
-
 })();

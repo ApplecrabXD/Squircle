@@ -70,7 +70,12 @@ function resize(){
   ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 
-addEventListener("resize",resize);
+// change in screen size
+addEventListener("resize",()=>{resize();
+  if(lines.length)
+    createlines();
+});
+
 resize();
 
 // SETTINGS BE VERY CARFULL

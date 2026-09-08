@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <script>
-        window.location.replace("Home/Home.html");
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squircle</title>
+<link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
+<link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
+<link rel="stylesheet" href="Home/Style.css">
 </head>
+
 <body>
+
+<div id="splash">
+  <div class="splash-center">
+    <div class="building-blocks">
+      <img
+        class="block-orange"
+        src="Assets/Logos/Bulding%20Blocks/Orange.svg"
+        alt="Ornage block"
+      >
+      <img
+        class="block-gray"
+        src="Assets/Logos/Bulding%20Blocks/Gray.svg"
+        alt="Gray Block"
+      >
+      <img
+        class="block-purple"
+        src="Assets/Logos/Bulding%20Blocks/Purple.svg"
+        alt="Purple Block"
+      >
+      <img
+        class="block-white"
+        src="Assets/Logos/Bulding%20Blocks/White.svg"
+        alt="White Block"
+      >
+    </div>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<nav class="navbar">
+
+  <a href="/" class="nav-logo">
+    <img src="Assets/Logos/Logo.svg" alt="Squircle">
+
+    <div class="nav-building-blocks">
+      <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+      <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+      <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+      <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+    </div>
+  </a>
+
+  <div class="nav-links">
+    <div class="nav-indicator"></div>
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="support.html">Support</a>
+  </div>
+
+  <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
+
+</nav>
+
+<script src="Home/Script.js"></script>
+
 </body>
 </html>

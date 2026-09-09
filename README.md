@@ -2,7 +2,7 @@
 
 # Squircle
 
-<img src="Assets/Logos/Logo.svg" alt="Logo" width="400">
+<img src="Assets/Logos/Logo.svg" alt="Logo" width="300">
 
 The Squircle project is my final school project for Web Dev. It is a free-choice website designed to demonstrate my skills and creativity.
 

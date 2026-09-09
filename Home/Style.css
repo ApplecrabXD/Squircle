@@ -156,7 +156,19 @@ html,body{
   pointer-events:none;
 }
 
-/* liquid glass — light mode visible edge & contrast tint */
+/* wraps each glass orb */
+.nav-orb{
+  display:inline-flex;
+  pointer-events:none;
+
+  transition:transform .35s cubic-bezier(.22,1,.36,1);
+}
+
+.nav-orb:hover{
+  transform:scale(1.05);
+}
+
+/* liquid glass */
 .nav-logo,
 .nav-links,
 .nav-menu{
@@ -172,19 +184,22 @@ html,body{
     inset 0 1px 1px rgba(255,255,255,.6);
   color:var(--line);
 
+  overflow:hidden;
+
+  /* forces the browser to re-clip */
+  -webkit-mask-image:-webkit-radial-gradient(white,black);
+  mask-image:radial-gradient(white,black);
+
   transition:
-    transform .35s cubic-bezier(.22,1,.36,1),
     background .35s ease,
     border-color .35s ease,
     box-shadow .35s ease;
 }
 
-/* UNIFIED HOVER STATE FOR ALL THREE ORBS */
-.nav-logo:hover,
-.nav-links:hover,
-.nav-menu:hover{
-  transform:scale(1.05);
-
+/* uinfied gover state */
+.nav-orb:hover .nav-logo,
+.nav-orb:hover .nav-links,
+.nav-orb:hover .nav-menu{
   background:rgba(0,0,0,.065);
   border-color:rgba(0,0,0,.14);
   box-shadow:0 14px 35px rgba(0,0,0,.1),inset 0 1px 1px rgba(255,255,255,.8);
@@ -254,11 +269,11 @@ html,body{
   object-fit:contain;
 }
 
-.nav-logo:hover .nav-building-blocks{opacity:1; transform:translate(-50%, -50%) scale(1);}
-.nav-logo:hover > img{opacity:0; transform:scale(.7) rotate(-15deg);}
+.nav-orb:hover .nav-logo .nav-building-blocks{opacity:1; transform:translate(-50%, -50%) scale(1);}
+.nav-orb:hover .nav-logo > img{opacity:0; transform:scale(.7) rotate(-15deg);}
 
-.nav-logo:hover .block-orange{animation:navOrangeMove .8s ease-in-out;}
-.nav-logo:hover .block-purple{animation:navPurpleMove .8s ease-in-out;}
+.nav-orb:hover .nav-logo .block-orange{animation:navOrangeMove .8s ease-in-out;}
+.nav-orb:hover .nav-logo .block-purple{animation:navPurpleMove .8s ease-in-out;}
 
 @keyframes navOrangeMove{
   0%{transform:rotate(-45deg);}
@@ -282,6 +297,8 @@ html,body{
   height:54px;
   padding:6px;
   border-radius:100px;
+
+  overflow:hidden;
 }
 
 /* sliding hover indicator pill */
@@ -328,6 +345,8 @@ html,body{
 
 /* right nav */
 .nav-menu{
+  position:relative;
+
   width:54px;
   height:54px;
   padding:0;

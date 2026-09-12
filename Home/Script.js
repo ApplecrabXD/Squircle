@@ -114,65 +114,74 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
   });
 }
 
-// hero scroll animation
+// gsap setup
+if(window.gsap && window.ScrollTrigger){
+  gsap.registerPlugin(ScrollTrigger);
+}
+const hasGsap=!!(window.gsap && window.ScrollTrigger);
+
+// hero scroll animation (GSAP ScrollTrigger, pinned + scrubbed)
 const heroWrap=document.getElementById("heroWrap");
 const heroCopy=document.getElementById("heroCopy");
 const heroLaptop=document.getElementById("heroLaptop");
+const heroLaptopImg=heroLaptop ? heroLaptop.querySelector("img") : null;
 const heroBehind=document.getElementById("heroBehind");
 
-if(heroWrap && heroCopy && heroLaptop && heroBehind){
-  const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind){
 
-  let mobileMode=false;
-  let offsetX=0; // vw, laptop's horizontal distance from centered
-  let offsetY=0; // vh, laptop's vertical distance from centered (diagonal entry)
+  ScrollTrigger.matchMedia({
 
-  function updateHero(){
-    // mobile gets a static stacked hero, no scroll-linked motion
-    if(innerWidth<=650){
-      mobileMode=true;
-      heroLaptop.style.transform="";
-      heroCopy.style.opacity="";
-      heroCopy.style.pointerEvents="";
-      heroBehind.style.transform="";
-      heroBehind.style.opacity="";
-      return;
+    // desktop: laptop flies in, holds centered through the marquee, then the
+    // section simply un-pins and normal scrolling carries you into the next section
+    "(min-width:651px)":()=>{
+      gsap.set(heroLaptop,{xPercent:-50,yPercent:-50});
+      gsap.set(heroBehind,{xPercent:-50,yPercent:-50});
+      gsap.set(heroCopy,{pointerEvents:"auto"});
+
+      const tl=gsap.timeline({
+        scrollTrigger:{
+          trigger:heroWrap,
+          start:"top top",
+          end:"bottom bottom",
+          scrub:1,
+          pin:".hero-sticky",
+        }
+      });
+
+      // phase 1 (first half): laptop slides in diagonally from the upper right
+      tl.fromTo(heroLaptop,{x:"29vw"},{x:"-3vw",ease:"none",duration:1},0);
+      tl.fromTo(heroCopy,{opacity:1},{opacity:0,ease:"none",duration:1},0);
+      tl.set(heroCopy,{pointerEvents:"none"},0.6);
+
+      // phase 2 (second half): laptop holds still, placeholder text scrolls up behind it,
+      // fading in over the first 15% and out over the last 15% as it passes through center.
+      // travel is kept small so the marquee stays close behind the laptop the whole time
+      // instead of sweeping off past its silhouette
+      tl.fromTo(heroBehind,{y:"18vh",opacity:0},{y:"12.6vh",opacity:1,ease:"none",duration:0.15},1);
+      tl.to(heroBehind,{y:"-12.6vh",opacity:1,ease:"none",duration:0.7},">");
+      tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
+
+      // laptop fades out alongside the marquee's own exit fade, in that same final 15%,
+      // so the handoff into the next section is a fade rather than an abrupt cut
+      tl.fromTo(heroLaptop,{opacity:1},{opacity:0,ease:"none",duration:0.15},1.85);
+
+      return ()=>{
+        tl.scrollTrigger && tl.scrollTrigger.kill();
+        tl.kill();
+        gsap.set([heroLaptop,heroCopy,heroBehind],{clearProps:"all"});
+      };
+    },
+
+    "(max-width:650px)":()=>{
+      gsap.set([heroLaptop,heroCopy,heroBehind],{clearProps:"all"});
     }
-    mobileMode=false;
 
-    const scrollable=heroWrap.offsetHeight-innerHeight;
-    const scrolled=-heroWrap.getBoundingClientRect().top;
-    const progress=scrollable>0 ? clamp(scrolled/scrollable,0,1) : 0;
-
-    // phase 1 (first half of the scroll range): laptop slides in diagonally from the upper right
-    // phase 2 (second half): laptop stays put, placeholder text scrolls up behind it
-    const phase1=clamp(progress/0.5,0,1);
-    const phase2=clamp((progress-0.5)/0.5,0,1);
-
-    offsetX=(1-phase1)*32;
-    offsetY=0;
-
-    heroCopy.style.opacity=String(1-phase1);
-    heroCopy.style.pointerEvents=phase1>0.6 ? "none" : "auto";
-
-    const travel=45; // vh of vertical travel behind the laptop
-    const behindY=travel-phase2*travel*2;
-    const fadeEdge=.15;
-    const fade=phase2<=0 ? 0
-      : phase2<fadeEdge ? phase2/fadeEdge
-      : phase2>1-fadeEdge ? (1-phase2)/fadeEdge
-      : 1;
-
-    heroBehind.style.transform=`translate(-50%, calc(-50% + ${behindY}vh))`;
-    heroBehind.style.opacity=String(clamp(fade,0,1));
-  }
-
-  addEventListener("scroll",updateHero,{passive:true});
-  addEventListener("resize",updateHero);
-  updateHero();
+  });
 
   // weighted bounce: a damped spring gets "kicked" by scroll motion, so it swings
-  // and settles like something with real mass, plus a slow constant idle sway
+  // and settles like something with real mass, plus a slow constant idle sway.
+  // applied to the laptop image itself so it layers on top of GSAP's positioning
+  // of the outer #heroLaptop wrapper without the two fighting over one transform.
   let lastScrollY=scrollY;
   let lastFrameTime=performance.now();
   let springY=0;
@@ -188,25 +197,74 @@ if(heroWrap && heroCopy && heroLaptop && heroBehind){
     lastFrameTime=now;
 
     const currentY=scrollY;
-    const delta=clamp(currentY-lastScrollY,-120,120);
+    const delta=Math.min(120,Math.max(-120,currentY-lastScrollY));
     lastScrollY=currentY;
 
-    if(!mobileMode){
+    if(innerWidth>650){
       springVelocity+=delta*scrollKick;
 
       const accel=-stiffness*springY-damping*springVelocity;
       springVelocity+=accel*dt;
-      springY=clamp(springY+springVelocity*dt,-40,40);
+      springY=Math.min(40,Math.max(-40,springY+springVelocity*dt));
 
       idlePhase+=dt*1.4;
       const idleY=Math.sin(idlePhase)*4;
 
-      heroLaptop.style.transform=`translate(calc(-50% + ${offsetX}vw - 3vw), calc(-50% - ${offsetY}vh + ${(springY+idleY).toFixed(2)}px))`;
+      heroLaptopImg.style.transform=`translateY(${(springY+idleY).toFixed(2)}px)`;
+    } else {
+      heroLaptopImg.style.transform="";
     }
 
     requestAnimationFrame(tickHeroBounce);
   }
   requestAnimationFrame(tickHeroBounce);
+}
+
+// product scroll-jacked carousel (GSAP ScrollTrigger, pinned + scrubbed)
+const productWrap=document.getElementById("productWrap");
+const productSticky=document.getElementById("productSticky");
+const productViewport=document.getElementById("productViewport");
+const productTrack=document.getElementById("productTrack");
+
+if(hasGsap && productWrap && productSticky && productViewport && productTrack){
+
+  ScrollTrigger.matchMedia({
+
+    "(min-width:651px)":()=>{
+      const tl=gsap.timeline({
+        scrollTrigger:{
+          trigger:productWrap,
+          start:"top top",
+          end:"bottom bottom",
+          scrub:1,
+          pin:productSticky,
+          invalidateOnRefresh:true,
+        }
+      });
+
+      // phase A (first 8%): the row fades up into place from below - kept short so
+      // it picks up right where the hero's fade-out leaves off, without a dead gap
+      tl.fromTo(productTrack,{y:"14vh",opacity:0},{y:"0vh",opacity:1,ease:"none",duration:0.08},0);
+
+      // phase B (remaining 92%): pinned in place, the row pans sideways through all 6 cards
+      tl.to(productTrack,{
+        x:()=>-(Math.max(0,productTrack.scrollWidth-productViewport.clientWidth)),
+        ease:"none",
+        duration:0.92,
+      },0.08);
+
+      return ()=>{
+        tl.scrollTrigger && tl.scrollTrigger.kill();
+        tl.kill();
+        gsap.set(productTrack,{clearProps:"all"});
+      };
+    },
+
+    "(max-width:650px)":()=>{
+      gsap.set(productTrack,{clearProps:"all"});
+    }
+
+  });
 }
 
 // canvas background

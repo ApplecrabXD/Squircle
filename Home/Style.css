@@ -1,12 +1,17 @@
 :root{
+  /* brand palette, in order of importance */
+  --accent:#cc330f;
+  --line:#090e11;
+  --whiteline:#ededed;
+  --accent-2:#8e0dab;
+  --accent-3:#f3af32;
+
   --background:#fff;
-  --line:#111;
-  --accent:#cc3e0f;
 }
 
 @media (prefers-color-scheme: dark){
   :root{
-    --background:#111;
+    --background:#090e11;
     --line:#fff;
   }
 }
@@ -514,29 +519,60 @@ html,body{
   left:50%;
   z-index:1;
 
-  max-width:640px;
-  width:100%;
-  padding:0 24px;
+  width:100vw;
 
-  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+
   transform:translate(-50%,-50%);
   opacity:0;
+  pointer-events:none;
 
   will-change:transform,opacity;
 }
 
-.hero-behind h2{
-  font-weight:400;
-  font-size:clamp(2.2rem,5.5vw,3.8rem);
-  color:var(--line);
-  margin-bottom:16px;
+.marquee{
+  overflow:hidden;
+  padding:16px 0;
 }
 
-.hero-behind p{
-  color:var(--line);
-  opacity:.7;
-  line-height:1.5;
-  font-size:clamp(1.05rem,2vw,1.35rem);
+.marquee-track{
+  display:flex;
+  width:max-content;
+  will-change:transform;
+}
+
+.marquee-set{
+  display:flex;
+  flex-shrink:0;
+  white-space:nowrap;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2rem,6vw,4rem);
+  letter-spacing:.04em;
+  padding-right:2.5rem;
+}
+
+/* most important palette color: primary bar, scrolling right to left */
+.marquee-a{background:var(--accent);}
+.marquee-a .marquee-set{color:var(--background);}
+.marquee-a .marquee-track{animation:marquee-rtl 22s linear infinite;}
+
+/* secondary + tertiary palette colors: lighter-weight bar, scrolling left to right */
+.marquee-b{background:var(--accent-2);}
+.marquee-b .marquee-set{color:var(--accent-3);}
+.marquee-b .marquee-track{animation:marquee-ltr 26s linear infinite;}
+
+@keyframes marquee-rtl{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+
+@keyframes marquee-ltr{
+  from{transform:translateX(-50%);}
+  to{transform:translateX(0);}
 }
 
 .placeholder-section{
@@ -601,22 +637,21 @@ html,body{
 
   .hero-behind{
     position:static;
-    max-width:none;
-    width:100%;
-    margin-top:40px;
-    padding:0;
+    width:calc(100% + 48px);
+    margin:40px -24px 0;
     opacity:1;
     transform:none;
   }
-}
 
 /* reduced motion */
 @media (prefers-reduced-motion:reduce){
   #splash .block-orange,
   #splash .block-purple,
-  .loading-bar{animation:none;}
+  .loading-bar,
+  .marquee-track{animation:none;}
 
   .loading-bar{width:100%;}
 
   #splash{transition:none;}
+
 }

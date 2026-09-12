@@ -114,6 +114,58 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
   });
 }
 
+// hero scroll animation
+const heroWrap=document.getElementById("heroWrap");
+const heroCopy=document.getElementById("heroCopy");
+const heroLaptop=document.getElementById("heroLaptop");
+const heroBehind=document.getElementById("heroBehind");
+
+if(heroWrap && heroCopy && heroLaptop && heroBehind){
+  const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
+
+  function updateHero(){
+    // mobile gets a static stacked hero, no scroll-linked motion
+    if(innerWidth<=650){
+      heroLaptop.style.transform="";
+      heroCopy.style.opacity="";
+      heroCopy.style.pointerEvents="";
+      heroBehind.style.transform="";
+      heroBehind.style.opacity="";
+      return;
+    }
+
+    const scrollable=heroWrap.offsetHeight-innerHeight;
+    const scrolled=-heroWrap.getBoundingClientRect().top;
+    const progress=scrollable>0 ? clamp(scrolled/scrollable,0,1) : 0;
+
+    // phase 1 (first half of the scroll range): laptop slides in from the right
+    // phase 2 (second half): laptop stays put, placeholder text scrolls up behind it
+    const phase1=clamp(progress/0.5,0,1);
+    const phase2=clamp((progress-0.5)/0.5,0,1);
+
+    const offset=(1-phase1)*32;
+    heroLaptop.style.transform=`translate(calc(-50% + ${offset}vw), -50%)`;
+
+    heroCopy.style.opacity=String(1-phase1);
+    heroCopy.style.pointerEvents=phase1>0.6 ? "none" : "auto";
+
+    const travel=45; // vh of vertical travel behind the laptop
+    const behindY=travel-phase2*travel*2;
+    const fadeEdge=.15;
+    const fade=phase2<=0 ? 0
+      : phase2<fadeEdge ? phase2/fadeEdge
+      : phase2>1-fadeEdge ? (1-phase2)/fadeEdge
+      : 1;
+
+    heroBehind.style.transform=`translate(-50%, calc(-50% + ${behindY}vh))`;
+    heroBehind.style.opacity=String(clamp(fade,0,1));
+  }
+
+  addEventListener("scroll",updateHero,{passive:true});
+  addEventListener("resize",updateHero);
+  updateHero();
+}
+
 // canvas background
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");

@@ -123,9 +123,14 @@ const heroBehind=document.getElementById("heroBehind");
 if(heroWrap && heroCopy && heroLaptop && heroBehind){
   const clamp=(value,min,max)=>Math.min(max,Math.max(min,value));
 
+  let mobileMode=false;
+  let offsetX=0; // vw, laptop's horizontal distance from centered
+  let offsetY=0; // vh, laptop's vertical distance from centered (diagonal entry)
+
   function updateHero(){
     // mobile gets a static stacked hero, no scroll-linked motion
     if(innerWidth<=650){
+      mobileMode=true;
       heroLaptop.style.transform="";
       heroCopy.style.opacity="";
       heroCopy.style.pointerEvents="";
@@ -133,18 +138,19 @@ if(heroWrap && heroCopy && heroLaptop && heroBehind){
       heroBehind.style.opacity="";
       return;
     }
+    mobileMode=false;
 
     const scrollable=heroWrap.offsetHeight-innerHeight;
     const scrolled=-heroWrap.getBoundingClientRect().top;
     const progress=scrollable>0 ? clamp(scrolled/scrollable,0,1) : 0;
 
-    // phase 1 (first half of the scroll range): laptop slides in from the right
+    // phase 1 (first half of the scroll range): laptop slides in diagonally from the upper right
     // phase 2 (second half): laptop stays put, placeholder text scrolls up behind it
     const phase1=clamp(progress/0.5,0,1);
     const phase2=clamp((progress-0.5)/0.5,0,1);
 
-    const offset=(1-phase1)*32;
-    heroLaptop.style.transform=`translate(calc(-50% + ${offset}vw), -50%)`;
+    offsetX=(1-phase1)*32;
+    offsetY=0;
 
     heroCopy.style.opacity=String(1-phase1);
     heroCopy.style.pointerEvents=phase1>0.6 ? "none" : "auto";
@@ -164,6 +170,43 @@ if(heroWrap && heroCopy && heroLaptop && heroBehind){
   addEventListener("scroll",updateHero,{passive:true});
   addEventListener("resize",updateHero);
   updateHero();
+
+  // weighted bounce: a damped spring gets "kicked" by scroll motion, so it swings
+  // and settles like something with real mass, plus a slow constant idle sway
+  let lastScrollY=scrollY;
+  let lastFrameTime=performance.now();
+  let springY=0;
+  let springVelocity=0;
+  let idlePhase=0;
+
+  const stiffness=20;   // lower = slower, heavier swing
+  const damping=6;    // lower = more/longer bounces before settling
+  const scrollKick=1; // how hard a scroll nudges the spring
+
+  function tickHeroBounce(now){
+    const dt=Math.min((now-lastFrameTime)/1000,.05); // seconds, capped to avoid jolts after tab-away
+    lastFrameTime=now;
+
+    const currentY=scrollY;
+    const delta=clamp(currentY-lastScrollY,-120,120);
+    lastScrollY=currentY;
+
+    if(!mobileMode){
+      springVelocity+=delta*scrollKick;
+
+      const accel=-stiffness*springY-damping*springVelocity;
+      springVelocity+=accel*dt;
+      springY=clamp(springY+springVelocity*dt,-40,40);
+
+      idlePhase+=dt*1.4;
+      const idleY=Math.sin(idlePhase)*4;
+
+      heroLaptop.style.transform=`translate(calc(-50% + ${offsetX}vw - 3vw), calc(-50% - ${offsetY}vh + ${(springY+idleY).toFixed(2)}px))`;
+    }
+
+    requestAnimationFrame(tickHeroBounce);
+  }
+  requestAnimationFrame(tickHeroBounce);
 }
 
 // canvas background

@@ -524,6 +524,32 @@ html[data-zone] .nav-indicator{
   margin-top:36px;
 }
 
+/* arrow that slides/reveals in on hover, every button */
+.btn::after{
+  content:"\2192";
+  display:inline-block;
+
+  max-width:0;
+  margin-left:0;
+  opacity:0;
+  overflow:hidden;
+
+  transform:translateX(-6px);
+
+  transition:
+    max-width .35s cubic-bezier(.22,1,.36,1),
+    margin-left .35s cubic-bezier(.22,1,.36,1),
+    opacity .3s ease,
+    transform .35s cubic-bezier(.22,1,.36,1);
+}
+
+.btn:hover::after{
+  max-width:24px;
+  margin-left:8px;
+  opacity:1;
+  transform:translateX(0);
+}
+
 .btn{
   display:inline-flex;
   align-items:center;
@@ -677,6 +703,10 @@ html[data-zone="orange"] .hero-title span{
 .product-viewport{
   width:100%;
   overflow:hidden;
+
+  /* fades cards in/out at the edges as the track pans past, instead of a hard clip */
+  -webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);
+  mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);
 }
 
 .product-track{
@@ -709,6 +739,14 @@ html[data-zone="orange"] .hero-title span{
   flex-direction:column-reverse;
 }
 
+.product-card{
+  transition:transform .4s cubic-bezier(.22,1,.36,1);
+}
+
+.product-card:hover{
+  transform:translateY(-12px);
+}
+
 .product-media{
   width:100%;
   max-width:260px;
@@ -717,6 +755,17 @@ html[data-zone="orange"] .hero-title span{
   overflow:hidden;
 
   background:color-mix(in srgb, var(--line) 6%, transparent);
+
+  transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;
+}
+
+.product-card:hover .product-media{
+  transform:rotate(-1.5deg);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+}
+
+.product-card--alt:hover .product-media{
+  transform:rotate(1.5deg);
 }
 
 .product-media img{
@@ -726,6 +775,12 @@ html[data-zone="orange"] .hero-title span{
   object-fit:cover;
   user-select:none;
   pointer-events:none;
+
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.product-card:hover .product-media img{
+  transform:scale(1.1);
 }
 
 .product-name{
@@ -770,6 +825,24 @@ html[data-zone="orange"] .hero-title span{
   border-radius:28px;
   overflow:hidden;
   background:color-mix(in srgb, var(--line) 6%, transparent);
+
+  opacity:0;
+  transform:translateY(48px);
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    transform .9s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease;
+}
+
+.about-media.in-view{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.about-media.in-view:hover{
+  transform:translateY(-12px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+  transition-duration:.4s;
 }
 
 .about-media img{
@@ -779,6 +852,12 @@ html[data-zone="orange"] .hero-title span{
   object-fit:cover;
   user-select:none;
   pointer-events:none;
+
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.about-media:hover img{
+  transform:scale(1.1);
 }
 
 .about-copy{
@@ -882,6 +961,25 @@ html[data-zone="orange"] .hero-title span{
   width:100%;
   height:clamp(340px,54vw,760px);
   padding:0 48px;
+  overflow:hidden;
+
+  opacity:0;
+  transform:translateY(48px);
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    transform .9s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease;
+}
+
+.about-banner.in-view{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.about-banner.in-view:hover{
+  transform:translateY(-12px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+  transition-duration:.4s;
 }
 
 .about-banner img{
@@ -890,6 +988,12 @@ html[data-zone="orange"] .hero-title span{
   height:100%;
   border-radius:28px;
   object-fit:cover;
+
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.about-banner:hover img{
+  transform:scale(1.1);
 }
 
 /* footer */
@@ -1141,7 +1245,11 @@ html[data-zone] .btn-outline{
     display:block;
   }
 
-  .product-viewport{overflow:visible;}
+  .product-viewport{
+    overflow:visible;
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
 
   .product-track{
     display:flex;
@@ -1208,6 +1316,18 @@ html[data-zone] .btn-outline{
 
   .about-scribble-text,
   .about-scribble-circle path{transition:none;}
+
+  .about-media,
+  .about-media img,
+  .about-banner,
+  .about-banner img,
+  .product-card,
+  .product-media,
+  .product-media img,
+  .btn::after{transition:none;}
+
+  .about-media,
+  .about-banner{opacity:1; transform:none;}
 
   .loading-bar{width:100%;}
 

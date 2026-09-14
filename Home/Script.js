@@ -265,17 +265,31 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
 }
 
 // about section reveal (scribble accent draws in once, first time it scrolls into view)
-const aboutHeading=document.querySelector(".about-heading");
-if(aboutHeading && "IntersectionObserver" in window){
+const aboutHeadings=document.querySelectorAll(".about-heading");
+if(aboutHeadings.length && "IntersectionObserver" in window){
   const aboutObserver=new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
-        aboutHeading.classList.add("in-view");
+        entry.target.classList.add("in-view");
         aboutObserver.unobserve(entry.target);
       }
     });
   },{threshold:0,rootMargin:"0px 0px -30% 0px"});
-  aboutObserver.observe(aboutHeading);
+  aboutHeadings.forEach(heading=>aboutObserver.observe(heading));
+}
+
+// about images fade/slide in the first time each scrolls into view
+const aboutReveals=document.querySelectorAll(".about-media, .about-banner");
+if(aboutReveals.length && "IntersectionObserver" in window){
+  const aboutMediaObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("in-view");
+        aboutMediaObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0,rootMargin:"0px 0px -15% 0px"});
+  aboutReveals.forEach(el=>aboutMediaObserver.observe(el));
 }
 
 // footer back-to-top

@@ -517,6 +517,36 @@ html[data-zone] .nav-indicator{
   color:var(--accent);
 }
 
+.hero-title-atom{
+  position:relative;
+  display:inline-block;
+}
+
+.hero-title-atom-text{
+  transition:opacity .3s ease;
+}
+
+.hero-title-atom.atom-ready .hero-title-atom-text{
+  opacity:0;
+}
+
+.hero-title-atom-canvas{
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  pointer-events:none;
+  opacity:0;
+
+  transition:opacity .3s ease;
+}
+
+.hero-title-atom.atom-ready .hero-title-atom-canvas{
+  opacity:1;
+}
+
 .hero-buttons{
   display:flex;
   flex-wrap:wrap;

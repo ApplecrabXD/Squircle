@@ -220,6 +220,151 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
   requestAnimationFrame(tickHeroBounce);
 }
 
+// "Squircle" hover atom effect: the word is sampled into a field of small particles that
+// scatter (with a slight swirl, so it reads as atoms rather than plain noise) away from
+// the cursor and spring back into the letterforms once it moves off
+const atomWrap=document.querySelector(".hero-title-atom");
+const atomText=document.querySelector(".hero-title-atom-text");
+const atomCanvas=document.querySelector(".hero-title-atom-canvas");
+const atomCtx=atomCanvas && atomCanvas.getContext ? atomCanvas.getContext("2d") : null;
+const atomReducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReducedMotion){
+
+  let atomParticles=[];
+  let atomDpr=1;
+  let atomMouseX=-9999,atomMouseY=-9999;
+
+  function buildAtomParticles(){
+    const w=atomText.offsetWidth;
+    const h=atomText.offsetHeight;
+    if(w<1||h<1)return;
+
+    atomDpr=Math.min(devicePixelRatio||1,2);
+
+    atomCanvas.width=w*atomDpr;
+    atomCanvas.height=h*atomDpr;
+    atomCanvas.style.width=w+"px";
+    atomCanvas.style.height=h+"px";
+
+    // sample the real heading text (same font/color) onto an offscreen canvas so the
+    // particle field matches the live letterforms and picks up the live accent color
+    const sample=document.createElement("canvas");
+    sample.width=w*atomDpr;
+    sample.height=h*atomDpr;
+    const sctx=sample.getContext("2d");
+    const style=getComputedStyle(atomText);
+
+    sctx.scale(atomDpr,atomDpr);
+    sctx.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    sctx.textBaseline="middle";
+    sctx.fillStyle=style.color;
+    sctx.fillText(atomText.textContent,0,h/2);
+
+    const data=sctx.getImageData(0,0,w*atomDpr,h*atomDpr).data;
+    const spacing=Math.max(3,Math.round(3.5*atomDpr));
+    const particles=[];
+
+    for(let y=0;y<h*atomDpr;y+=spacing){
+      for(let x=0;x<w*atomDpr;x+=spacing){
+        const i=(y*w*atomDpr+x)*4;
+        if(data[i+3]>120){
+          particles.push({
+            homeX:x/atomDpr,homeY:y/atomDpr,
+            x:x/atomDpr,y:y/atomDpr,
+            vx:0,vy:0,
+            r:.8+Math.random()*.6,
+            color:`rgb(${data[i]},${data[i+1]},${data[i+2]})`
+          });
+        }
+      }
+    }
+
+    atomParticles=particles;
+    atomWrap.classList.add("atom-ready");
+  }
+
+  addEventListener("mousemove",e=>{
+    const rect=atomCanvas.getBoundingClientRect();
+    atomMouseX=e.clientX-rect.left;
+    atomMouseY=e.clientY-rect.top;
+  });
+
+  addEventListener("mouseleave",()=>{atomMouseX=-9999; atomMouseY=-9999;});
+
+  const atomRadius=50;
+  const atomForce=1.6;
+  const atomSwirl=.5;
+  const atomStiffness=.12;
+  const atomDamping=.82;
+
+  function tickAtoms(){
+    if(atomParticles.length){
+      atomCtx.clearRect(0,0,atomCanvas.width,atomCanvas.height);
+      atomCtx.save();
+      atomCtx.scale(atomDpr,atomDpr);
+
+      for(const p of atomParticles){
+        const dx=p.x-atomMouseX;
+        const dy=p.y-atomMouseY;
+        const distance=Math.hypot(dx,dy);
+
+        if(distance<atomRadius){
+          const force=(1-distance/atomRadius)*atomForce;
+          const angle=Math.atan2(dy,dx);
+          p.vx+=Math.cos(angle)*force-Math.sin(angle)*force*atomSwirl;
+          p.vy+=Math.sin(angle)*force+Math.cos(angle)*force*atomSwirl;
+        }
+
+        p.vx+=(p.homeX-p.x)*atomStiffness;
+        p.vy+=(p.homeY-p.y)*atomStiffness;
+        p.vx*=atomDamping;
+        p.vy*=atomDamping;
+        p.x+=p.vx;
+        p.y+=p.vy;
+      }
+
+      // faint links between neighboring displaced particles: the "atom" look
+      atomCtx.lineWidth=.6;
+      for(let i=0;i<atomParticles.length;i++){
+        const a=atomParticles[i];
+        if(Math.hypot(a.x-a.homeX,a.y-a.homeY)<2)continue;
+
+        for(let j=i+1;j<atomParticles.length;j++){
+          const b=atomParticles[j];
+          const dist=Math.hypot(a.x-b.x,a.y-b.y);
+          if(dist<14){
+            atomCtx.strokeStyle=`rgba(255,255,255,${.3*(1-dist/14)})`;
+            atomCtx.beginPath();
+            atomCtx.moveTo(a.x,a.y);
+            atomCtx.lineTo(b.x,b.y);
+            atomCtx.stroke();
+          }
+        }
+      }
+
+      for(const p of atomParticles){
+        atomCtx.beginPath();
+        atomCtx.fillStyle=p.color;
+        atomCtx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        atomCtx.fill();
+      }
+
+      atomCtx.restore();
+    }
+
+    requestAnimationFrame(tickAtoms);
+  }
+
+  if(document.fonts && document.fonts.ready)
+    document.fonts.ready.then(buildAtomParticles);
+  else
+    buildAtomParticles();
+
+  addEventListener("resize",buildAtomParticles);
+  requestAnimationFrame(tickAtoms);
+}
+
 // product scroll-jacked carousel (GSAP ScrollTrigger, pinned + scrubbed)
 const productWrap=document.getElementById("productWrap");
 const productSticky=document.getElementById("productSticky");

@@ -278,6 +278,14 @@ if(aboutHeading && "IntersectionObserver" in window){
   aboutObserver.observe(aboutHeading);
 }
 
+// footer back-to-top
+const footerTop=document.getElementById("footerTop");
+if(footerTop){
+  footerTop.addEventListener("click",()=>{
+    scrollTo({top:0,behavior:"smooth"});
+  });
+}
+
 // canvas background
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");

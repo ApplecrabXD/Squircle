@@ -673,6 +673,127 @@ html,body{
   font-family:"obliqua",sans-serif;
 }
 
+/* about */
+.about-wrap{
+  position:relative;
+  z-index:1;
+
+  display:grid;
+  grid-template-columns:minmax(200px,22vw) 1fr 1fr minmax(200px,22vw);
+  gap:32px;
+
+  padding:140px 48px;
+}
+
+.about-media{
+  min-height:460px;
+  border-radius:28px;
+  overflow:hidden;
+  background:color-mix(in srgb, var(--line) 6%, transparent);
+}
+
+.about-media img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  pointer-events:none;
+}
+
+.about-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+
+  text-align:center;
+}
+
+.about-heading{
+  position:relative;
+  display:inline-block;
+}
+
+.about-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2.2rem,3.6vw,3.2rem);
+  line-height:1.05;
+  color:var(--line);
+}
+
+.about-scribble{
+  position:absolute;
+  left:50%;
+  top:50%;
+  z-index:2;
+
+  display:inline-block;
+  transform:translate(-50%,-50%) rotate(-20deg);
+  pointer-events:none;
+
+  transition:opacity .3s ease;
+}
+
+.about-heading:hover .about-scribble{
+  opacity:0;
+}
+
+.about-scribble-text{
+  position:relative;
+  z-index:1;
+  display:block;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-style:normal;
+  font-size:clamp(2.4rem,4vw,3.6rem);
+  color:var(--accent);
+  white-space:nowrap;
+
+  opacity:0;
+  transform:scale(.5);
+  transition:transform .6s cubic-bezier(.34,1.56,.64,1),opacity .4s ease;
+}
+
+.about-scribble-circle{
+  position:absolute;
+  inset:-30% -14%;
+  width:128%;
+  height:160%;
+  overflow:visible;
+}
+
+.about-scribble-circle path{
+  fill:none;
+  stroke:var(--accent);
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-dasharray:100;
+  stroke-dashoffset:100;
+  transition:stroke-dashoffset .9s ease .35s;
+}
+
+.about-heading.in-view .about-scribble-text{
+  opacity:1;
+  transform:scale(1);
+}
+
+.about-heading.in-view .about-scribble-circle path{
+  stroke-dashoffset:0;
+}
+
+.about-text{
+  max-width:36ch;
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.5;
+  color:var(--line);
+  opacity:.7;
+}
+
 @media (prefers-color-scheme:dark){
   .btn-outline{
     background:rgba(255,255,255,.015);
@@ -754,6 +875,14 @@ html,body{
     height:auto;
     padding:0;
   }
+
+  .about-wrap{
+    grid-template-columns:1fr;
+    padding:72px 24px;
+    gap:40px;
+  }
+
+  .about-media{min-height:320px;}
 }
 
 /* reduced motion */
@@ -762,6 +891,9 @@ html,body{
   #splash .block-purple,
   .loading-bar,
   .marquee-track{animation:none;}
+
+  .about-scribble-text,
+  .about-scribble-circle path{transition:none;}
 
   .loading-bar{width:100%;}
 

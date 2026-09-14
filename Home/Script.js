@@ -264,6 +264,20 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
   });
 }
 
+// about section reveal (scribble accent draws in once, first time it scrolls into view)
+const aboutHeading=document.querySelector(".about-heading");
+if(aboutHeading && "IntersectionObserver" in window){
+  const aboutObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        aboutHeading.classList.add("in-view");
+        aboutObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0,rootMargin:"0px 0px -30% 0px"});
+  aboutObserver.observe(aboutHeading);
+}
+
 // canvas background
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");

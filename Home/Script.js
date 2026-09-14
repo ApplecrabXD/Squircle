@@ -153,17 +153,17 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
       tl.fromTo(heroCopy,{opacity:1},{opacity:0,ease:"none",duration:1},0);
       tl.set(heroCopy,{pointerEvents:"none"},0.6);
 
-      // phase 2 (second half): laptop holds still, placeholder text scrolls up behind it,
-      // fading in over the first 15% and out over the last 15% as it passes through center.
-      // travel is kept small so the marquee stays close behind the laptop the whole time
-      // instead of sweeping off past its silhouette
-      tl.fromTo(heroBehind,{y:"18vh",opacity:0},{y:"12.6vh",opacity:1,ease:"none",duration:0.15},1);
-      tl.to(heroBehind,{y:"-12.6vh",opacity:1,ease:"none",duration:0.7},">");
-      tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
+      // phase 2 (second half): laptop holds still, placeholder text is already in place the
+      // moment phase 2 starts (no fade-in wait) and scrolls up behind it, fading out over the
+      // last 15% as it passes through center. travel is kept small so the marquee stays close
+      // behind the laptop the whole time instead of sweeping off past its silhouette
+tl.set(heroBehind,{y:"12.6vh",opacity:1},1);
+tl.to(heroBehind,{y:"-12.6vh",ease:"none",duration:0.85},1);
+tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
       // laptop fades out alongside the marquee's own exit fade, in that same final 15%,
       // so the handoff into the next section is a fade rather than an abrupt cut
-      tl.fromTo(heroLaptop,{opacity:1},{opacity:0,ease:"none",duration:0.15},1.85);
+      tl.to(heroLaptop,{opacity:0,ease:"none",duration:0.15},1.85);
 
       return ()=>{
         tl.scrollTrigger && tl.scrollTrigger.kill();
@@ -242,16 +242,13 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
         }
       });
 
-      // phase A (first 8%): the row fades up into place from below - kept short so
-      // it picks up right where the hero's fade-out leaves off, without a dead gap
-      tl.fromTo(productTrack,{y:"14vh",opacity:0},{y:"0vh",opacity:1,ease:"none",duration:0.08},0);
-
-      // phase B (remaining 92%): pinned in place, the row pans sideways through all 6 cards
+      // row is already in place and fully visible the moment the pin engages; the whole
+      // pinned scroll range pans it sideways through all 6 cards
       tl.to(productTrack,{
         x:()=>-(Math.max(0,productTrack.scrollWidth-productViewport.clientWidth)),
         ease:"none",
-        duration:0.92,
-      },0.08);
+        duration:1,
+      },0);
 
       return ()=>{
         tl.scrollTrigger && tl.scrollTrigger.kill();

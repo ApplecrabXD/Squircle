@@ -436,12 +436,101 @@ function drawLine(line,time){
 }
 
 
+// scroll-driven background zones: hero+product = orange, about = purple, footer = black.
+// html[data-zone] (read by Style.css) drives --line/buttons/nav/footer; the canvas fill
+// itself is interpolated here so the color wash is smooth instead of a hard cut.
+const zoneSections={
+  productWrap:document.getElementById("productWrap"),
+  aboutWrap:document.querySelector(".about-wrap"),
+  aboutBanner:document.querySelector(".about-banner"),
+  footer:document.querySelector(".site-footer")
+};
+
+function hexToRgb(hex){
+  const n=parseInt(hex.trim().replace("#",""),16);
+  return[(n>>16)&255,(n>>8)&255,n&255];
+}
+
+const zoneRootStyle=getComputedStyle(document.documentElement);
+const zoneColors={
+  orange:hexToRgb(zoneRootStyle.getPropertyValue("--accent")),
+  purple:hexToRgb(zoneRootStyle.getPropertyValue("--accent-2")),
+  black:hexToRgb(zoneRootStyle.getPropertyValue("--zone-dark"))
+};
+
+// transition midpoints, in document Y coordinates; remeasured whenever layout can shift.
+// zoneT0 holds black through the page's resting/loaded state, igniting to orange shortly
+// after the hero's scroll-hijack actually starts engaging, rather than being orange instantly
+let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
+function measureZones(){
+  const{productWrap,aboutWrap,aboutBanner,footer}=zoneSections;
+  if(!heroWrap||!productWrap||!aboutWrap||!aboutBanner||!footer)return;
+
+  const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
+  const bannerCenter=aboutBanner.offsetTop+aboutBanner.offsetHeight/2;
+
+  zoneT0=heroWrap.offsetTop+innerHeight;
+  zoneT1=(productBottom+aboutWrap.offsetTop)/2;
+  zoneT2=bannerCenter;
+  docMaxScroll=Math.max(0,document.documentElement.scrollHeight-innerHeight);
+}
+measureZones();
+addEventListener("resize",measureZones);
+addEventListener("load",measureZones);
+
+// footer's own content is often too short for the "look ahead" sample below to ever
+// reach zoneT2 before scrolling bottoms out, so the page-bottom case is guaranteed here
+function isAtBottom(scrollTop){
+  return scrollTop>=docMaxScroll-1;
+}
+
+function zoneNameAt(y,scrollTop){
+  if(isAtBottom(scrollTop))return"black";
+  if(y<zoneT0)return"black";
+  if(y<zoneT1)return"orange";
+  if(y<zoneT2)return"purple";
+  return"black";
+}
+
+function lerpColor(c1,c2,t){
+  t=Math.max(0,Math.min(1,t));
+  return[c1[0]+(c2[0]-c1[0])*t,c1[1]+(c2[1]-c1[1])*t,c1[2]+(c2[2]-c1[2])*t];
+}
+
+function targetZoneColor(y,scrollTop){
+  if(isAtBottom(scrollTop))return zoneColors.black;
+
+  const band=Math.max(innerHeight*.3,150);
+
+  if(y<zoneT0-band)return zoneColors.black;
+  if(y<zoneT0+band)return lerpColor(zoneColors.black,zoneColors.orange,(y-(zoneT0-band))/(2*band));
+  if(y<zoneT1-band)return zoneColors.orange;
+  if(y<zoneT1+band)return lerpColor(zoneColors.orange,zoneColors.purple,(y-(zoneT1-band))/(2*band));
+  if(y<zoneT2-band)return zoneColors.purple;
+  if(y<zoneT2+band)return lerpColor(zoneColors.purple,zoneColors.black,(y-(zoneT2-band))/(2*band));
+  return zoneColors.black;
+}
+
+let bgNow=zoneColors.black.slice();
+
+
 // animation loop
 function animate(time){
   mouse.x+=(mouse.targetX-mouse.x)*.09;
   mouse.y+=(mouse.targetY-mouse.y)*.09;
 
-  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue("--background");
+  const zoneSampleY=scrollY+innerHeight*.4;
+
+  const zoneNow=zoneNameAt(zoneSampleY,scrollY);
+  if(document.documentElement.dataset.zone!==zoneNow)
+    document.documentElement.dataset.zone=zoneNow;
+
+  const bgTarget=targetZoneColor(zoneSampleY,scrollY);
+  bgNow[0]+=(bgTarget[0]-bgNow[0])*.08;
+  bgNow[1]+=(bgTarget[1]-bgNow[1])*.08;
+  bgNow[2]+=(bgTarget[2]-bgNow[2])*.08;
+
+  ctx.fillStyle=`rgb(${bgNow[0]|0}, ${bgNow[1]|0}, ${bgNow[2]|0})`;
   ctx.fillRect(0,0,width,height);
   ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue("--line");
   ctx.lineWidth=settings.lineWidth;

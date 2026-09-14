@@ -7,6 +7,10 @@
   --accent-3:#f3af32;
 
   --background:#ededed;
+  --zone-dark:#090e11;
+
+  /* what the canvas + body actually paint; overridden per scroll zone below */
+  --zone-bg:var(--background);
 }
 
 @media (prefers-color-scheme: dark){
@@ -15,6 +19,15 @@
     --line:#ededed;
   }
 }
+
+/* scroll-driven background zones: hero+product = orange, about = purple, footer = black.
+   html[data-zone] is set by Script.js as the user scrolls; it overrides the light/dark
+   mode colors above regardless of system theme, since these are fixed brand colors. */
+html[data-zone="orange"]{--zone-bg:var(--accent);}
+html[data-zone="purple"]{--zone-bg:var(--accent-2);}
+html[data-zone="black"]{--zone-bg:var(--zone-dark);}
+
+html[data-zone]{--line:var(--whiteline);}
 
 @font-face{
   font-family:"SuperMalibu";
@@ -32,7 +45,7 @@
 html,body{
   width:100%;
   min-height:100%;
-  background:var(--background);
+  background:var(--zone-bg);
 }
 
 #canvas{
@@ -438,6 +451,30 @@ html,body{
   }
 }
 
+/* scroll zones: same light-tinted glass treatment as dark mode, since orange/purple/black
+   are all dark or saturated enough to need it regardless of system theme */
+html[data-zone] .nav-logo,
+html[data-zone] .nav-links,
+html[data-zone] .nav-menu{
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.14);
+  box-shadow:
+    0 8px 30px rgba(0,0,0,.2),
+    inset 0 1px 1px rgba(255,255,255,.15);
+}
+
+html[data-zone] .nav-orb:hover .nav-logo,
+html[data-zone] .nav-orb:hover .nav-links,
+html[data-zone] .nav-orb:hover .nav-menu{
+  background:rgba(255,255,255,.11);
+  border-color:rgba(255,255,255,.25);
+  box-shadow:0 12px 35px rgba(0,0,0,.25),inset 0 1px 1px rgba(255,255,255,.25);
+}
+
+html[data-zone] .nav-indicator{
+  background:rgba(255,255,255,.16);
+}
+
 /* hero */
 .hero-wrap{
   position:relative;
@@ -522,6 +559,18 @@ html,body{
 
   backdrop-filter:blur(25px) saturate(160%);
   -webkit-backdrop-filter:blur(25px) saturate(160%);
+}
+
+/* orange zone only: .btn-fill and the accent-colored "Squircle" span are normally
+   --accent-colored, which is the same color as the zone background there */
+html[data-zone="orange"] .btn-fill{
+  background:var(--whiteline);
+  border-color:var(--whiteline);
+  color:var(--accent);
+}
+
+html[data-zone="orange"] .hero-title span{
+  color:var(--whiteline);
 }
 
 .hero-laptop{
@@ -1016,6 +1065,25 @@ html,body{
     background:rgba(255,255,255,.015);
     border-color:rgba(255,255,255,.08);
   }
+}
+
+/* scroll zones: footer is always the "black" zone, and .btn-outline appears in the
+   hero/about zones too, so both need the light-tinted glass regardless of system theme */
+html[data-zone] .site-footer{
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.14);
+}
+
+html[data-zone] .footer-top{
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.14);
+}
+
+html[data-zone] .footer-top:hover{background:rgba(255,255,255,.12);}
+
+html[data-zone] .btn-outline{
+  background:rgba(255,255,255,.05);
+  border-color:rgba(255,255,255,.14);
 }
 
 /* mobile */

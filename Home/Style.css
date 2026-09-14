@@ -44,6 +44,38 @@ html,body{
   z-index:0;
 }
 
+/* film grain, sits directly above the canvas but still below all page content */
+.grain{
+  position:fixed;
+  inset:0;
+  z-index:0;
+
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='500' height='500'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.5' numOctaves='2' seed='7' stitchTiles='stitch' result='t'/%3E%3CfeColorMatrix in='t' type='saturate' values='0'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='0.35' intercept='0'/%3E%3CfeFuncG type='linear' slope='0.35' intercept='0'/%3E%3CfeFuncB type='linear' slope='0.35' intercept='0'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:500px 500px;
+
+  opacity:.14;
+
+  pointer-events:none;
+  animation:grainShift .8s steps(8) infinite;
+}
+
+@media (prefers-color-scheme:dark){
+  .grain{opacity:.1;}
+}
+
+/* offsets are irregular and non-repeating-looking on purpose, so the tiling never settles into a visible loop */
+@keyframes grainShift{
+  0%{background-position:0 0;}
+  12%{background-position:-140px 60px;}
+  25%{background-position:90px -120px;}
+  37%{background-position:-70px -160px;}
+  50%{background-position:160px 40px;}
+  62%{background-position:-110px 110px;}
+  75%{background-position:50px -70px;}
+  87%{background-position:-160px -30px;}
+  100%{background-position:0 0;}
+}
+
 #splash{
   position:fixed;
   inset:0;
@@ -1100,7 +1132,8 @@ html,body{
   #splash .block-orange,
   #splash .block-purple,
   .loading-bar,
-  .marquee-track{animation:none;}
+  .marquee-track,
+  .grain{animation:none;}
 
   .footer-blocks .block-orange,
   .footer-blocks .block-purple{animation:none;}

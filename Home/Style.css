@@ -591,7 +591,6 @@ html,body{
 
   display:flex;
   align-items:center;
-  transform:translateY(8vh);
 }
 
 .product-viewport{

@@ -1014,4 +1014,202 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
   dbClose.addEventListener("click",dbCloseBattle);
   dbOverlay.addEventListener("click",e=>{if(e.target===dbOverlay)dbCloseBattle();});
 }
+
+// easter egg: click the hero laptop to play Flappy Squircle
+const flappyTrigger=document.getElementById("heroLaptop");
+const flappyGame=document.getElementById("flappyGame");
+const flappyCanvas=document.getElementById("flappyCanvas");
+const flappyScoreEl=document.getElementById("flappyScore");
+const flappyBestEl=document.getElementById("flappyBest");
+const flappyMsg=document.getElementById("flappyMsg");
+const flappyClose=document.getElementById("flappyClose");
+
+if(flappyTrigger && flappyGame && flappyCanvas && flappyScoreEl && flappyBestEl && flappyMsg && flappyClose){
+  const flCtx=flappyCanvas.getContext("2d");
+  const FL_W=flappyCanvas.width;
+  const FL_H=flappyCanvas.height;
+  const FL_BIRD=42;
+  const FL_GRAVITY=1500;
+  const FL_FLAP_VEL=-380;
+  const FL_PIPE_W=64;
+  const FL_PIPE_GAP=150;
+  const FL_PIPE_SPEED=170;
+  const FL_PIPE_INTERVAL=1300;
+
+  const flBirdImg=new Image();
+  flBirdImg.src="Assets/Logos/Logo.png";
+  const flBgImg=new Image();
+  flBgImg.src="Assets/Easter%20Eggs/Flappy%20Bird/BG.png";
+  const flPipeImg=new Image();
+  flPipeImg.src="Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
+
+  let flState="idle"; // idle | playing | over
+  let flBirdY,flBirdVel,flBirdRot,flPipes,flScore,flBest=0,flLast,flPipeTimer,flRaf;
+
+  function flReset(){
+    flBirdY=FL_H/2;
+    flBirdVel=0;
+    flBirdRot=0;
+    flPipes=[];
+    flScore=0;
+    flPipeTimer=0;
+    flappyScoreEl.textContent="0";
+  }
+
+  function flSpawnPipe(){
+    const margin=60;
+    const gapY=margin+Math.random()*(FL_H-margin*2-FL_PIPE_GAP);
+    flPipes.push({x:FL_W,gapY,passed:false});
+  }
+
+  function flDraw(){
+    flCtx.clearRect(0,0,FL_W,FL_H);
+
+    if(flBgImg.complete && flBgImg.naturalWidth){
+      const scale=Math.max(FL_W/flBgImg.naturalWidth,FL_H/flBgImg.naturalHeight);
+      const w=flBgImg.naturalWidth*scale,h=flBgImg.naturalHeight*scale;
+      flCtx.drawImage(flBgImg,(FL_W-w)/2,(FL_H-h)/2,w,h);
+    }else{
+      const sky=flCtx.createLinearGradient(0,0,0,FL_H);
+      sky.addColorStop(0,"#7fd4ff");
+      sky.addColorStop(1,"#d8f4ff");
+      flCtx.fillStyle=sky;
+      flCtx.fillRect(0,0,FL_W,FL_H);
+    }
+
+    for(const p of flPipes){
+      const bottomH=FL_H-(p.gapY+FL_PIPE_GAP);
+      if(flPipeImg.complete && flPipeImg.naturalWidth){
+        flCtx.save();
+        flCtx.translate(p.x,p.gapY);
+        flCtx.scale(1,-1);
+        flCtx.drawImage(flPipeImg,0,0,FL_PIPE_W,p.gapY);
+        flCtx.restore();
+        flCtx.drawImage(flPipeImg,p.x,p.gapY+FL_PIPE_GAP,FL_PIPE_W,bottomH);
+      }else{
+        flCtx.fillStyle="#3cb043";
+        flCtx.strokeStyle="#1f6b26";
+        flCtx.lineWidth=3;
+        flCtx.fillRect(p.x,0,FL_PIPE_W,p.gapY);
+        flCtx.strokeRect(p.x,0,FL_PIPE_W,p.gapY);
+        flCtx.fillRect(p.x,p.gapY+FL_PIPE_GAP,FL_PIPE_W,bottomH);
+        flCtx.strokeRect(p.x,p.gapY+FL_PIPE_GAP,FL_PIPE_W,bottomH);
+      }
+    }
+
+    flCtx.save();
+    flCtx.translate(FL_W/2,flBirdY);
+    flCtx.rotate(flBirdRot);
+    if(flBirdImg.complete && flBirdImg.naturalWidth){
+      const ratio=flBirdImg.naturalWidth/flBirdImg.naturalHeight;
+      const w=ratio>=1?FL_BIRD:FL_BIRD*ratio;
+      const h=ratio>=1?FL_BIRD/ratio:FL_BIRD;
+      flCtx.drawImage(flBirdImg,-w/2,-h/2,w,h);
+    }else{
+      flCtx.fillStyle="#ffd23f";
+      flCtx.fillRect(-FL_BIRD/2,-FL_BIRD/2,FL_BIRD,FL_BIRD);
+    }
+    flCtx.restore();
+  }
+
+  function flGameOver(){
+    flState="over";
+    cancelAnimationFrame(flRaf);
+    flBest=Math.max(flBest,flScore);
+    flappyBestEl.textContent="Best: "+flBest;
+    flappyMsg.textContent="Game Over — Score "+flScore+" — click to retry";
+    flappyMsg.hidden=false;
+  }
+
+  function flLoop(now){
+    const dt=Math.max(0,Math.min(.032,(now-flLast)/1000));
+    flLast=now;
+
+    flBirdVel+=FL_GRAVITY*dt;
+    flBirdY+=flBirdVel*dt;
+    flBirdRot=Math.max(-.5,Math.min(1.2,flBirdVel/500));
+
+    flPipeTimer+=dt*1000;
+    if(flPipeTimer>FL_PIPE_INTERVAL){
+      flPipeTimer=0;
+      flSpawnPipe();
+    }
+
+    const birdLeft=FL_W/2-FL_BIRD/2;
+    const birdRight=FL_W/2+FL_BIRD/2;
+
+    for(const p of flPipes){
+      p.x-=FL_PIPE_SPEED*dt;
+      if(!p.passed && p.x+FL_PIPE_W<birdLeft){
+        p.passed=true;
+        flScore++;
+        flappyScoreEl.textContent=String(flScore);
+      }
+    }
+    flPipes=flPipes.filter(p=>p.x+FL_PIPE_W>-10);
+
+    const bTop=flBirdY-FL_BIRD/2;
+    const bBottom=flBirdY+FL_BIRD/2;
+
+    let dead=bTop<0 || bBottom>FL_H;
+    if(!dead){
+      for(const p of flPipes){
+        if(birdRight>p.x && birdLeft<p.x+FL_PIPE_W){
+          if(bTop<p.gapY || bBottom>p.gapY+FL_PIPE_GAP){dead=true;break;}
+        }
+      }
+    }
+
+    flDraw();
+
+    if(dead){
+      flGameOver();
+      return;
+    }
+
+    flRaf=requestAnimationFrame(flLoop);
+  }
+
+  function flStart(){
+    flState="playing";
+    flappyMsg.hidden=true;
+    flLast=performance.now();
+    flRaf=requestAnimationFrame(flLoop);
+  }
+
+  function flFlap(){
+    if(flState==="idle"){flStart();flBirdVel=FL_FLAP_VEL;}
+    else if(flState==="playing")flBirdVel=FL_FLAP_VEL;
+    else if(flState==="over"){flReset();flStart();flBirdVel=FL_FLAP_VEL;}
+  }
+
+  function flOpen(){
+    flReset();
+    flState="idle";
+    flappyMsg.textContent="Click or press Space to flap";
+    flappyMsg.hidden=false;
+    flappyBestEl.textContent="Best: "+flBest;
+    flappyGame.hidden=false;
+    flappyGame.setAttribute("aria-hidden","false");
+    flDraw();
+  }
+
+  function flClose(){
+    flappyGame.hidden=true;
+    flappyGame.setAttribute("aria-hidden","true");
+    cancelAnimationFrame(flRaf);
+    flState="idle";
+  }
+
+  flappyTrigger.addEventListener("click",flOpen);
+  flappyCanvas.addEventListener("click",flFlap);
+  flappyClose.addEventListener("click",flClose);
+  flappyGame.addEventListener("click",e=>{if(e.target===flappyGame)flClose();});
+
+  addEventListener("keydown",e=>{
+    if(flappyGame.hidden)return;
+    if(e.key==="Escape"){flClose();return;}
+    if(e.code==="Space"){e.preventDefault();flFlap();}
+  });
+}
 })();

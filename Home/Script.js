@@ -830,7 +830,9 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
     dbHpCurrent=Math.max(0,dbHpCurrent-2);
     dbUpdateHp();
     dbHeart.classList.add("db-hit");
+    dbOverlay.classList.add("db-screen-shake");
     setTimeout(()=>{dbHeart.classList.remove("db-hit");dbInvuln=false;},700);
+    setTimeout(()=>{dbOverlay.classList.remove("db-screen-shake");},400);
   }
 
   function dbSpawnBullet(){

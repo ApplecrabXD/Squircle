@@ -291,6 +291,37 @@
 
 </footer>
 
+<!-- easter egg: type "deltarune" or "undertale" to start a battle (see the ASCII hint up top) -->
+<div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
+  <div class="db-scene">
+    <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">
+  </div>
+
+  <div class="db-hp" id="dbHp" hidden>
+    <span class="db-hp-name" id="dbHpName">KRIS</span>
+    <span class="db-hp-lv">LV 1</span>
+    <div class="db-hp-bar"><div class="db-hp-fill" id="dbHpFill"></div></div>
+    <span class="db-hp-num" id="dbHpNum">20 / 20</span>
+  </div>
+
+  <div class="db-board" id="dbBoard" hidden>
+    <img class="db-heart" id="dbHeart" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Heart.webp" alt="">
+  </div>
+
+  <div class="db-textbox">
+    <p class="db-text" id="deltaruneText"></p>
+    <div class="db-menu" id="dbMenu" hidden>
+      <button type="button" data-act="fight">FIGHT</button>
+      <button type="button" data-act="act">ACT</button>
+      <button type="button" data-act="item">ITEM</button>
+      <button type="button" data-act="mercy">MERCY</button>
+    </div>
+  </div>
+
+  <button class="db-close" id="deltaruneClose" type="button">Close (Esc)</button>
+</div>
+<audio id="deltaruneAudio" preload="none"></audio>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
 <script src="Home/Script.js"></script>

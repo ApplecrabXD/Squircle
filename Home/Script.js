@@ -324,25 +324,6 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
         p.y+=p.vy;
       }
 
-      // faint links between neighboring displaced particles: the "atom" look
-      atomCtx.lineWidth=.6;
-      for(let i=0;i<atomParticles.length;i++){
-        const a=atomParticles[i];
-        if(Math.hypot(a.x-a.homeX,a.y-a.homeY)<2)continue;
-
-        for(let j=i+1;j<atomParticles.length;j++){
-          const b=atomParticles[j];
-          const dist=Math.hypot(a.x-b.x,a.y-b.y);
-          if(dist<14){
-            atomCtx.strokeStyle=`rgba(255,255,255,${.3*(1-dist/14)})`;
-            atomCtx.beginPath();
-            atomCtx.moveTo(a.x,a.y);
-            atomCtx.lineTo(b.x,b.y);
-            atomCtx.stroke();
-          }
-        }
-      }
-
       for(const p of atomParticles){
         atomCtx.beginPath();
         atomCtx.fillStyle=p.color;
@@ -713,4 +694,322 @@ function animate(time){
 }
 
 requestAnimationFrame(animate);
+
+// easter egg: typing "deltarune" or "undertale" anywhere on the page starts a battle
+const dbOverlay=document.getElementById("deltaruneBattle");
+const dbText=document.getElementById("deltaruneText");
+const dbAudio=document.getElementById("deltaruneAudio");
+const dbClose=document.getElementById("deltaruneClose");
+const dbMenu=document.getElementById("dbMenu");
+const dbHp=document.getElementById("dbHp");
+const dbHpName=document.getElementById("dbHpName");
+const dbHpFill=document.getElementById("dbHpFill");
+const dbHpNum=document.getElementById("dbHpNum");
+const dbBoard=document.getElementById("dbBoard");
+const dbHeart=document.getElementById("dbHeart");
+const dbEnemyImg=document.getElementById("dbEnemyImg");
+
+if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && dbHpFill && dbHpNum && dbBoard && dbHeart && dbEnemyImg){
+  const dbMonsters={
+    deltarune:{
+      trigger:"deltarune",
+      enemyImg:"Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp",
+      enemyAlt:"Lancer",
+      heroName:"KRIS",
+      theme:"Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer%20vs%20theme.mp3",
+      introLines:[
+        "* LANCER blocks the way!",
+        "* \"IT'S ME, LANCER! PREPARE FOR A BATTLE ROYALE!\"",
+        "* (He does not seem all that threatening.)"
+      ],
+      actLines:[
+        "* You check LANCER.",
+        "* ATK 1 DEF 1.",
+        "* He's a great kid, and he's trying his best."
+      ],
+      itemLines:[
+        "* You check your inventory.",
+        "* You have no items.",
+        "* (You left them at home. Rookie mistake.)"
+      ],
+      outroLines:[
+        "* LANCER's Lance-tastic assault comes to an end!",
+        "* LANCER: \"Wow!! You're really good at this!\"",
+        "* LANCER: \"...Can we be friends now?\""
+      ],
+      mercyLines:[
+        "* You spared LANCER.",
+        "* LANCER: \"Yay!! Best friends forever!!\""
+      ]
+    },
+    undertale:{
+      trigger:"undertale",
+      enemyImg:"Assets/Easter%20Eggs/Deltarune%20Undertale/Sans.webp",
+      enemyAlt:"Sans",
+      heroName:"FRISK",
+      theme:"Assets/Easter%20Eggs/Deltarune%20Undertale/MEGALOVANIA.mp3",
+      introLines:[
+        "* SANS is watching you very closely.",
+        "* SANS: \"heh. so you're the one everybody's talking about.\"",
+        "* SANS: \"you're gonna have a bad time.\""
+      ],
+      actLines:[
+        "* You check SANS.",
+        "* ATK ??? DEF ???",
+        "* (The underlined zero is oddly menacing.)"
+      ],
+      itemLines:[
+        "* You check your inventory.",
+        "* You have no items.",
+        "* (Shoulda brought a Cinnamon Bunny.)"
+      ],
+      outroLines:[
+        "* Somehow, you're still standing.",
+        "* SANS: \"heh. not bad, kid.\"",
+        "* SANS: \"...guess this is a good a time as any for a little break.\""
+      ],
+      mercyLines:[
+        "* You spared SANS.",
+        "* SANS: \"kid, that's not really how this works. but nice try.\""
+      ]
+    }
+  };
+
+  let dbCurrentMonster=dbMonsters.deltarune;
+
+  const BOARD_W=300;
+  const BOARD_H=200;
+  const HEART_HALF=8;
+  const HP_MAX=20;
+  const ATTACK_DURATION=8000;
+
+  let dbKeyBuffer="";
+  let dbTypingTimer=null;
+  let dbKeysHeld={};
+  let dbBullets=[];
+  let dbSpawnTimer=null;
+  let dbAttackRunning=false;
+  let dbAttackStart=0;
+  let dbLastFrame=0;
+  let dbInvuln=false;
+  let dbHeartX=BOARD_W/2;
+  let dbHeartY=BOARD_H/2;
+  let dbHpCurrent=HP_MAX;
+
+  function dbType(lines,onDone){
+    clearTimeout(dbTypingTimer);
+    let lineIndex=0;
+    let charIndex=0;
+    dbText.textContent="";
+
+    function step(){
+      const current=lines[lineIndex];
+      dbText.textContent=lines.slice(0,lineIndex).join("\n")+(lineIndex?"\n":"")+current.slice(0,charIndex+1);
+      charIndex++;
+
+      if(charIndex<current.length){
+        dbTypingTimer=setTimeout(step,28);
+      }else if(lineIndex<lines.length-1){
+        lineIndex++;
+        charIndex=0;
+        dbTypingTimer=setTimeout(step,600);
+      }else if(onDone){
+        dbTypingTimer=setTimeout(onDone,700);
+      }
+    }
+    step();
+  }
+
+  function dbUpdateHp(){
+    dbHpFill.style.width=(dbHpCurrent/HP_MAX*100)+"%";
+    dbHpNum.textContent=dbHpCurrent+" / "+HP_MAX;
+  }
+
+  function dbHit(){
+    dbInvuln=true;
+    dbHpCurrent=Math.max(0,dbHpCurrent-2);
+    dbUpdateHp();
+    dbHeart.classList.add("db-hit");
+    setTimeout(()=>{dbHeart.classList.remove("db-hit");dbInvuln=false;},700);
+  }
+
+  function dbSpawnBullet(){
+    const pattern=Math.floor(Math.random()*3);
+    const speed=.09+Math.random()*.05;
+    let x,y,vx,vy;
+
+    if(pattern===0){
+      x=-10;y=20+Math.random()*(BOARD_H-40);vx=speed;vy=0;
+    }else if(pattern===1){
+      x=BOARD_W+10;y=20+Math.random()*(BOARD_H-40);vx=-speed;vy=0;
+    }else{
+      x=20+Math.random()*(BOARD_W-40);y=-10;vx=0;vy=speed;
+    }
+
+    const el=document.createElement("div");
+    el.className="db-bullet";
+    el.style.left=x+"px";
+    el.style.top=y+"px";
+    dbBoard.appendChild(el);
+    dbBullets.push({el,x,y,vx,vy,r:6});
+  }
+
+  function dbAttackLoop(now){
+    if(!dbAttackRunning)return;
+
+    const dt=Math.min(32,now-(dbLastFrame||now));
+    dbLastFrame=now;
+
+    const speed=.28;
+    let dx=0,dy=0;
+    if(dbKeysHeld.arrowup||dbKeysHeld.w)dy-=1;
+    if(dbKeysHeld.arrowdown||dbKeysHeld.s)dy+=1;
+    if(dbKeysHeld.arrowleft||dbKeysHeld.a)dx-=1;
+    if(dbKeysHeld.arrowright||dbKeysHeld.d)dx+=1;
+
+    if(dx||dy){
+      const len=Math.hypot(dx,dy)||1;
+      dbHeartX+=(dx/len)*speed*dt;
+      dbHeartY+=(dy/len)*speed*dt;
+    }
+    dbHeartX=Math.max(HEART_HALF,Math.min(BOARD_W-HEART_HALF,dbHeartX));
+    dbHeartY=Math.max(HEART_HALF,Math.min(BOARD_H-HEART_HALF,dbHeartY));
+    dbHeart.style.left=dbHeartX+"px";
+    dbHeart.style.top=dbHeartY+"px";
+
+    for(let i=dbBullets.length-1;i>=0;i--){
+      const b=dbBullets[i];
+      b.x+=b.vx*dt;
+      b.y+=b.vy*dt;
+      b.el.style.left=b.x+"px";
+      b.el.style.top=b.y+"px";
+
+      if(b.x<-20||b.x>BOARD_W+20||b.y<-20||b.y>BOARD_H+20){
+        b.el.remove();
+        dbBullets.splice(i,1);
+        continue;
+      }
+
+      if(!dbInvuln && Math.hypot(b.x-dbHeartX,b.y-dbHeartY)<b.r+HEART_HALF)dbHit();
+    }
+
+    if(now-dbAttackStart>=ATTACK_DURATION){
+      dbEndAttack();
+      return;
+    }
+
+    requestAnimationFrame(dbAttackLoop);
+  }
+
+  function dbStartAttack(){
+    dbBoard.hidden=false;
+    dbHp.hidden=false;
+    dbHeartX=BOARD_W/2;
+    dbHeartY=BOARD_H/2;
+    dbHeart.style.left=dbHeartX+"px";
+    dbHeart.style.top=dbHeartY+"px";
+    dbHpCurrent=HP_MAX;
+    dbUpdateHp();
+    dbKeysHeld={};
+    dbInvuln=false;
+    dbBullets.forEach(b=>b.el.remove());
+    dbBullets=[];
+    dbAttackStart=performance.now();
+    dbLastFrame=0;
+    dbAttackRunning=true;
+    clearInterval(dbSpawnTimer);
+    dbSpawnTimer=setInterval(dbSpawnBullet,450);
+    requestAnimationFrame(dbAttackLoop);
+  }
+
+  function dbEndAttack(){
+    dbAttackRunning=false;
+    clearInterval(dbSpawnTimer);
+    dbBullets.forEach(b=>b.el.remove());
+    dbBullets=[];
+    dbBoard.hidden=true;
+    dbHp.hidden=true;
+    dbType(dbCurrentMonster.outroLines);
+  }
+
+  function dbOpen(monster){
+    dbCurrentMonster=monster;
+    dbEnemyImg.src=monster.enemyImg;
+    dbEnemyImg.alt=monster.enemyAlt;
+    dbHpName.textContent=monster.heroName;
+
+    dbOverlay.hidden=false;
+    dbOverlay.setAttribute("aria-hidden","false");
+    dbBoard.hidden=true;
+    dbHp.hidden=true;
+    dbMenu.hidden=true;
+    dbAudio.src=monster.theme;
+    dbAudio.currentTime=0;
+    dbAudio.play().catch(()=>{});
+    dbType(monster.introLines,()=>{dbMenu.hidden=false;});
+  }
+
+  function dbCloseBattle(){
+    dbOverlay.hidden=true;
+    dbOverlay.setAttribute("aria-hidden","true");
+    dbAudio.pause();
+    dbAudio.currentTime=0;
+    clearTimeout(dbTypingTimer);
+    dbAttackRunning=false;
+    clearInterval(dbSpawnTimer);
+    dbBullets.forEach(b=>b.el.remove());
+    dbBullets=[];
+    dbBoard.hidden=true;
+    dbHp.hidden=true;
+    dbMenu.hidden=true;
+    dbKeysHeld={};
+  }
+
+  dbMenu.addEventListener("click",e=>{
+    const btn=e.target.closest("button[data-act]");
+    if(!btn)return;
+    dbMenu.hidden=true;
+
+    if(btn.dataset.act==="fight")dbStartAttack();
+    else if(btn.dataset.act==="act")dbType(dbCurrentMonster.actLines,()=>{dbMenu.hidden=false;});
+    else if(btn.dataset.act==="item")dbType(dbCurrentMonster.itemLines,()=>{dbMenu.hidden=false;});
+    else if(btn.dataset.act==="mercy")dbType(dbCurrentMonster.mercyLines);
+  });
+
+  const dbMoveKeys=["arrowup","arrowdown","arrowleft","arrowright","w","a","s","d"];
+
+  addEventListener("keydown",e=>{
+    if(!dbOverlay.hidden){
+      if(e.key==="Escape"){dbCloseBattle();return;}
+
+      const key=e.key.toLowerCase();
+      if(dbAttackRunning && dbMoveKeys.includes(key)){
+        dbKeysHeld[key]=true;
+        e.preventDefault();
+      }
+      return;
+    }
+
+    const target=e.target;
+    if(target && (target.tagName==="INPUT"||target.tagName==="TEXTAREA"||target.isContentEditable))return;
+
+    if(e.key.length!==1)return;
+    dbKeyBuffer=(dbKeyBuffer+e.key).toLowerCase().slice(-12);
+
+    for(const key in dbMonsters){
+      if(dbKeyBuffer.endsWith(dbMonsters[key].trigger)){
+        dbOpen(dbMonsters[key]);
+        dbKeyBuffer="";
+        break;
+      }
+    }
+  });
+
+  addEventListener("keyup",e=>{
+    dbKeysHeld[e.key.toLowerCase()]=false;
+  });
+
+  dbClose.addEventListener("click",dbCloseBattle);
+  dbOverlay.addEventListener("click",e=>{if(e.target===dbOverlay)dbCloseBattle();});
+}
 })();

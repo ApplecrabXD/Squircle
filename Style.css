@@ -1,5 +1,5 @@
 :root{
-  /* brand palette, in order of importance */
+  /* brand palette in order of importance */
   --accent:#cc330f;
   --line:#090e11;
   --whiteline:#ededed;
@@ -21,8 +21,7 @@
 }
 
 /* scroll-driven background zones: hero+product = orange, about = purple, footer = black.
-   html[data-zone] is set by Script.js as the user scrolls; it overrides the light/dark
-   mode colors above regardless of system theme, since these are fixed brand colors. */
+/* html[data-zone] is set by Script.js as the user scrolls mode colors above, these are fixed brand colors */
 html[data-zone="orange"]{--zone-bg:var(--accent);}
 html[data-zone="purple"]{--zone-bg:var(--accent-2);}
 html[data-zone="black"]{--zone-bg:var(--zone-dark);}
@@ -90,11 +89,9 @@ html,body{
   animation:grainShift .8s steps(8) infinite;
 }
 
-@media (prefers-color-scheme:dark){
-  .grain{opacity:.1;}
-}
+@media (prefers-color-scheme:dark){.grain{opacity:.1;}}
 
-/* offsets are irregular and non-repeating-looking on purpose, so the tiling never settles into a visible loop */
+/* offsets are irregular, no visible loop */
 @keyframes grainShift{
   0%{background-position:0 0;}
   12%{background-position:-140px 60px;}
@@ -118,9 +115,7 @@ html,body{
 
   background:var(--background);
 
-  transition:
-    opacity .7s ease,
-    visibility .7s;
+  transition:opacity .7s ease,visibility .7s;
 }
 
 #splash.loaded{
@@ -142,14 +137,11 @@ html,body{
   width:min(280px,55vw);
   aspect-ratio:1;
 
-  transition:
-    transform 1.2s cubic-bezier(.22,1,.36,1),
-    opacity .5s ease;
+  transition:transform 1.2s cubic-bezier(.22,1,.36,1),opacity .5s ease;
 }
 
 .building-blocks img{
   position:absolute;
-
   width:100%;
   height:100%;
 
@@ -217,7 +209,6 @@ html,body{
 /* navbar */
 .navbar{
   position:fixed;
-
   top:28px;
   left:28px;
   right:28px;
@@ -254,9 +245,7 @@ html,body{
 
   backdrop-filter:blur(25px) saturate(160%);
   -webkit-backdrop-filter:blur(25px) saturate(160%);
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.06),
-    inset 0 1px 1px rgba(255,255,255,.6);
+  box-shadow:0 10px 30px rgba(0,0,0,.06),inset 0 1px 1px rgba(255,255,255,.6);
   color:var(--line);
 
   overflow:hidden;
@@ -303,20 +292,17 @@ html,body{
 
   display:block;
 
-  transition:
-    opacity .3s ease,
-    transform .5s cubic-bezier(.22,1,.36,1);
+  transition:opacity .3s ease,transform .5s cubic-bezier(.22,1,.36,1);
 }
 
-/* HIDE NAV LOGO IMAGE UNTIL SPLASH LANDING FINISHES */
+/* hides nav logo till animation is done */
 #splash:not(.loaded) ~ .navbar .nav-logo > img{
   opacity:0;
 }
 
-/* PERFECTLY CENTERED LOGO ANIMATION BUILD-BLOCKS */
+/* center logo with animation in nav*/
 .nav-building-blocks{
   position:absolute;
-
   top:50%;
   left:50%;
   width:38px;
@@ -328,9 +314,7 @@ html,body{
 
   transform:translate(-50%, -50%) scale(.8);
 
-  transition:
-    opacity .25s ease,
-    transform .4s cubic-bezier(.22,1,.36,1);
+  transition:opacity .25s ease,transform .4s cubic-bezier(.22,1,.36,1);
 }
 
 .nav-building-blocks img{

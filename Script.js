@@ -9,7 +9,15 @@ const navBlocks=document.querySelector(".nav-building-blocks");
 
 // splash screen
 
-if(splash && loadingBar){
+// once the intro has played anywhere on the site this tab session, skip it on
+const introKey="squircleIntroSeen";
+
+if(splash && loadingBar && sessionStorage.getItem(introKey)==="1"){
+  splash.style.display="none";
+  splash.classList.add("loaded");
+}else if(splash && loadingBar){
+  sessionStorage.setItem(introKey,"1");
+
   const minimumTime=2500;
   const startTime=performance.now();
 
@@ -695,7 +703,7 @@ function animate(time){
 
 requestAnimationFrame(animate);
 
-// easter egg: typing "deltarune" or "undertale" anywhere on the page starts a battle
+// easter egg typing "deltarune" or "undertale" 
 const dbOverlay=document.getElementById("deltaruneBattle");
 const dbText=document.getElementById("deltaruneText");
 const dbAudio=document.getElementById("deltaruneAudio");

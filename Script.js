@@ -6,15 +6,15 @@ const splashBlocks=document.querySelector(".building-blocks");
 const navLogo=document.querySelector(".nav-logo");
 const navBlocks=document.querySelector(".nav-building-blocks");
 
-
 // splash screen
 
-// once the intro has played anywhere on the site this tab session, skip it on
+// once the intro has played once anywhere on the site this tab session, skip it afterwords
 const introKey="squircleIntroSeen";
 
 if(splash && loadingBar && sessionStorage.getItem(introKey)==="1"){
   splash.style.display="none";
   splash.classList.add("loaded");
+  
 }else if(splash && loadingBar){
   sessionStorage.setItem(introKey,"1");
 
@@ -65,7 +65,7 @@ function moveAnimationToNavbar(){
   if(orange) orange.style.animation="none";
   if(purple) purple.style.animation="none";
 
-  // fly to the nav icon's exact position
+  // move to the nav icon position
   splashBlocks.style.transform=`translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
 
   setTimeout(()=>{ splash.style.background="transparent"; },350);
@@ -76,11 +76,8 @@ function moveAnimationToNavbar(){
   },1050);
 
   // hard cleanup
-  setTimeout(()=>{
-    splash.style.display="none";
-  },1600);
+  setTimeout(()=>{splash.style.display="none";},1600);
 }
-
 
   // end splash screen
   function finishSplash(){
@@ -117,18 +114,14 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
     });
   });
 
-  navLinksContainer.addEventListener("mouseleave", () => {
-    navIndicator.style.opacity = "0";
-  });
+  navLinksContainer.addEventListener("mouseleave", () => {navIndicator.style.opacity = "0";});
 }
 
-// gsap setup
-if(window.gsap && window.ScrollTrigger){
-  gsap.registerPlugin(ScrollTrigger);
-}
+// gsap setup (holy cow gasp is so cool why havent i used it before)
+if(window.gsap && window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);}
 const hasGsap=!!(window.gsap && window.ScrollTrigger);
 
-// hero scroll animation (GSAP ScrollTrigger, pinned + scrubbed)
+// hero scroll animation GSAP ScrollTrigger pinned
 const heroWrap=document.getElementById("heroWrap");
 const heroCopy=document.getElementById("heroCopy");
 const heroLaptop=document.getElementById("heroLaptop");
@@ -139,8 +132,7 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
 
   ScrollTrigger.matchMedia({
 
-    // desktop: laptop flies in, holds centered through the marquee, then the
-    // section simply un-pins and normal scrolling carries you into the next section
+    // desktop laptop flies in, holds centered through the marquee, then the section unpints and noraml scrolling reterns
     "(min-width:651px)":()=>{
       gsap.set(heroLaptop,{xPercent:-50,yPercent:-50});
       gsap.set(heroBehind,{xPercent:-50,yPercent:-50});
@@ -156,21 +148,17 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
         }
       });
 
-      // phase 1 (first half): laptop slides in diagonally from the upper right
+      // phase 1 - laptop slides in diagonally from the upper right
       tl.fromTo(heroLaptop,{x:"29vw"},{x:"-3vw",ease:"none",duration:1},0);
       tl.fromTo(heroCopy,{opacity:1},{opacity:0,ease:"none",duration:1},0);
       tl.set(heroCopy,{pointerEvents:"none"},0.6);
 
-      // phase 2 (second half): laptop holds still, placeholder text is already in place the
-      // moment phase 2 starts (no fade-in wait) and scrolls up behind it, fading out over the
-      // last 15% as it passes through center. travel is kept small so the marquee stays close
-      // behind the laptop the whole time instead of sweeping off past its silhouette
+      // phase 2 - laptop holds still and scrolls up behind it fading out last 15% as passes through center
 tl.set(heroBehind,{y:"12.6vh",opacity:1},1);
 tl.to(heroBehind,{y:"-12.6vh",ease:"none",duration:0.85},1);
 tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
-      // laptop fades out alongside the marquee's own exit fade, in that same final 15%,
-      // so the handoff into the next section is a fade rather than an abrupt cut
+      // laptop fades out alongside the marquee's in final 15% so the handoff into the next section is a fade
       tl.to(heroLaptop,{opacity:0,ease:"none",duration:0.15},1.85);
 
       return ()=>{
@@ -186,22 +174,19 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
   });
 
-  // weighted bounce: a damped spring gets "kicked" by scroll motion, so it swings
-  // and settles like something with real mass, plus a slow constant idle sway.
-  // applied to the laptop image itself so it layers on top of GSAP's positioning
-  // of the outer #heroLaptop wrapper without the two fighting over one transform.
+  // weighted bounce so it settles like something with weight + idle animation only on laptop ontop of gsap 
   let lastScrollY=scrollY;
   let lastFrameTime=performance.now();
   let springY=0;
   let springVelocity=0;
   let idlePhase=0;
 
-  const stiffness=20;   // lower = slower, heavier swing
+  const stiffness=20;   // lower = slower - heavier swing
   const damping=6;    // lower = more/longer bounces before settling
   const scrollKick=1; // how hard a scroll nudges the spring
 
   function tickHeroBounce(now){
-    const dt=Math.min((now-lastFrameTime)/1000,.05); // seconds, capped to avoid jolts after tab-away
+    const dt=Math.min((now-lastFrameTime)/1000,.05); // seconds, capped to avoid jolts after tab out (idk why but it works)
     lastFrameTime=now;
 
     const currentY=scrollY;
@@ -228,9 +213,7 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
   requestAnimationFrame(tickHeroBounce);
 }
 
-// "Squircle" hover atom effect: the word is sampled into a field of small particles that
-// scatter (with a slight swirl, so it reads as atoms rather than plain noise) away from
-// the cursor and spring back into the letterforms once it moves off
+// Squircle atom effect the word is sampled into a field of small particles that scatter away from the cursor
 const atomWrap=document.querySelector(".hero-title-atom");
 const atomText=document.querySelector(".hero-title-atom-text");
 const atomCanvas=document.querySelector(".hero-title-atom-canvas");
@@ -255,8 +238,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     atomCanvas.style.width=w+"px";
     atomCanvas.style.height=h+"px";
 
-    // sample the real heading text (same font/color) onto an offscreen canvas so the
-    // particle field matches the live letterforms and picks up the live accent color
+    // sample the real heading text onto an offscreen canvas so the particle matches the leters 
     const sample=document.createElement("canvas");
     sample.width=w*atomDpr;
     sample.height=h*atomDpr;
@@ -354,16 +336,14 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
   requestAnimationFrame(tickAtoms);
 }
 
-// product scroll-jacked carousel (GSAP ScrollTrigger, pinned + scrubbed)
+// product scroll-jacked carousel gasp scrolltrigger
 const productWrap=document.getElementById("productWrap");
 const productSticky=document.getElementById("productSticky");
 const productViewport=document.getElementById("productViewport");
 const productTrack=document.getElementById("productTrack");
 
 if(hasGsap && productWrap && productSticky && productViewport && productTrack){
-
   ScrollTrigger.matchMedia({
-
     "(min-width:651px)":()=>{
       const tl=gsap.timeline({
         scrollTrigger:{
@@ -376,8 +356,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
         }
       });
 
-      // row is already in place and fully visible the moment the pin engages; the whole
-      // pinned scroll range pans it sideways through all 6 cards
+      // row is already in place and fully visible the moment the pin engages
       tl.to(productTrack,{
         x:()=>-(Math.max(0,productTrack.scrollWidth-productViewport.clientWidth)),
         ease:"none",
@@ -391,14 +370,12 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
       };
     },
 
-    "(max-width:650px)":()=>{
-      gsap.set(productTrack,{clearProps:"all"});
-    }
+    "(max-width:650px)":()=>{gsap.set(productTrack,{clearProps:"all"});}
 
   });
 }
 
-// about section reveal (scribble accent draws in once, first time it scrolls into view)
+// about/more info section reveal (scribble accent draws in once, first time it scrolls into view)
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){
   const aboutObserver=new IntersectionObserver((entries)=>{

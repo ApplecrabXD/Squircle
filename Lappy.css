@@ -57,6 +57,12 @@
   .lappy-hero-laptop img{animation:none;}
 }
 
+.lappy-marquee{
+  position:relative;
+  z-index:1;
+  margin-bottom:48px;
+}
+
 @media (max-width:650px){
   .lappy-hero{
     flex-direction:column-reverse;
@@ -72,4 +78,221 @@
     white-space:normal;
     font-size:clamp(2rem,9vw,3rem);
   }
+}
+
+/* lappy feature showcase — horizontal scroll-jacked panels, gsap.com-style text reveals */
+.lappy-showcase{
+  position:relative;
+  z-index:1;
+  height:500vh;
+}
+
+.lappy-showcase-sticky{
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+
+  display:flex;
+  align-items:center;
+}
+
+.lappy-showcase-track{
+  display:flex;
+  height:100%;
+  will-change:transform;
+}
+
+.lappy-panel{
+  --panel-accent:var(--accent);
+
+  position:relative;
+  flex:0 0 100vw;
+  height:100%;
+
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:clamp(24px,5vw,64px);
+  padding:0 clamp(28px,7vw,160px);
+  overflow:hidden;
+}
+
+/* alternate the two "loudest" brand accents panel to panel so each feature reads distinctly */
+.lappy-panel:nth-of-type(even){--panel-accent:var(--accent-2);}
+
+.lappy-panel-media{
+  position:relative;
+  z-index:1;
+  flex:0 0 clamp(180px,22vw,300px);
+
+  aspect-ratio:9/16;
+  border-radius:24px;
+  overflow:hidden;
+
+  background:color-mix(in srgb, var(--line) 6%, transparent);
+}
+
+.lappy-panel-media img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  pointer-events:none;
+}
+
+.lappy-panel-index{
+  position:absolute;
+  z-index:0;
+  top:8%;
+  right:6%;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(6rem,18vw,14rem);
+  line-height:1;
+  color:var(--panel-accent);
+  opacity:.3;
+
+  pointer-events:none;
+  user-select:none;
+}
+
+/* text sits on its own frosted card instead of directly on the canvas art behind it —
+   same glass recipe as .nav-orb / .site-footer, since plain text was blending into the
+   line-art squiggles (both painted in --line) */
+.lappy-panel-body{
+  position:relative;
+  z-index:1;
+  flex:1 1 0%;
+  min-width:0;
+  max-width:1100px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:24px;
+  padding:52px 60px;
+  border-radius:28px;
+
+  background:rgba(0,0,0,.035);
+  border:1px solid rgba(0,0,0,.08);
+  backdrop-filter:blur(25px) saturate(160%);
+  -webkit-backdrop-filter:blur(25px) saturate(160%);
+}
+
+@media (prefers-color-scheme:dark){
+  .lappy-panel-body{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
+}
+
+/* lappy always sits in a scroll zone (dark canvas), so this is what actually applies */
+html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
+
+.lappy-panel-tag{
+  display:inline-flex;
+  padding:8px 20px;
+  border-radius:100px;
+  background:var(--panel-accent);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.8rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#fff;
+}
+
+.lappy-panel-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.9rem,3.4vw,3.2rem);
+  line-height:1.15;
+  color:var(--line);
+}
+
+.lappy-panel-text{
+  max-width:58ch;
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.6;
+  color:var(--line);
+  opacity:.8;
+}
+
+.lappy-panel-stat{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  margin-top:4px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(1.6rem,2.6vw,2.2rem);
+  line-height:1;
+  color:var(--accent-3);
+}
+
+.lappy-panel-stat small{
+  font-family:"obliqua",sans-serif;
+  font-size:.75rem;
+  font-weight:400;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--line);
+  opacity:.65;
+}
+
+.lappy-panel--cta{
+  justify-content:center;
+  text-align:center;
+}
+
+.lappy-panel--cta .lappy-panel-body{
+  align-items:center;
+  max-width:none;
+
+  padding:0;
+  background:none;
+  border:none;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+/* the plain html[data-zone] glass rule above outranks the pair-of-classes selector on
+   specificity alone (that leading html tips it), so it re-fills the "no box" cta body
+   unless it's beaten at its own level here */
+html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-color:transparent;}
+
+.lappy-panel--cta .lappy-panel-title{font-size:clamp(2.6rem,6.5vw,5.6rem);}
+
+@media (max-width:650px){
+  .lappy-showcase{height:auto;}
+
+  .lappy-showcase-sticky{
+    position:static;
+    height:auto;
+    display:block;
+  }
+
+  .lappy-showcase-track{
+    flex-direction:column;
+    height:auto;
+  }
+
+  .lappy-panel{
+    flex-direction:column;
+    flex:none;
+    width:100%;
+    height:auto;
+    gap:28px;
+    padding:70px 24px;
+  }
+
+  .lappy-panel-media{width:min(70vw,320px);}
+  .lappy-panel-index{font-size:5rem; top:4%;}
+
+  .lappy-panel-body{
+    max-width:none;
+    width:100%;
+    padding:28px 24px;
+  }
+
+  .lappy-panel--cta .lappy-panel-body{padding:0;}
 }

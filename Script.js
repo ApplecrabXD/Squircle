@@ -375,6 +375,78 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
   });
 }
 
+// lappy feature showcase — horizontal scroll-jacked panels, text flies in from all directions as each panel pans into view
+const lappyShowcaseWrap=document.getElementById("lappyShowcase");
+const lappyShowcaseSticky=document.getElementById("lappyShowcaseSticky");
+const lappyShowcaseTrack=document.getElementById("lappyShowcaseTrack");
+const lappyPanels=lappyShowcaseTrack ? Array.from(lappyShowcaseTrack.children) : [];
+
+if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && lappyPanels.length){
+
+  // per data-fx value, where each bit of text starts before it settles into place
+  const fxFrom={
+    up:{y:70,rotate:-3},
+    down:{y:-70,rotate:3},
+    left:{x:-140,rotate:-4},
+    right:{x:140,rotate:4},
+    scale:{scale:.6,rotate:6}
+  };
+
+  ScrollTrigger.matchMedia({
+
+    "(min-width:651px)":()=>{
+      // the horizontal pan itself, pinned for the length of the wrap
+      const panTween=gsap.to(lappyShowcaseTrack,{
+        x:()=>-(lappyShowcaseTrack.scrollWidth-lappyShowcaseSticky.clientWidth),
+        ease:"none",
+        scrollTrigger:{
+          trigger:lappyShowcaseWrap,
+          start:"top top",
+          end:"bottom bottom",
+          scrub:1,
+          pin:lappyShowcaseSticky,
+          invalidateOnRefresh:true,
+        }
+      });
+
+      // each panel's text pieces get their own scrubbed reveal, mapped onto the
+      // horizontal pan via containerAnimation instead of the page's vertical scroll
+      const fxTweens=[];
+
+      lappyPanels.forEach(panel=>{
+        panel.querySelectorAll("[data-fx]").forEach(el=>{
+          fxTweens.push(gsap.from(el,{
+            ...fxFrom[el.dataset.fx],
+            opacity:0,
+            duration:1,
+            scrollTrigger:{
+              trigger:panel,
+              containerAnimation:panTween,
+              start:"left 78%",
+              end:"left 30%",
+              scrub:true,
+            }
+          }));
+        });
+      });
+
+      return ()=>{
+        panTween.scrollTrigger && panTween.scrollTrigger.kill();
+        panTween.kill();
+        fxTweens.forEach(t=>{t.scrollTrigger && t.scrollTrigger.kill(); t.kill();});
+        gsap.set(lappyShowcaseTrack,{clearProps:"all"});
+        gsap.set(lappyShowcaseTrack.querySelectorAll("[data-fx]"),{clearProps:"all"});
+      };
+    },
+
+    "(max-width:650px)":()=>{
+      gsap.set(lappyShowcaseTrack,{clearProps:"all"});
+      gsap.set(lappyShowcaseTrack.querySelectorAll("[data-fx]"),{clearProps:"all"});
+    }
+
+  });
+}
+
 // about/more info section reveal (scribble accent draws in once, first time it scrolls into view)
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){

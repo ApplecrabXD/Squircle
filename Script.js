@@ -375,7 +375,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
   });
 }
 
-// lappy feature showcase — horizontal scroll-jacked panels, text flies in from all directions as each panel pans into view
+// lappy feature showcase: horizontal scroll-jacked panels, text flies in from all directions as each panel pans into view
 const lappyShowcaseWrap=document.getElementById("lappyShowcase");
 const lappyShowcaseSticky=document.getElementById("lappyShowcaseSticky");
 const lappyShowcaseTrack=document.getElementById("lappyShowcaseTrack");

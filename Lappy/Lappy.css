@@ -1,4 +1,4 @@
-/* Lappy 13 Pro product page — styles specific to Lappy.html only */
+/* Lappy 13 Pro product page: styles specific to Lappy/index.html only */
 
 .lappy-hero{
   position:relative;
@@ -80,7 +80,7 @@
   }
 }
 
-/* lappy feature showcase — horizontal scroll-jacked panels, gsap.com-style text reveals */
+/* lappy feature showcase: horizontal scroll-jacked panels, gsap.com-style text reveals */
 .lappy-showcase{
   position:relative;
   z-index:1;
@@ -157,7 +157,7 @@
   user-select:none;
 }
 
-/* text sits on its own frosted card instead of directly on the canvas art behind it —
+/* text sits on its own frosted card instead of directly on the canvas art behind it.
    same glass recipe as .nav-orb / .site-footer, since plain text was blending into the
    line-art squiggles (both painted in --line) */
 .lappy-panel-body{

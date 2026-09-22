@@ -1,0 +1,75 @@
+/* Lappy 13 Pro product page — styles specific to Lappy.html only */
+
+.lappy-hero{
+  position:relative;
+  z-index:1;
+
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:40px;
+
+  padding:160px 8% 80px;
+}
+
+.lappy-hero-copy{
+  max-width:none;
+  text-align:center;
+}
+
+.lappy-hero-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2.4rem,5.5vw,6.2rem);
+  line-height:1.05;
+  color:var(--line);
+  white-space:nowrap;
+}
+
+.lappy-hero-title span{color:var(--accent);}
+
+.lappy-hero-laptop{
+  flex:0 0 auto;
+  width:min(46vw,560px);
+}
+
+.lappy-hero-laptop img{
+  display:block;
+  max-width:100%;
+  max-height:70vh;
+  width:auto;
+  height:auto;
+  margin:0 auto;
+
+  user-select:none;
+  pointer-events:none;
+
+  animation:lappy-float 4.5s ease-in-out infinite;
+}
+
+@keyframes lappy-float{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-14px);}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .lappy-hero-laptop img{animation:none;}
+}
+
+@media (max-width:650px){
+  .lappy-hero{
+    flex-direction:column-reverse;
+    text-align:center;
+    padding:120px 24px 60px;
+    gap:40px;
+  }
+
+  .lappy-hero-copy{align-self:center; margin-top:0; max-width:none;}
+  .lappy-hero-laptop{width:min(80vw,380px);}
+
+  .lappy-hero-title{
+    white-space:normal;
+    font-size:clamp(2rem,9vw,3rem);
+  }
+}

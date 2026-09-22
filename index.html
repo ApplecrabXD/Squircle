@@ -6,7 +6,7 @@
 <title>Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
-<link rel="stylesheet" href="Home/Style.css">
+<link rel="stylesheet" href="Style.css">
 </head>
 
 <!-- 
@@ -47,31 +47,14 @@
 <div id="splash">
   <div class="splash-center">
     <div class="building-blocks">
-      <img
-        class="block-orange"
-        src="Assets/Logos/Bulding%20Blocks/Orange.svg"
-        alt="Ornage block"
-      >
-      <img
-        class="block-gray"
-        src="Assets/Logos/Bulding%20Blocks/Gray.svg"
-        alt="Gray Block"
-      >
-      <img
-        class="block-purple"
-        src="Assets/Logos/Bulding%20Blocks/Purple.svg"
-        alt="Purple Block"
-      >
-      <img
-        class="block-white"
-        src="Assets/Logos/Bulding%20Blocks/White.svg"
-        alt="White Block"
-      >
+      <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
+      <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
+      <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
+      <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
     </div>
     <div class="loading-container">
-      <div class="loading-bar"></div>
+      <div class="loading-bar"></div> <!--again why did i do it like this-->
     </div>
-
   </div>
 </div>
 
@@ -85,25 +68,28 @@
       <img src="Assets/Logos/Logo.svg" alt="Squircle">
 
       <div class="nav-building-blocks">
-        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
       </div>
     </a>
   </div>
 
   <div class="nav-orb">
     <div class="nav-links">
-      <div class="nav-indicator"></div>
+      <div class="nav-indicator"></div> <!--why dose this work why did i do it like this-->
       <a href="index.html">Home</a>
       <a href="shop.html">Shop</a>
       <a href="support.html">Support</a>
+      <a href="about.html">About Us</a>
     </div>
   </div>
 
   <div class="nav-orb">
-    <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
+    <button class="nav-menu" aria-label="Open menu">
+      <span>☰</span>
+    </button>
   </div>
 
 </nav>
@@ -112,7 +98,13 @@
   <div class="hero-sticky">
 
     <div class="hero-copy" id="heroCopy">
-      <h1 class="hero-title">Welcome to<br><span class="hero-title-atom"><span class="hero-title-atom-text">Squircle</span><canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas></span></h1>
+      <h1 class="hero-title">Welcome to <br>
+        <span class="hero-title-atom">
+          <span class="hero-title-atom-text">Squircle</span>
+          <canvas class="hero-title-atom-canvas" aria-hidden="true">
+          </canvas>
+        </span>
+      </h1>
       <div class="hero-buttons">
         <a href="shop.html" class="btn btn-fill">Shop Now</a>
         <a href="knowlage.html" class="btn btn-outline">Knowlage Base</a>
@@ -148,13 +140,15 @@
 
         <article class="product-card">
           <div class="product-media">
-            <img src="Assets/Home Page/Logo in laptop.png" alt="Lappy 13 Pro" href="Product Pages/Lappy 13 Pro/Lappy.html">
+            <a href="Lappy/">
+              <img href="Lappy/" src="Assets/Home Page/Logo in laptop.png" alt="Lappy 13 Pro">
+            </a>
           </div>
           <h3 class="product-name">Lappy 13 Pro</h3>
-          <a href="Product Pages/Lappy 13 Pro/Lappy.html" class="btn btn-fill product-buy">Buy Now</a>
+          <a href="Lappy/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
-        <article class="product-card product-card--alt">
+        <article class="product-card product-card--alt"> <!-- why am i useing mutltable clases for the same elements-->
           <div class="product-media">
             <img src="Assets/Temp/9x16.jpg" alt="Placeholder product 2">
           </div>
@@ -250,10 +244,10 @@
 
     <div class="footer-brand">
       <div class="footer-blocks">
-        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
       </div>
       <p class="footer-tagline">Placeholder tagline about Squircle goes here &mdash; swap this for the real copy once it's ready.</p>
     </div>
@@ -291,7 +285,7 @@
 
 </footer>
 
-<!-- easter egg: type "deltarune" or "undertale" to start a battle (see the ASCII hint up top) -->
+<!-- easter egg: type "deltarune" or "undertale" to start a battle -->
 <div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
   <div class="db-scene">
     <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">
@@ -322,9 +316,20 @@
 </div>
 <audio id="deltaruneAudio" preload="none"></audio>
 
+<!-- easter egg: click the hero laptop to play Flappy Squircle -->
+<div class="flappy-game" id="flappyGame" hidden aria-hidden="true">
+  <div class="flappy-hud">
+    <span class="flappy-score" id="flappyScore">0</span>
+    <span class="flappy-best" id="flappyBest">Best: 0</span>
+  </div>
+  <canvas class="flappy-canvas" id="flappyCanvas" width="360" height="540"></canvas>
+  <p class="flappy-msg" id="flappyMsg">Click or press Space to flap</p>
+  <button class="db-close flappy-close" id="flappyClose" type="button">Close (Esc)</button>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
-<script src="Home/Script.js"></script>
+<script src="Script.js"></script>
 
 </body>
 </html>

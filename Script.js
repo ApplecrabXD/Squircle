@@ -6,10 +6,18 @@ const splashBlocks=document.querySelector(".building-blocks");
 const navLogo=document.querySelector(".nav-logo");
 const navBlocks=document.querySelector(".nav-building-blocks");
 
-
 // splash screen
 
-if(splash && loadingBar){
+// once the intro has played once anywhere on the site this tab session, skip it afterwords
+const introKey="squircleIntroSeen";
+
+if(splash && loadingBar && sessionStorage.getItem(introKey)==="1"){
+  splash.style.display="none";
+  splash.classList.add("loaded");
+  
+}else if(splash && loadingBar){
+  sessionStorage.setItem(introKey,"1");
+
   const minimumTime=2500;
   const startTime=performance.now();
 
@@ -57,7 +65,7 @@ function moveAnimationToNavbar(){
   if(orange) orange.style.animation="none";
   if(purple) purple.style.animation="none";
 
-  // fly to the nav icon's exact position
+  // move to the nav icon position
   splashBlocks.style.transform=`translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
 
   setTimeout(()=>{ splash.style.background="transparent"; },350);
@@ -68,11 +76,8 @@ function moveAnimationToNavbar(){
   },1050);
 
   // hard cleanup
-  setTimeout(()=>{
-    splash.style.display="none";
-  },1600);
+  setTimeout(()=>{splash.style.display="none";},1600);
 }
-
 
   // end splash screen
   function finishSplash(){
@@ -109,18 +114,14 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
     });
   });
 
-  navLinksContainer.addEventListener("mouseleave", () => {
-    navIndicator.style.opacity = "0";
-  });
+  navLinksContainer.addEventListener("mouseleave", () => {navIndicator.style.opacity = "0";});
 }
 
-// gsap setup
-if(window.gsap && window.ScrollTrigger){
-  gsap.registerPlugin(ScrollTrigger);
-}
+// gsap setup (holy cow gasp is so cool why havent i used it before)
+if(window.gsap && window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);}
 const hasGsap=!!(window.gsap && window.ScrollTrigger);
 
-// hero scroll animation (GSAP ScrollTrigger, pinned + scrubbed)
+// hero scroll animation GSAP ScrollTrigger pinned
 const heroWrap=document.getElementById("heroWrap");
 const heroCopy=document.getElementById("heroCopy");
 const heroLaptop=document.getElementById("heroLaptop");
@@ -131,8 +132,7 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
 
   ScrollTrigger.matchMedia({
 
-    // desktop: laptop flies in, holds centered through the marquee, then the
-    // section simply un-pins and normal scrolling carries you into the next section
+    // desktop laptop flies in, holds centered through the marquee, then the section unpints and noraml scrolling reterns
     "(min-width:651px)":()=>{
       gsap.set(heroLaptop,{xPercent:-50,yPercent:-50});
       gsap.set(heroBehind,{xPercent:-50,yPercent:-50});
@@ -148,21 +148,17 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
         }
       });
 
-      // phase 1 (first half): laptop slides in diagonally from the upper right
+      // phase 1 - laptop slides in diagonally from the upper right
       tl.fromTo(heroLaptop,{x:"29vw"},{x:"-3vw",ease:"none",duration:1},0);
       tl.fromTo(heroCopy,{opacity:1},{opacity:0,ease:"none",duration:1},0);
       tl.set(heroCopy,{pointerEvents:"none"},0.6);
 
-      // phase 2 (second half): laptop holds still, placeholder text is already in place the
-      // moment phase 2 starts (no fade-in wait) and scrolls up behind it, fading out over the
-      // last 15% as it passes through center. travel is kept small so the marquee stays close
-      // behind the laptop the whole time instead of sweeping off past its silhouette
+      // phase 2 - laptop holds still and scrolls up behind it fading out last 15% as passes through center
 tl.set(heroBehind,{y:"12.6vh",opacity:1},1);
 tl.to(heroBehind,{y:"-12.6vh",ease:"none",duration:0.85},1);
 tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
-      // laptop fades out alongside the marquee's own exit fade, in that same final 15%,
-      // so the handoff into the next section is a fade rather than an abrupt cut
+      // laptop fades out alongside the marquee's in final 15% so the handoff into the next section is a fade
       tl.to(heroLaptop,{opacity:0,ease:"none",duration:0.15},1.85);
 
       return ()=>{
@@ -178,22 +174,19 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
   });
 
-  // weighted bounce: a damped spring gets "kicked" by scroll motion, so it swings
-  // and settles like something with real mass, plus a slow constant idle sway.
-  // applied to the laptop image itself so it layers on top of GSAP's positioning
-  // of the outer #heroLaptop wrapper without the two fighting over one transform.
+  // weighted bounce so it settles like something with weight + idle animation only on laptop ontop of gsap 
   let lastScrollY=scrollY;
   let lastFrameTime=performance.now();
   let springY=0;
   let springVelocity=0;
   let idlePhase=0;
 
-  const stiffness=20;   // lower = slower, heavier swing
+  const stiffness=20;   // lower = slower - heavier swing
   const damping=6;    // lower = more/longer bounces before settling
   const scrollKick=1; // how hard a scroll nudges the spring
 
   function tickHeroBounce(now){
-    const dt=Math.min((now-lastFrameTime)/1000,.05); // seconds, capped to avoid jolts after tab-away
+    const dt=Math.min((now-lastFrameTime)/1000,.05); // seconds, capped to avoid jolts after tab out (idk why but it works)
     lastFrameTime=now;
 
     const currentY=scrollY;
@@ -220,9 +213,7 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
   requestAnimationFrame(tickHeroBounce);
 }
 
-// "Squircle" hover atom effect: the word is sampled into a field of small particles that
-// scatter (with a slight swirl, so it reads as atoms rather than plain noise) away from
-// the cursor and spring back into the letterforms once it moves off
+// Squircle atom effect the word is sampled into a field of small particles that scatter away from the cursor
 const atomWrap=document.querySelector(".hero-title-atom");
 const atomText=document.querySelector(".hero-title-atom-text");
 const atomCanvas=document.querySelector(".hero-title-atom-canvas");
@@ -247,8 +238,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     atomCanvas.style.width=w+"px";
     atomCanvas.style.height=h+"px";
 
-    // sample the real heading text (same font/color) onto an offscreen canvas so the
-    // particle field matches the live letterforms and picks up the live accent color
+    // sample the real heading text onto an offscreen canvas so the particle matches the leters 
     const sample=document.createElement("canvas");
     sample.width=w*atomDpr;
     sample.height=h*atomDpr;
@@ -346,16 +336,14 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
   requestAnimationFrame(tickAtoms);
 }
 
-// product scroll-jacked carousel (GSAP ScrollTrigger, pinned + scrubbed)
+// product scroll-jacked carousel gasp scrolltrigger
 const productWrap=document.getElementById("productWrap");
 const productSticky=document.getElementById("productSticky");
 const productViewport=document.getElementById("productViewport");
 const productTrack=document.getElementById("productTrack");
 
 if(hasGsap && productWrap && productSticky && productViewport && productTrack){
-
   ScrollTrigger.matchMedia({
-
     "(min-width:651px)":()=>{
       const tl=gsap.timeline({
         scrollTrigger:{
@@ -368,8 +356,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
         }
       });
 
-      // row is already in place and fully visible the moment the pin engages; the whole
-      // pinned scroll range pans it sideways through all 6 cards
+      // row is already in place and fully visible the moment the pin engages
       tl.to(productTrack,{
         x:()=>-(Math.max(0,productTrack.scrollWidth-productViewport.clientWidth)),
         ease:"none",
@@ -383,14 +370,84 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
       };
     },
 
+    "(max-width:650px)":()=>{gsap.set(productTrack,{clearProps:"all"});}
+
+  });
+}
+
+// lappy feature showcase: horizontal scroll-jacked panels, text flies in from all directions as each panel pans into view
+const lappyShowcaseWrap=document.getElementById("lappyShowcase");
+const lappyShowcaseSticky=document.getElementById("lappyShowcaseSticky");
+const lappyShowcaseTrack=document.getElementById("lappyShowcaseTrack");
+const lappyPanels=lappyShowcaseTrack ? Array.from(lappyShowcaseTrack.children) : [];
+
+if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && lappyPanels.length){
+
+  // per data-fx value, where each bit of text starts before it settles into place
+  const fxFrom={
+    up:{y:70,rotate:-3},
+    down:{y:-70,rotate:3},
+    left:{x:-140,rotate:-4},
+    right:{x:140,rotate:4},
+    scale:{scale:.6,rotate:6}
+  };
+
+  ScrollTrigger.matchMedia({
+
+    "(min-width:651px)":()=>{
+      // the horizontal pan itself, pinned for the length of the wrap
+      const panTween=gsap.to(lappyShowcaseTrack,{
+        x:()=>-(lappyShowcaseTrack.scrollWidth-lappyShowcaseSticky.clientWidth),
+        ease:"none",
+        scrollTrigger:{
+          trigger:lappyShowcaseWrap,
+          start:"top top",
+          end:"bottom bottom",
+          scrub:1,
+          pin:lappyShowcaseSticky,
+          invalidateOnRefresh:true,
+        }
+      });
+
+      // each panel's text pieces get their own scrubbed reveal, mapped onto the
+      // horizontal pan via containerAnimation instead of the page's vertical scroll
+      const fxTweens=[];
+
+      lappyPanels.forEach(panel=>{
+        panel.querySelectorAll("[data-fx]").forEach(el=>{
+          fxTweens.push(gsap.from(el,{
+            ...fxFrom[el.dataset.fx],
+            opacity:0,
+            duration:1,
+            scrollTrigger:{
+              trigger:panel,
+              containerAnimation:panTween,
+              start:"left 78%",
+              end:"left 30%",
+              scrub:true,
+            }
+          }));
+        });
+      });
+
+      return ()=>{
+        panTween.scrollTrigger && panTween.scrollTrigger.kill();
+        panTween.kill();
+        fxTweens.forEach(t=>{t.scrollTrigger && t.scrollTrigger.kill(); t.kill();});
+        gsap.set(lappyShowcaseTrack,{clearProps:"all"});
+        gsap.set(lappyShowcaseTrack.querySelectorAll("[data-fx]"),{clearProps:"all"});
+      };
+    },
+
     "(max-width:650px)":()=>{
-      gsap.set(productTrack,{clearProps:"all"});
+      gsap.set(lappyShowcaseTrack,{clearProps:"all"});
+      gsap.set(lappyShowcaseTrack.querySelectorAll("[data-fx]"),{clearProps:"all"});
     }
 
   });
 }
 
-// about section reveal (scribble accent draws in once, first time it scrolls into view)
+// about/more info section reveal (scribble accent draws in once, first time it scrolls into view)
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){
   const aboutObserver=new IntersectionObserver((entries)=>{
@@ -695,7 +752,7 @@ function animate(time){
 
 requestAnimationFrame(animate);
 
-// easter egg: typing "deltarune" or "undertale" anywhere on the page starts a battle
+// easter egg typing "deltarune" or "undertale" 
 const dbOverlay=document.getElementById("deltaruneBattle");
 const dbText=document.getElementById("deltaruneText");
 const dbAudio=document.getElementById("deltaruneAudio");
@@ -830,7 +887,9 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
     dbHpCurrent=Math.max(0,dbHpCurrent-2);
     dbUpdateHp();
     dbHeart.classList.add("db-hit");
+    dbOverlay.classList.add("db-screen-shake");
     setTimeout(()=>{dbHeart.classList.remove("db-hit");dbInvuln=false;},700);
+    setTimeout(()=>{dbOverlay.classList.remove("db-screen-shake");},400);
   }
 
   function dbSpawnBullet(){
@@ -1011,5 +1070,203 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
 
   dbClose.addEventListener("click",dbCloseBattle);
   dbOverlay.addEventListener("click",e=>{if(e.target===dbOverlay)dbCloseBattle();});
+}
+
+// easter egg: click the hero laptop to play Flappy Squircle
+const flappyTrigger=document.getElementById("heroLaptop");
+const flappyGame=document.getElementById("flappyGame");
+const flappyCanvas=document.getElementById("flappyCanvas");
+const flappyScoreEl=document.getElementById("flappyScore");
+const flappyBestEl=document.getElementById("flappyBest");
+const flappyMsg=document.getElementById("flappyMsg");
+const flappyClose=document.getElementById("flappyClose");
+
+if(flappyTrigger && flappyGame && flappyCanvas && flappyScoreEl && flappyBestEl && flappyMsg && flappyClose){
+  const flCtx=flappyCanvas.getContext("2d");
+  const FL_W=flappyCanvas.width;
+  const FL_H=flappyCanvas.height;
+  const FL_BIRD=42;
+  const FL_GRAVITY=1500;
+  const FL_FLAP_VEL=-380;
+  const FL_PIPE_W=64;
+  const FL_PIPE_GAP=150;
+  const FL_PIPE_SPEED=170;
+  const FL_PIPE_INTERVAL=1300;
+
+  const flBirdImg=new Image();
+  flBirdImg.src="Assets/Logos/Logo.png";
+  const flBgImg=new Image();
+  flBgImg.src="Assets/Easter%20Eggs/Flappy%20Bird/BG.png";
+  const flPipeImg=new Image();
+  flPipeImg.src="Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
+
+  let flState="idle"; // idle | playing | over
+  let flBirdY,flBirdVel,flBirdRot,flPipes,flScore,flBest=0,flLast,flPipeTimer,flRaf;
+
+  function flReset(){
+    flBirdY=FL_H/2;
+    flBirdVel=0;
+    flBirdRot=0;
+    flPipes=[];
+    flScore=0;
+    flPipeTimer=0;
+    flappyScoreEl.textContent="0";
+  }
+
+  function flSpawnPipe(){
+    const margin=60;
+    const gapY=margin+Math.random()*(FL_H-margin*2-FL_PIPE_GAP);
+    flPipes.push({x:FL_W,gapY,passed:false});
+  }
+
+  function flDraw(){
+    flCtx.clearRect(0,0,FL_W,FL_H);
+
+    if(flBgImg.complete && flBgImg.naturalWidth){
+      const scale=Math.max(FL_W/flBgImg.naturalWidth,FL_H/flBgImg.naturalHeight);
+      const w=flBgImg.naturalWidth*scale,h=flBgImg.naturalHeight*scale;
+      flCtx.drawImage(flBgImg,(FL_W-w)/2,(FL_H-h)/2,w,h);
+    }else{
+      const sky=flCtx.createLinearGradient(0,0,0,FL_H);
+      sky.addColorStop(0,"#7fd4ff");
+      sky.addColorStop(1,"#d8f4ff");
+      flCtx.fillStyle=sky;
+      flCtx.fillRect(0,0,FL_W,FL_H);
+    }
+
+    for(const p of flPipes){
+      const bottomH=FL_H-(p.gapY+FL_PIPE_GAP);
+      if(flPipeImg.complete && flPipeImg.naturalWidth){
+        flCtx.save();
+        flCtx.translate(p.x,p.gapY);
+        flCtx.scale(1,-1);
+        flCtx.drawImage(flPipeImg,0,0,FL_PIPE_W,p.gapY);
+        flCtx.restore();
+        flCtx.drawImage(flPipeImg,p.x,p.gapY+FL_PIPE_GAP,FL_PIPE_W,bottomH);
+      }else{
+        flCtx.fillStyle="#3cb043";
+        flCtx.strokeStyle="#1f6b26";
+        flCtx.lineWidth=3;
+        flCtx.fillRect(p.x,0,FL_PIPE_W,p.gapY);
+        flCtx.strokeRect(p.x,0,FL_PIPE_W,p.gapY);
+        flCtx.fillRect(p.x,p.gapY+FL_PIPE_GAP,FL_PIPE_W,bottomH);
+        flCtx.strokeRect(p.x,p.gapY+FL_PIPE_GAP,FL_PIPE_W,bottomH);
+      }
+    }
+
+    flCtx.save();
+    flCtx.translate(FL_W/2,flBirdY);
+    flCtx.rotate(flBirdRot);
+    if(flBirdImg.complete && flBirdImg.naturalWidth){
+      const ratio=flBirdImg.naturalWidth/flBirdImg.naturalHeight;
+      const w=ratio>=1?FL_BIRD:FL_BIRD*ratio;
+      const h=ratio>=1?FL_BIRD/ratio:FL_BIRD;
+      flCtx.drawImage(flBirdImg,-w/2,-h/2,w,h);
+    }else{
+      flCtx.fillStyle="#ffd23f";
+      flCtx.fillRect(-FL_BIRD/2,-FL_BIRD/2,FL_BIRD,FL_BIRD);
+    }
+    flCtx.restore();
+  }
+
+  function flGameOver(){
+    flState="over";
+    cancelAnimationFrame(flRaf);
+    flBest=Math.max(flBest,flScore);
+    flappyBestEl.textContent="Best: "+flBest;
+    flappyMsg.textContent="Game Over — Score "+flScore+" — click to retry";
+    flappyMsg.hidden=false;
+  }
+
+  function flLoop(now){
+    const dt=Math.max(0,Math.min(.032,(now-flLast)/1000));
+    flLast=now;
+
+    flBirdVel+=FL_GRAVITY*dt;
+    flBirdY+=flBirdVel*dt;
+    flBirdRot=Math.max(-.5,Math.min(1.2,flBirdVel/500));
+
+    flPipeTimer+=dt*1000;
+    if(flPipeTimer>FL_PIPE_INTERVAL){
+      flPipeTimer=0;
+      flSpawnPipe();
+    }
+
+    const birdLeft=FL_W/2-FL_BIRD/2;
+    const birdRight=FL_W/2+FL_BIRD/2;
+
+    for(const p of flPipes){
+      p.x-=FL_PIPE_SPEED*dt;
+      if(!p.passed && p.x+FL_PIPE_W<birdLeft){
+        p.passed=true;
+        flScore++;
+        flappyScoreEl.textContent=String(flScore);
+      }
+    }
+    flPipes=flPipes.filter(p=>p.x+FL_PIPE_W>-10);
+
+    const bTop=flBirdY-FL_BIRD/2;
+    const bBottom=flBirdY+FL_BIRD/2;
+
+    let dead=bTop<0 || bBottom>FL_H;
+    if(!dead){
+      for(const p of flPipes){
+        if(birdRight>p.x && birdLeft<p.x+FL_PIPE_W){
+          if(bTop<p.gapY || bBottom>p.gapY+FL_PIPE_GAP){dead=true;break;}
+        }
+      }
+    }
+
+    flDraw();
+
+    if(dead){
+      flGameOver();
+      return;
+    }
+
+    flRaf=requestAnimationFrame(flLoop);
+  }
+
+  function flStart(){
+    flState="playing";
+    flappyMsg.hidden=true;
+    flLast=performance.now();
+    flRaf=requestAnimationFrame(flLoop);
+  }
+
+  function flFlap(){
+    if(flState==="idle"){flStart();flBirdVel=FL_FLAP_VEL;}
+    else if(flState==="playing")flBirdVel=FL_FLAP_VEL;
+    else if(flState==="over"){flReset();flStart();flBirdVel=FL_FLAP_VEL;}
+  }
+
+  function flOpen(){
+    flReset();
+    flState="idle";
+    flappyMsg.textContent="Click or press Space to flap";
+    flappyMsg.hidden=false;
+    flappyBestEl.textContent="Best: "+flBest;
+    flappyGame.hidden=false;
+    flappyGame.setAttribute("aria-hidden","false");
+    flDraw();
+  }
+
+  function flClose(){
+    flappyGame.hidden=true;
+    flappyGame.setAttribute("aria-hidden","true");
+    cancelAnimationFrame(flRaf);
+    flState="idle";
+  }
+
+  flappyTrigger.addEventListener("click",flOpen);
+  flappyCanvas.addEventListener("click",flFlap);
+  flappyClose.addEventListener("click",flClose);
+  flappyGame.addEventListener("click",e=>{if(e.target===flappyGame)flClose();});
+
+  addEventListener("keydown",e=>{
+    if(flappyGame.hidden)return;
+    if(e.key==="Escape"){flClose();return;}
+    if(e.code==="Space"){e.preventDefault();flFlap();}
+  });
 }
 })();

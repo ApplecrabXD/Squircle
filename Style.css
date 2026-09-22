@@ -1,5 +1,5 @@
 :root{
-  /* brand palette, in order of importance */
+  /* brand palette in order of importance */
   --accent:#cc330f;
   --line:#090e11;
   --whiteline:#ededed;
@@ -21,8 +21,7 @@
 }
 
 /* scroll-driven background zones: hero+product = orange, about = purple, footer = black.
-   html[data-zone] is set by Script.js as the user scrolls; it overrides the light/dark
-   mode colors above regardless of system theme, since these are fixed brand colors. */
+/* html[data-zone] is set by Script.js as the user scrolls mode colors above, these are fixed brand colors */
 html[data-zone="orange"]{--zone-bg:var(--accent);}
 html[data-zone="purple"]{--zone-bg:var(--accent-2);}
 html[data-zone="black"]{--zone-bg:var(--zone-dark);}
@@ -30,11 +29,29 @@ html[data-zone="black"]{--zone-bg:var(--zone-dark);}
 html[data-zone]{--line:var(--whiteline);}
 
 @font-face{
+  font-family:"Deltarune";
+  src:url("../Assets/Easter Eggs/Deltarune Undertale/deltarune.ttf") format("truetype");
+  font-weight:normal;
+  font-display:swap;
+}
+
+@font-face{
   font-family:"SuperMalibu";
   src:url("../Assets/Typeface/SuperMalibu.ttf") format("truetype");
   font-weight:normal;
   font-display:swap;
 }
+
+/* dont know why this works but gmeni said it do soo.... */
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
 
 *{
   margin:0;
@@ -72,11 +89,9 @@ html,body{
   animation:grainShift .8s steps(8) infinite;
 }
 
-@media (prefers-color-scheme:dark){
-  .grain{opacity:.1;}
-}
+@media (prefers-color-scheme:dark){.grain{opacity:.1;}}
 
-/* offsets are irregular and non-repeating-looking on purpose, so the tiling never settles into a visible loop */
+/* offsets are irregular, no visible loop */
 @keyframes grainShift{
   0%{background-position:0 0;}
   12%{background-position:-140px 60px;}
@@ -100,9 +115,7 @@ html,body{
 
   background:var(--background);
 
-  transition:
-    opacity .7s ease,
-    visibility .7s;
+  transition:opacity .7s ease,visibility .7s;
 }
 
 #splash.loaded{
@@ -124,14 +137,11 @@ html,body{
   width:min(280px,55vw);
   aspect-ratio:1;
 
-  transition:
-    transform 1.2s cubic-bezier(.22,1,.36,1),
-    opacity .5s ease;
+  transition:transform 1.2s cubic-bezier(.22,1,.36,1),opacity .5s ease;
 }
 
 .building-blocks img{
   position:absolute;
-
   width:100%;
   height:100%;
 
@@ -199,7 +209,6 @@ html,body{
 /* navbar */
 .navbar{
   position:fixed;
-
   top:28px;
   left:28px;
   right:28px;
@@ -236,9 +245,7 @@ html,body{
 
   backdrop-filter:blur(25px) saturate(160%);
   -webkit-backdrop-filter:blur(25px) saturate(160%);
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.06),
-    inset 0 1px 1px rgba(255,255,255,.6);
+  box-shadow:0 10px 30px rgba(0,0,0,.06),inset 0 1px 1px rgba(255,255,255,.6);
   color:var(--line);
 
   overflow:hidden;
@@ -285,20 +292,17 @@ html,body{
 
   display:block;
 
-  transition:
-    opacity .3s ease,
-    transform .5s cubic-bezier(.22,1,.36,1);
+  transition:opacity .3s ease,transform .5s cubic-bezier(.22,1,.36,1);
 }
 
-/* HIDE NAV LOGO IMAGE UNTIL SPLASH LANDING FINISHES */
+/* hides nav logo till animation is done */
 #splash:not(.loaded) ~ .navbar .nav-logo > img{
   opacity:0;
 }
 
-/* PERFECTLY CENTERED LOGO ANIMATION BUILD-BLOCKS */
+/* center logo with animation in nav*/
 .nav-building-blocks{
   position:absolute;
-
   top:50%;
   left:50%;
   width:38px;
@@ -310,9 +314,7 @@ html,body{
 
   transform:translate(-50%, -50%) scale(.8);
 
-  transition:
-    opacity .25s ease,
-    transform .4s cubic-bezier(.22,1,.36,1);
+  transition:opacity .25s ease,transform .4s cubic-bezier(.22,1,.36,1);
 }
 
 .nav-building-blocks img{
@@ -358,7 +360,7 @@ html,body{
   overflow:hidden;
 }
 
-/* sliding hover indicator pill */
+/* sliding hover */
 .nav-indicator{
   position:absolute;
   top:6px;
@@ -388,7 +390,6 @@ html,body{
   color:var(--line);
 
   text-decoration:none;
-
   font-family:"obliqua",sans-serif;
   font-weight:700;
   font-size:15px;
@@ -451,16 +452,13 @@ html,body{
   }
 }
 
-/* scroll zones: same light-tinted glass treatment as dark mode, since orange/purple/black
-   are all dark or saturated enough to need it regardless of system theme */
+/* scroll zones orange/purple/black need to workout a light them */
 html[data-zone] .nav-logo,
 html[data-zone] .nav-links,
 html[data-zone] .nav-menu{
   background:rgba(255,255,255,.05);
   border-color:rgba(255,255,255,.14);
-  box-shadow:
-    0 8px 30px rgba(0,0,0,.2),
-    inset 0 1px 1px rgba(255,255,255,.15);
+  box-shadow:0 8px 30px rgba(0,0,0,.2), inset 0 1px 1px rgba(255,255,255,.15);
 }
 
 html[data-zone] .nav-orb:hover .nav-logo,
@@ -502,10 +500,7 @@ html[data-zone] .nav-indicator{
 
 .hero-copy,
 .hero-behind,
-.btn{
-  font-family:"SuperMalibu","obliqua",sans-serif;
-}
-
+.btn{font-family:"SuperMalibu","obliqua",sans-serif;}
 .hero-title{
   font-weight:400;
   font-size:clamp(3rem,7.5vw,6.2rem);
@@ -513,23 +508,10 @@ html[data-zone] .nav-indicator{
   color:var(--line);
 }
 
-.hero-title span{
-  color:var(--accent);
-}
-
-.hero-title-atom{
-  position:relative;
-  display:inline-block;
-}
-
-.hero-title-atom-text{
-  transition:opacity .3s ease;
-}
-
-.hero-title-atom.atom-ready .hero-title-atom-text{
-  opacity:0;
-}
-
+.hero-title span{color:var(--accent);}
+.hero-title-atom{position:relative; display:inline-block;}
+.hero-title-atom-text{transition:opacity .3s ease;}
+.hero-title-atom.atom-ready .hero-title-atom-text{opacity:0;}
 .hero-title-atom-canvas{
   position:absolute;
   inset:0;
@@ -543,9 +525,7 @@ html[data-zone] .nav-indicator{
   transition:opacity .3s ease;
 }
 
-.hero-title-atom.atom-ready .hero-title-atom-canvas{
-  opacity:1;
-}
+.hero-title-atom.atom-ready .hero-title-atom-canvas{ opacity:1;}
 
 .hero-buttons{
   display:flex;
@@ -554,7 +534,7 @@ html[data-zone] .nav-indicator{
   margin-top:36px;
 }
 
-/* arrow that slides/reveals in on hover, every button */
+/* arrow that slides animation on hover */
 .btn::after{
   content:"\2192";
   display:inline-block;
@@ -598,9 +578,7 @@ html[data-zone] .nav-indicator{
     border-color .35s ease;
 }
 
-.btn:hover{
-  transform:scale(1.04);
-}
+.btn:hover{transform:scale(1.04);}
 
 .btn-fill{
   background:var(--accent);
@@ -617,17 +595,14 @@ html[data-zone] .nav-indicator{
   -webkit-backdrop-filter:blur(25px) saturate(160%);
 }
 
-/* orange zone only: .btn-fill and the accent-colored "Squircle" span are normally
-   --accent-colored, which is the same color as the zone background there */
+/* orange zone only change the colours as ornage is the noraml acsent colour */
 html[data-zone="orange"] .btn-fill{
   background:var(--whiteline);
   border-color:var(--whiteline);
   color:var(--accent);
 }
 
-html[data-zone="orange"] .hero-title span{
-  color:var(--whiteline);
-}
+html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
 .hero-laptop{
   position:absolute;
@@ -639,6 +614,7 @@ html[data-zone="orange"] .hero-title span{
   transform:translate(-50%,-50%);
 
   will-change:transform;
+  cursor:pointer;
 }
 
 .hero-laptop img{
@@ -671,10 +647,7 @@ html[data-zone="orange"] .hero-title span{
   will-change:transform,opacity;
 }
 
-.marquee{
-  overflow:hidden;
-  padding:16px 0;
-}
+.marquee{overflow:hidden;padding:16px 0;}
 
 .marquee-track{
   display:flex;
@@ -694,12 +667,12 @@ html[data-zone="orange"] .hero-title span{
   padding-right:2.5rem;
 }
 
-/* most important palette color: primary bar, scrolling right to left */
+/* important palette color primary bar, scrolling right to left */
 .marquee-a{background:var(--accent);}
 .marquee-a .marquee-set{color:var(--background);}
 .marquee-a .marquee-track{animation:marquee-rtl 22s linear infinite;}
 
-/* secondary + tertiary palette colors: lighter-weight bar, scrolling left to right */
+/* secondary + tertiary palette colors lighter-weight bar, scrolling left to right */
 .marquee-b{background:var(--accent-2);}
 .marquee-b .marquee-set{color:var(--accent-3);}
 .marquee-b .marquee-track{animation:marquee-ltr 26s linear infinite;}
@@ -734,7 +707,7 @@ html[data-zone="orange"] .hero-title span{
   width:100%;
   overflow:hidden;
 
-  /* fades cards in/out at the edges as the track pans past, instead of a hard clip */
+  /* fades cards in/out at the edges instead of hard clip */
   -webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);
   mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);
 }
@@ -764,19 +737,10 @@ html[data-zone="orange"] .hero-title span{
   color:var(--line);
 }
 
-/* alternates card order: image / name / buy -> buy / name / image */
-.product-card--alt{
-  flex-direction:column-reverse;
-}
-
-.product-card{
-  transition:transform .4s cubic-bezier(.22,1,.36,1);
-}
-
-.product-card:hover{
-  transform:translateY(-12px);
-}
-
+/* card order image / name / buy -> buy / name / image */
+.product-card--alt{flex-direction:column-reverse;}
+.product-card{transition:transform .4s cubic-bezier(.22,1,.36,1);}
+.product-card:hover{transform:translateY(-12px);}
 .product-media{
   width:100%;
   max-width:260px;
@@ -794,9 +758,7 @@ html[data-zone="orange"] .hero-title span{
   box-shadow:0 24px 48px rgba(0,0,0,.2);
 }
 
-.product-card--alt:hover .product-media{
-  transform:rotate(1.5deg);
-}
+.product-card--alt:hover .product-media{transform:rotate(1.5deg);}
 
 .product-media img{
   display:block;
@@ -809,19 +771,9 @@ html[data-zone="orange"] .hero-title span{
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.product-card:hover .product-media img{
-  transform:scale(1.1);
-}
-
-.product-name{
-  font-weight:400;
-  font-size:clamp(1.3rem,2.2vw,1.8rem);
-}
-
-.btn.product-buy{
-  padding:12px 30px;
-  font-size:15px;
-}
+.product-card:hover .product-media img{transform:scale(1.1);}
+.product-name{font-weight:400;font-size:clamp(1.3rem,2.2vw,1.8rem);}
+.btn.product-buy{padding:12px 30px;font-size:15px;}
 
 .placeholder-section{
   position:relative;
@@ -838,7 +790,7 @@ html[data-zone="orange"] .hero-title span{
   font-family:"obliqua",sans-serif;
 }
 
-/* about */
+/* about and more info section */
 .about-wrap{
   position:relative;
   z-index:1;
@@ -864,10 +816,7 @@ html[data-zone="orange"] .hero-title span{
     box-shadow .4s ease;
 }
 
-.about-media.in-view{
-  opacity:1;
-  transform:translateY(0);
-}
+.about-media.in-view{opacity:1;transform:translateY(0);}
 
 .about-media.in-view:hover{
   transform:translateY(-12px);
@@ -886,9 +835,7 @@ html[data-zone="orange"] .hero-title span{
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.about-media:hover img{
-  transform:scale(1.1);
-}
+.about-media:hover img{transform:scale(1.1);}
 
 .about-copy{
   display:flex;
@@ -900,10 +847,7 @@ html[data-zone="orange"] .hero-title span{
   text-align:center;
 }
 
-.about-heading{
-  position:relative;
-  display:inline-block;
-}
+.about-heading{position:relative;display:inline-block;}
 
 .about-title{
   font-family:"SuperMalibu","obliqua",sans-serif;
@@ -926,9 +870,7 @@ html[data-zone="orange"] .hero-title span{
   transition:opacity .3s ease;
 }
 
-.about-heading:hover .about-scribble{
-  opacity:0;
-}
+.about-heading:hover .about-scribble{opacity:0;}
 
 .about-scribble-text{
   position:relative;
@@ -965,14 +907,8 @@ html[data-zone="orange"] .hero-title span{
   transition:stroke-dashoffset .9s ease .35s;
 }
 
-.about-heading.in-view .about-scribble-text{
-  opacity:1;
-  transform:scale(1);
-}
-
-.about-heading.in-view .about-scribble-circle path{
-  stroke-dashoffset:0;
-}
+.about-heading.in-view .about-scribble-text{opacity:1;transform:scale(1);}
+.about-heading.in-view .about-scribble-circle path{stroke-dashoffset:0;}
 
 .about-text{
   max-width:36ch;
@@ -983,7 +919,7 @@ html[data-zone="orange"] .hero-title span{
   opacity:.7;
 }
 
-/* single banner image below the about section */
+/* banner image before fotter */
 .about-banner{
   position:relative;
   z-index:1;
@@ -1001,10 +937,7 @@ html[data-zone="orange"] .hero-title span{
     box-shadow .4s ease;
 }
 
-.about-banner.in-view{
-  opacity:1;
-  transform:translateY(0);
-}
+.about-banner.in-view{opacity:1;transform:translateY(0);}
 
 .about-banner.in-view:hover{
   transform:translateY(-12px);
@@ -1022,11 +955,9 @@ html[data-zone="orange"] .hero-title span{
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.about-banner:hover img{
-  transform:scale(1.1);
-}
+.about-banner:hover img{transform:scale(1.1);}
 
-/* footer */
+/* the footer */
 .site-footer{
   position:relative;
   z-index:1;
@@ -1078,7 +1009,7 @@ html[data-zone="orange"] .hero-title span{
   user-select:none;
 }
 
-/* easter egg: typing "deltarune" opens this overlay (Script.js) */
+/* easter egg deltarune and undertaile opens the overlay (Script.js) */
 .deltarune-battle{
   position:fixed;
   inset:0;
@@ -1088,6 +1019,7 @@ html[data-zone="orange"] .hero-title span{
   align-items:center;
   justify-content:center;
   gap:20px;
+
   background:#000;
   padding:32px;
   box-sizing:border-box;
@@ -1095,6 +1027,20 @@ html[data-zone="orange"] .hero-title span{
 }
 
 .deltarune-battle[hidden]{display:none;}
+.deltarune-battle.db-screen-shake{animation:db-screen-shake .4s linear;}
+
+@keyframes db-screen-shake{
+  0%,100%{transform:translate(0,0);}
+  10%{transform:translate(-10px,-6px);}
+  20%{transform:translate(9px,5px);}
+  30%{transform:translate(-8px,6px);}
+  40%{transform:translate(10px,-5px);}
+  50%{transform:translate(-9px,-4px);}
+  60%{transform:translate(8px,6px);}
+  70%{transform:translate(-6px,-5px);}
+  80%{transform:translate(6px,4px);}
+  90%{transform:translate(-4px,2px);}
+}
 
 .db-scene{
   position:relative;
@@ -1111,9 +1057,7 @@ html[data-zone="orange"] .hero-title span{
   animation:db-drop .5s ease-out;
 }
 
-@keyframes db-drop{
-  from{transform:translateY(-120%);opacity:0;}
-  to{transform:translateY(0);opacity:1;}
+@keyframes db-drop{from{transform:translateY(-120%);opacity:0;} to{transform:translateY(0);opacity:1;}
 }
 
 .db-hp{
@@ -1121,12 +1065,11 @@ html[data-zone="orange"] .hero-title span{
   align-items:center;
   gap:12px;
   color:#fff;
-  font-family:"Courier New",monospace;
+  font-family:"Deltarune","Courier New",monospace;
   font-size:.9rem;
 }
 
 .db-hp[hidden]{display:none;}
-
 .db-hp-name{font-weight:bold;}
 
 .db-hp-bar{
@@ -1166,15 +1109,10 @@ html[data-zone="orange"] .hero-title span{
   pointer-events:none;
 }
 
-.db-heart.db-hit{
-  animation:db-shake .12s linear 3;
-  filter:drop-shadow(0 0 6px #ff3b3b);
+.db-heart.db-hit{animation:db-shake .12s linear 3; filter:drop-shadow(0 0 6px #ff3b3b);
 }
 
-@keyframes db-shake{
-  0%,100%{margin-left:0;}
-  50%{margin-left:4px;}
-}
+@keyframes db-shake{0%,100%{margin-left:0;} 50%{margin-left:4px;}}
 
 .db-bullet{
   position:absolute;
@@ -1199,7 +1137,7 @@ html[data-zone="orange"] .hero-title span{
 .db-text{
   margin:0;
   color:#fff;
-  font-family:"Courier New",monospace;
+  font-family:"Deltarune","Courier New",monospace;
   font-size:clamp(1rem,2vw,1.4rem);
   line-height:1.6;
   white-space:pre-wrap;
@@ -1218,7 +1156,7 @@ html[data-zone="orange"] .hero-title span{
   border:2px solid #fff;
   background:transparent;
   color:#fff;
-  font-family:"Courier New",monospace;
+  font-family:"Deltarune","Courier New",monospace;
   font-size:.95rem;
   padding:8px 18px;
   cursor:pointer;
@@ -1230,7 +1168,7 @@ html[data-zone="orange"] .hero-title span{
   border:2px solid #fff;
   background:transparent;
   color:#fff;
-  font-family:"Courier New",monospace;
+  font-family:"Deltarune","Courier New",monospace;
   font-size:.95rem;
   padding:10px 20px;
   cursor:pointer;
@@ -1238,7 +1176,58 @@ html[data-zone="orange"] .hero-title span{
 
 .db-close:hover{background:#fff;color:#000;}
 
-/* same idle wiggle as the splash-screen logo, just slower and always-on */
+
+/* flappy bird easter egg */
+.flappy-game{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+
+  background:rgba(0,0,0,.85);
+  padding:32px;
+  box-sizing:border-box;
+  overflow:auto;
+}
+
+.flappy-game[hidden]{display:none;}
+
+.flappy-hud{
+  display:flex;
+  gap:24px;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  font-size:1.1rem;
+}
+
+.flappy-canvas{
+  display:block;
+  border:4px solid #fff;
+  border-radius:6px;
+  background:#7fd4ff;
+  max-width:90vw;
+  max-height:70vh;
+  width:auto;
+  height:auto;
+  cursor:pointer;
+}
+
+.flappy-msg{
+  margin:0;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  font-size:.95rem;
+  text-align:center;
+}
+
+.flappy-msg[hidden]{display:none;}
+.flappy-close{font-family:Arial,sans-serif;}
+
+/* idle wiggle reusing splash screen animation */
 .footer-blocks .block-orange{animation:orangeMove 3s ease-in-out infinite;}
 .footer-blocks .block-purple{animation:purpleMove 3s ease-in-out infinite;}
 
@@ -1299,10 +1288,7 @@ html[data-zone="orange"] .hero-title span{
   transition:transform .3s cubic-bezier(.22,1,.36,1);
 }
 
-.footer-col a:hover::after{
-  transform:scaleX(1);
-  transform-origin:left;
-}
+.footer-col a:hover::after{transform:scaleX(1); transform-origin:left;}
 
 .footer-top{
   display:flex;
@@ -1325,10 +1311,7 @@ html[data-zone="orange"] .hero-title span{
     background .35s ease;
 }
 
-.footer-top:hover{
-  transform:translateY(-4px);
-  background:rgba(0,0,0,.065);
-}
+.footer-top:hover{transform:translateY(-4px); background:rgba(0,0,0,.065);}
 
 .footer-bottom{
   padding:0 48px 32px;
@@ -1341,16 +1324,8 @@ html[data-zone="orange"] .hero-title span{
 }
 
 @media (prefers-color-scheme:dark){
-  .site-footer{
-    background:rgba(255,255,255,.015);
-    border-color:rgba(255,255,255,.08);
-  }
-
-  .footer-top{
-    background:rgba(255,255,255,.015);
-    border-color:rgba(255,255,255,.08);
-  }
-
+  .site-footer{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
+  .footer-top{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
   .footer-top:hover{background:rgba(255,255,255,.08);}
 }
 
@@ -1361,24 +1336,11 @@ html[data-zone="orange"] .hero-title span{
   }
 }
 
-/* scroll zones: footer is always the "black" zone, and .btn-outline appears in the
-   hero/about zones too, so both need the light-tinted glass regardless of system theme */
-html[data-zone] .site-footer{
-  background:rgba(255,255,255,.05);
-  border-color:rgba(255,255,255,.14);
-}
-
-html[data-zone] .footer-top{
-  background:rgba(255,255,255,.05);
-  border-color:rgba(255,255,255,.14);
-}
-
+/* scroll zones footer is always black and .btn-outline appears in hero and more info both need light tinted glass */
+html[data-zone] .site-footer{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
+html[data-zone] .footer-top{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
 html[data-zone] .footer-top:hover{background:rgba(255,255,255,.12);}
-
-html[data-zone] .btn-outline{
-  background:rgba(255,255,255,.05);
-  border-color:rgba(255,255,255,.14);
-}
+html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);}
 
 /* mobile */
 @media (max-width:650px){
@@ -1386,7 +1348,7 @@ html[data-zone] .btn-outline{
   .nav-links{gap:2px;}
   .nav-links a{padding:9px 12px; font-size:13px;}
 
-  /* scroll-driven animation is desktop-only; mobile gets a simple stacked hero */
+  /* scroll animation is desktop-only mobile gets stacked hero */
   .hero-wrap{height:auto;}
 
   .hero-sticky{
@@ -1466,11 +1428,7 @@ html[data-zone] .btn-outline{
   }
 
   .about-media{min-height:320px;}
-
-  .about-banner{
-    height:clamp(220px,70vw,420px);
-    padding:0 24px;
-  }
+  .about-banner{height:clamp(220px,70vw,420px); padding:0 24px;}
 
   .footer-main{
     grid-template-columns:1fr;
@@ -1479,9 +1437,8 @@ html[data-zone] .btn-outline{
   }
 
   .footer-brand{align-items:center; text-align:center;}
-
   .footer-blocks{margin-inline:auto;}
-
+  
   .footer-links{
     grid-template-columns:1fr;
     gap:28px;
@@ -1489,7 +1446,6 @@ html[data-zone] .btn-outline{
   }
 
   .footer-col{align-items:center;}
-
   .footer-top{justify-self:center;}
 }
 

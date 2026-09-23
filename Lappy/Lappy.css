@@ -380,6 +380,159 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
   .lappy-options-grid{grid-template-columns:1fr; gap:48px;}
 }
 
+/* spec configurator: laptop on the left, a click-to-expand spec list on the right.
+   the sliding accent pill behind the active row reuses the .nav-indicator idea,
+   just measured vertically instead of horizontally */
+.lappy-configurator{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(32px,6vw,80px);
+
+  padding:100px 8%;
+}
+
+.lappy-configurator-media{
+  flex:0 0 auto;
+  width:min(42vw,520px);
+}
+
+.lappy-configurator-media img{
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+
+  user-select:none;
+  pointer-events:none;
+
+  transition:opacity .25s ease;
+}
+
+.lappy-spec-list{
+  position:relative;
+  flex:0 1 380px;
+  max-width:420px;
+  margin-left:clamp(16px,4vw,56px);
+
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.lappy-spec-indicator{
+  position:absolute;
+  z-index:0;
+  left:0;
+  right:0;
+  top:0;
+  height:0;
+
+  border-radius:28px;
+  background:var(--accent);
+}
+
+.lappy-spec-btn{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+
+  width:100%;
+  padding:12px 22px;
+  border-radius:100px;
+  background:rgba(0,0,0,.035);
+  border:1px solid rgba(0,0,0,.08);
+
+  text-align:left;
+  cursor:pointer;
+
+  transition:transform .25s ease, background .35s ease, border-color .35s ease, border-radius .45s ease;
+}
+
+html[data-zone] .lappy-spec-btn{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
+
+.lappy-spec-btn:hover{transform:scale(1.02);}
+
+.lappy-spec-btn.is-active{
+  background:transparent;
+  border-color:transparent;
+  border-radius:28px;
+  transform:scale(1.03);
+}
+
+/* the zone rule above outranks .lappy-spec-btn.is-active on specificity alone (same
+   leading-html quirk noted earlier by .lappy-panel--cta), so it's beaten at its own level here */
+html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:transparent;}
+
+.lappy-spec-label{
+  display:block;
+  width:100%;
+  text-align:center;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1rem,1.6vw,1.3rem);
+  line-height:1.2;
+  color:var(--line);
+
+  transition:color .35s ease;
+}
+
+.lappy-spec-btn.is-active .lappy-spec-label{color:#fff;}
+
+.lappy-spec-desc-wrap{
+  display:grid;
+  grid-template-rows:0fr;
+  width:100%;
+  transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-spec-btn.is-active .lappy-spec-desc-wrap{grid-template-rows:1fr;}
+
+.lappy-spec-desc{
+  display:block;
+  overflow:hidden;
+  min-height:0;
+
+  max-width:52ch;
+  font-family:"obliqua",sans-serif;
+  font-size:.9rem;
+  line-height:1.5;
+  color:var(--line);
+  opacity:0;
+
+  transition:opacity .3s ease;
+}
+
+.lappy-spec-btn.is-active .lappy-spec-desc{opacity:.85; color:#fff;}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-configurator-media img,
+  .lappy-spec-indicator,
+  .lappy-spec-btn,
+  .lappy-spec-label,
+  .lappy-spec-desc-wrap,
+  .lappy-spec-desc{transition:none;}
+}
+
+@media (max-width:900px){
+  .lappy-configurator{flex-direction:column;}
+  .lappy-configurator-media{width:min(70vw,380px);}
+  .lappy-spec-list{max-width:none; width:100%; margin-left:0;}
+}
+
+@media (max-width:650px){
+  .lappy-configurator{padding:70px 24px;}
+  .lappy-spec-btn{padding:10px 18px;}
+}
+
 @media (max-width:650px){
   .lappy-showcase{height:auto;}
 

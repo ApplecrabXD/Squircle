@@ -489,6 +489,60 @@ if(lappyOptions.length && "IntersectionObserver" in window){
   lappyOptions.forEach(el=>lappyOptionsObserver.observe(el));
 }
 
+// lappy spec configurator: click a spec to swap the laptop image, expand its
+// placeholder description, and slide a nav-indicator-style pill behind it
+const lappyConfiguratorImg=document.getElementById("lappyConfiguratorImg");
+const lappySpecList=document.querySelector(".lappy-spec-list");
+const lappySpecIndicator=document.querySelector(".lappy-spec-indicator");
+const lappySpecBtns=document.querySelectorAll(".lappy-spec-btn");
+
+if(lappyConfiguratorImg && lappySpecList && lappySpecIndicator && lappySpecBtns.length){
+
+  function moveSpecIndicator(btn){
+    const btnRect=btn.getBoundingClientRect();
+    const listRect=lappySpecList.getBoundingClientRect();
+
+    lappySpecIndicator.style.top=`${btnRect.top-listRect.top}px`;
+    lappySpecIndicator.style.height=`${btnRect.height}px`;
+  }
+
+  // the row's own height animates (grid-template-rows) as its description opens/closes,
+  // so the pill is re-measured every frame for a bit rather than positioned just once
+  function trackSpecIndicator(btn,duration=500){
+    const start=performance.now();
+
+    (function step(now){
+      moveSpecIndicator(btn);
+      if(now-start<duration)requestAnimationFrame(step);
+    })(start);
+  }
+
+  function setActiveSpec(btn){
+    if(btn.classList.contains("is-active"))return;
+
+    lappySpecBtns.forEach(b=>b.classList.toggle("is-active",b===btn));
+    trackSpecIndicator(btn);
+
+    const nextImage=btn.dataset.image;
+    if(nextImage && lappyConfiguratorImg.getAttribute("src")!==nextImage){
+      lappyConfiguratorImg.style.opacity="0";
+      setTimeout(()=>{
+        lappyConfiguratorImg.src=nextImage;
+        lappyConfiguratorImg.style.opacity="1";
+      },250);
+    }
+  }
+
+  lappySpecBtns.forEach(btn=>btn.addEventListener("click",()=>setActiveSpec(btn)));
+
+  const initialSpecBtn=document.querySelector(".lappy-spec-btn.is-active")||lappySpecBtns[0];
+  requestAnimationFrame(()=>moveSpecIndicator(initialSpecBtn));
+  addEventListener("resize",()=>{
+    const current=document.querySelector(".lappy-spec-btn.is-active")||lappySpecBtns[0];
+    moveSpecIndicator(current);
+  });
+}
+
 // footer back-to-top
 const footerTop=document.getElementById("footerTop");
 if(footerTop){

@@ -1,3 +1,5 @@
+// You are not expected to understand this 
+ 
  (() => {
 
 const splash=document.getElementById("splash");
@@ -240,11 +242,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
 
     // sample onto an offscreen canvas rendered well above the on-screen resolution, then
     // scale particle positions back down by the same factor. at the real display size,
-    // Gecko (Firefox/Zen) anti-aliases this font's small glyph edges patchily enough that
-    // the sample grid below reads gaps that aren't visually there (confirmed: rendering the
-    // text several times larger fixes it, stripping the font's hint instructions doesn't -
-    // so it's edge coverage at small sizes, not glyph shape). oversampling gives every grid
-    // point much finer glyph detail to read alpha from, without changing the on-screen size.
+    // Gecko anti-aliases this font's small glyph edges patchily enough that
     const sampleScale=atomDpr*4;
 
     const sample=document.createElement("canvas");
@@ -335,8 +333,8 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     requestAnimationFrame(tickAtoms);
   }
 
-  // force-load SuperMalibu specifically (not the CSS fallback stack) before the first
-  // sample, matching the single-family font string buildAtomParticles now uses to paint.
+  // force-load SuperMalibu specifically before the first sample
+  // , matching the single-family font string buildAtomParticles now uses to paint.
   const atomStyle=getComputedStyle(atomText);
   const atomFontSpec=`${atomStyle.fontWeight} ${atomStyle.fontSize} "SuperMalibu"`;
 
@@ -389,7 +387,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
   });
 }
 
-// lappy feature showcase: horizontal scroll-jacked panels, text flies in from all directions as each panel pans into view
+// lappy feature showcase horizontal scroll-jacked panels text flies in from all directions as each panel pans into view
 const lappyShowcaseWrap=document.getElementById("lappyShowcase");
 const lappyShowcaseSticky=document.getElementById("lappyShowcaseSticky");
 const lappyShowcaseTrack=document.getElementById("lappyShowcaseTrack");
@@ -397,7 +395,7 @@ const lappyPanels=lappyShowcaseTrack ? Array.from(lappyShowcaseTrack.children) :
 
 if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && lappyPanels.length){
 
-  // per data-fx value, where each bit of text starts before it settles into place
+  // per data fx value
   const fxFrom={
     up:{y:70,rotate:-3},
     down:{y:-70,rotate:3},
@@ -423,8 +421,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
         }
       });
 
-      // each panel's text pieces get their own scrubbed reveal, mapped onto the
-      // horizontal pan via containerAnimation instead of the page's vertical scroll
+      // each panel's text pieces get their own scrubbed reveal, mapped onto the horizontal pan via containerAnimation 
       const fxTweens=[];
 
       lappyPanels.forEach(panel=>{
@@ -461,7 +458,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
   });
 }
 
-// about/more info section reveal (scribble accent draws in once, first time it scrolls into view)
+// about/more info section reveal scribble accent draws in only first scroll into view
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){
   const aboutObserver=new IntersectionObserver((entries)=>{
@@ -503,8 +500,7 @@ if(lappyOptions.length && "IntersectionObserver" in window){
   lappyOptions.forEach(el=>lappyOptionsObserver.observe(el));
 }
 
-// lappy spec configurator: click a spec to swap the laptop image, expand its
-// placeholder description, and slide a nav-indicator-style pill behind it
+// lappy spec configurator click a spec witch will swap the laptop image and expand its placeholder description
 const lappyConfiguratorImg=document.getElementById("lappyConfiguratorImg");
 const lappySpecList=document.querySelector(".lappy-spec-list");
 const lappySpecIndicator=document.querySelector(".lappy-spec-indicator");

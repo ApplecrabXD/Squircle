@@ -1,4 +1,4 @@
-(() => {
+ (() => {
 
 const splash=document.getElementById("splash");
 const loadingBar=document.querySelector(".loading-bar");
@@ -238,30 +238,38 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     atomCanvas.style.width=w+"px";
     atomCanvas.style.height=h+"px";
 
-    // sample the real heading text onto an offscreen canvas so the particle matches the leters 
+    // sample onto an offscreen canvas rendered well above the on-screen resolution, then
+    // scale particle positions back down by the same factor. at the real display size,
+    // Gecko (Firefox/Zen) anti-aliases this font's small glyph edges patchily enough that
+    // the sample grid below reads gaps that aren't visually there (confirmed: rendering the
+    // text several times larger fixes it, stripping the font's hint instructions doesn't -
+    // so it's edge coverage at small sizes, not glyph shape). oversampling gives every grid
+    // point much finer glyph detail to read alpha from, without changing the on-screen size.
+    const sampleScale=atomDpr*4;
+
     const sample=document.createElement("canvas");
-    sample.width=w*atomDpr;
-    sample.height=h*atomDpr;
+    sample.width=w*sampleScale;
+    sample.height=h*sampleScale;
     const sctx=sample.getContext("2d");
     const style=getComputedStyle(atomText);
 
-    sctx.scale(atomDpr,atomDpr);
-    sctx.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    sctx.scale(sampleScale,sampleScale);
+    sctx.font=`${style.fontWeight} ${style.fontSize} "SuperMalibu"`;
     sctx.textBaseline="middle";
     sctx.fillStyle=style.color;
     sctx.fillText(atomText.textContent,0,h/2);
 
-    const data=sctx.getImageData(0,0,w*atomDpr,h*atomDpr).data;
-    const spacing=Math.max(3,Math.round(3.5*atomDpr));
+    const data=sctx.getImageData(0,0,w*sampleScale,h*sampleScale).data;
+    const spacing=Math.max(3,Math.round(3.5*sampleScale));
     const particles=[];
 
-    for(let y=0;y<h*atomDpr;y+=spacing){
-      for(let x=0;x<w*atomDpr;x+=spacing){
-        const i=(y*w*atomDpr+x)*4;
+    for(let y=0;y<h*sampleScale;y+=spacing){
+      for(let x=0;x<w*sampleScale;x+=spacing){
+        const i=(y*w*sampleScale+x)*4;
         if(data[i+3]>120){
           particles.push({
-            homeX:x/atomDpr,homeY:y/atomDpr,
-            x:x/atomDpr,y:y/atomDpr,
+            homeX:x/sampleScale,homeY:y/sampleScale,
+            x:x/sampleScale,y:y/sampleScale,
             vx:0,vy:0,
             r:.8+Math.random()*.6,
             color:`rgb(${data[i]},${data[i+1]},${data[i+2]})`
@@ -327,8 +335,14 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     requestAnimationFrame(tickAtoms);
   }
 
-  if(document.fonts && document.fonts.ready)
-    document.fonts.ready.then(buildAtomParticles);
+  // force-load SuperMalibu specifically (not the CSS fallback stack) before the first
+  // sample, matching the single-family font string buildAtomParticles now uses to paint.
+  const atomStyle=getComputedStyle(atomText);
+  const atomFontSpec=`${atomStyle.fontWeight} ${atomStyle.fontSize} "SuperMalibu"`;
+
+  if(document.fonts && document.fonts.load)
+    Promise.all([document.fonts.load(atomFontSpec,atomText.textContent),document.fonts.ready])
+      .catch(()=>{}).then(buildAtomParticles);
   else
     buildAtomParticles();
 

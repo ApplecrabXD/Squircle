@@ -475,6 +475,20 @@ if(aboutReveals.length && "IntersectionObserver" in window){
   aboutReveals.forEach(el=>aboutMediaObserver.observe(el));
 }
 
+// lappy DIY/pre-built cards fade/slide in the first time they scroll into view
+const lappyOptions=document.querySelectorAll(".lappy-option");
+if(lappyOptions.length && "IntersectionObserver" in window){
+  const lappyOptionsObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("in-view");
+        lappyOptionsObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0,rootMargin:"0px 0px -15% 0px"});
+  lappyOptions.forEach(el=>lappyOptionsObserver.observe(el));
+}
+
 // footer back-to-top
 const footerTop=document.getElementById("footerTop");
 if(footerTop){

@@ -262,6 +262,124 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 
 .lappy-panel--cta .lappy-panel-title{font-size:clamp(2.6rem,6.5vw,5.6rem);}
 
+/* DIY vs. pre-built comparison: two image+copy cards side by side */
+.lappy-options{
+  position:relative;
+  z-index:1;
+  padding:120px 8%;
+}
+
+.lappy-options-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(24px,4vw,48px);
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.lappy-option{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.lappy-option-media{
+  aspect-ratio:16/9;
+  border-radius:24px;
+  overflow:hidden;
+  background:color-mix(in srgb, var(--line) 6%, transparent);
+
+  opacity:0;
+  transform:translateY(48px);
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    transform .9s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease;
+}
+
+.lappy-option.in-view .lappy-option-media{opacity:1;transform:translateY(0);}
+
+.lappy-option.in-view .lappy-option-media:hover{
+  transform:translateY(-12px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+  transition-duration:.4s;
+}
+
+.lappy-option-media img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  pointer-events:none;
+
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-option-media:hover img{transform:scale(1.1);}
+
+.lappy-option-title,
+.lappy-option-text{
+  opacity:0;
+  transform:translateY(24px);
+  transition:
+    opacity .7s cubic-bezier(.22,1,.36,1),
+    transform .7s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-option.in-view .lappy-option-title{opacity:1;transform:translateY(0);transition-delay:.15s;}
+.lappy-option.in-view .lappy-option-text{opacity:.8;transform:translateY(0);transition-delay:.28s;}
+
+/* fade only (no slide) so this doesn't fight .btn's own hover-scale transform transition */
+.lappy-option-btn{
+  align-self:center;
+  opacity:0;
+  transition:opacity .7s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-option.in-view .lappy-option-btn{opacity:1;transition-delay:.4s;}
+
+.lappy-option-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.9rem,3.4vw,3.2rem);
+  line-height:1.15;
+  color:var(--line);
+}
+
+.lappy-option-text{
+  max-width:58ch;
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.6;
+  color:var(--line);
+}
+
+/* second card lags a touch behind the first so the pair doesn't reveal as one flat block */
+.lappy-option:nth-child(2) .lappy-option-media{transition-delay:.12s;}
+.lappy-option:nth-child(2).in-view .lappy-option-title{transition-delay:.27s;}
+.lappy-option:nth-child(2).in-view .lappy-option-text{transition-delay:.4s;}
+.lappy-option:nth-child(2).in-view .lappy-option-btn{transition-delay:.52s;}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-option-media,
+  .lappy-option-media img,
+  .lappy-option-title,
+  .lappy-option-text,
+  .lappy-option-btn{transition:none;}
+
+  .lappy-option-media,
+  .lappy-option-title,
+  .lappy-option-btn{opacity:1;transform:none;}
+
+  .lappy-option-text{opacity:.8;transform:none;}
+}
+
+@media (max-width:650px){
+  .lappy-options{padding:70px 24px;}
+  .lappy-options-grid{grid-template-columns:1fr; gap:48px;}
+}
+
 @media (max-width:650px){
   .lappy-showcase{height:auto;}
 

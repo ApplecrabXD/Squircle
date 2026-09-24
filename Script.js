@@ -516,8 +516,7 @@ if(lappyConfiguratorImg && lappySpecList && lappySpecIndicator && lappySpecBtns.
     lappySpecIndicator.style.height=`${btnRect.height}px`;
   }
 
-  // the row's own height animates (grid-template-rows) as its description opens/closes,
-  // so the pill is re-measured every frame for a bit rather than positioned just once
+  // the row's own height animates as its description opens/closes so the pill remasured ever fram rathen than keyframing
   function trackSpecIndicator(btn,duration=500){
     const start=performance.now();
 
@@ -651,7 +650,7 @@ function getPoint(line,x,time){
   let y=line.baseY+wave1*line.amplitude+wave2*15+wave3*10;
 
 
-  /* Mouse reaction */
+  // Mouse reaction
   if(mouse.active &&!("ontouchstart" in window)){
     const dx=x-mouse.x;
     const dy=y-mouse.y;
@@ -711,9 +710,8 @@ function drawLine(line,time){
 }
 
 
-// scroll-driven background zones: hero+product = orange, about = purple, footer = black.
-// html[data-zone] (read by Style.css) drives --line/buttons/nav/footer; the canvas fill
-// itself is interpolated here so the color wash is smooth instead of a hard cut.
+// scroll driven background zones hero+product = orange, about = purple, footer = black. html[data-zone] (Style.css) drives
+// --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
 const zoneSections={
   productWrap:document.getElementById("productWrap"),
   aboutWrap:document.querySelector(".about-wrap"),
@@ -733,9 +731,8 @@ const zoneColors={
   black:hexToRgb(zoneRootStyle.getPropertyValue("--zone-dark"))
 };
 
-// transition midpoints, in document Y coordinates; remeasured whenever layout can shift.
-// zoneT0 holds black through the page's resting/loaded state, igniting to orange shortly
-// after the hero's scroll-hijack actually starts engaging, rather than being orange instantly
+// transition midpoints to Y coordinates remeasured whenever layout can shift. zoneT0 holds black untill igniting to orange
+// after the hero's scroll-hijack engaging, rather than being orange instantly
 let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
 function measureZones(){
   const{productWrap,aboutWrap,aboutBanner,footer}=zoneSections;
@@ -753,8 +750,7 @@ measureZones();
 addEventListener("resize",measureZones);
 addEventListener("load",measureZones);
 
-// footer's own content is often too short for the "look ahead" sample below to ever
-// reach zoneT2 before scrolling bottoms out, so the page-bottom case is guaranteed here
+// footer's own content is often too short for the look ahead. sample below to ever reach zoneT2 before scrolling bottoms out
 function isAtBottom(scrollTop){
   return scrollTop>=docMaxScroll-1;
 }
@@ -905,7 +901,7 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
       ],
       mercyLines:[
         "* You spared SANS.",
-        "* SANS: \"kid, that's not really how this works. but nice try.\""
+        "* SANS: \"kid, that's not really how this works. but im tired. you win.\""
       ]
     }
   };
@@ -1150,7 +1146,7 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
   dbOverlay.addEventListener("click",e=>{if(e.target===dbOverlay)dbCloseBattle();});
 }
 
-// easter egg: click the hero laptop to play Flappy Squircle
+// easter egg laptop hero to play Flappy bird but as squircle
 const flappyTrigger=document.getElementById("heroLaptop");
 const flappyGame=document.getElementById("flappyGame");
 const flappyCanvas=document.getElementById("flappyCanvas");
@@ -1178,7 +1174,7 @@ if(flappyTrigger && flappyGame && flappyCanvas && flappyScoreEl && flappyBestEl 
   const flPipeImg=new Image();
   flPipeImg.src="Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
 
-  let flState="idle"; // idle | playing | over
+  let flState="idle"; // idle playing over
   let flBirdY,flBirdVel,flBirdRot,flPipes,flScore,flBest=0,flLast,flPipeTimer,flRaf;
 
   function flReset(){

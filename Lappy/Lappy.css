@@ -155,6 +155,11 @@
 /* alternate the two "loudest" brand accents panel to panel so each feature reads distinctly */
 .lappy-panel:nth-of-type(even){--panel-accent:var(--accent-2);}
 
+/* the showcase lives in the orange scroll zone, where an orange accent would vanish into the background. the orange
+   panels flip theirs to white (with orange tag text), the same swap .btn-fill makes there; purple panels read fine */
+html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whiteline);}
+html[data-zone="orange"] .lappy-panel:nth-of-type(odd) .lappy-panel-tag{color:var(--accent);}
+
 .lappy-panel-media{
   position:relative;
   z-index:1;
@@ -190,6 +195,8 @@
 
   pointer-events:none;
   user-select:none;
+
+  transition:color .35s ease;
 }
 
 /* text sits on its own frosted card instead of directly on the canvas art behind it.
@@ -219,8 +226,18 @@
   .lappy-panel-body{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
 }
 
-/* lappy always sits in a scroll zone (dark canvas), so this is what actually applies */
+/* lappy always sits in one scroll zone or another, so this is what actually applies */
 html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
+
+/* on orange, the saturate() boost turns the card a hot red-orange that washes out the white copy, so there it
+   goes smoked instead: a touch darker, no boost. (:not(--cta) keeps the cta's no-box body from gaining a blur) */
+html[data-zone="orange"] .lappy-panel:not(.lappy-panel--cta) .lappy-panel-body{
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+}
+
+.lappy-panel-body{transition:background .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease;}
 
 .lappy-panel-tag{
   display:inline-flex;
@@ -233,6 +250,8 @@ html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color
   letter-spacing:.06em;
   text-transform:uppercase;
   color:#fff;
+
+  transition:background .35s ease, color .35s ease;
 }
 
 .lappy-panel-title{
@@ -262,7 +281,12 @@ html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color
   font-size:clamp(1.6rem,2.6vw,2.2rem);
   line-height:1;
   color:var(--accent-3);
+
+  transition:color .35s ease;
 }
+
+/* yellow on the orange zone is too low-contrast to read, so the stat goes white there */
+html[data-zone="orange"] .lappy-panel-stat{color:var(--whiteline);}
 
 .lappy-panel-stat small{
   font-family:"obliqua",sans-serif;

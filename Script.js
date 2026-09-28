@@ -747,13 +747,18 @@ function drawLine(line,time){
 }
 
 
-// scroll driven background zones hero+product = orange, about = purple, footer = black. html[data-zone] (Style.css) drives
-// --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
+// scroll driven background zones, the same black > orange > purple > black run on both pages:
+//   home:  hero = black till its scroll-hijack engages, products = orange, about = purple, banner centre on = black
+//   lappy: hero + first banner = black, feature showcase = orange, DIY/pre-built + specs = purple, closing banner centre on = black
+// html[data-zone] (Style.css) drives --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
 const zoneSections={
   productWrap:document.getElementById("productWrap"),
   aboutWrap:document.querySelector(".about-wrap"),
   aboutBanner:document.querySelector(".about-banner"),
-  footer:document.querySelector(".site-footer")
+  footer:document.querySelector(".site-footer"),
+  lappyShowcase:document.getElementById("lappyShowcase"),
+  lappyOptions:document.getElementById("lappyOptions"),
+  lappyBuyBanner:document.querySelector(".lappy-buy-banner")
 };
 
 function hexToRgb(hex){
@@ -772,20 +777,33 @@ const zoneColors={
 // after the hero's scroll-hijack engaging, rather than being orange instantly
 let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
 function measureZones(){
-  const{productWrap,aboutWrap,aboutBanner,footer}=zoneSections;
-  if(!heroWrap||!productWrap||!aboutWrap||!aboutBanner||!footer)return;
+  const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner}=zoneSections;
 
-  const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
-  const bannerCenter=aboutBanner.offsetTop+aboutBanner.offsetHeight/2;
+  if(heroWrap&&productWrap&&aboutWrap&&aboutBanner&&footer){
+    const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
+    const bannerCenter=aboutBanner.offsetTop+aboutBanner.offsetHeight/2;
 
-  zoneT0=heroWrap.offsetTop+innerHeight;
-  zoneT1=(productBottom+aboutWrap.offsetTop)/2;
-  zoneT2=bannerCenter;
+    zoneT0=heroWrap.offsetTop+innerHeight;
+    zoneT1=(productBottom+aboutWrap.offsetTop)/2;
+    zoneT2=bannerCenter;
+  }
+  // lappy: orange ignites as the feature showcase arrives (so it's full orange before the pin starts), purple as
+  // the DIY/pre-built cards take over, black from the closing banner's centre, same hand-off as the home banner
+  else if(lappyShowcase&&lappyOptions&&lappyBuyBanner){
+    zoneT0=lappyShowcase.offsetTop;
+    zoneT1=lappyOptions.offsetTop;
+    zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
+  }
+  else return;
+
   docMaxScroll=Math.max(0,document.documentElement.scrollHeight-innerHeight);
 }
 measureZones();
 addEventListener("resize",measureZones);
 addEventListener("load",measureZones);
+
+// the page also changes height without a resize (web fonts landing late, spec rows expanding), so re-measure then too
+if("ResizeObserver" in window)new ResizeObserver(measureZones).observe(document.body);
 
 // footer's own content is often too short for the look ahead. sample below to ever reach zoneT2 before scrolling bottoms out
 function isAtBottom(scrollTop){

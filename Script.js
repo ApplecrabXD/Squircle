@@ -119,6 +119,17 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
   navLinksContainer.addEventListener("mouseleave", () => {navIndicator.style.opacity = "0";});
 }
 
+// product page buy pill drops out from under the nav once the hero is mostly scrolled away, tucks back at the top.
+// the -30% top margin means "hero's bottom edge has risen above 30% of the screen" rather than waiting for all of it to leave
+const navbar=document.querySelector(".navbar");
+const navBuy=document.getElementById("navBuy");
+const navBuyHero=document.querySelector(".lappy-hero");
+if(navbar && navBuy && navBuyHero && "IntersectionObserver" in window){
+  new IntersectionObserver(([entry])=>{
+    navbar.classList.toggle("nav-buy-shown",!entry.isIntersecting);
+  },{rootMargin:"-30% 0px 0px 0px"}).observe(navBuyHero);
+}
+
 // gsap setup (holy cow gasp is so cool why havent i used it before)
 if(window.gsap && window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);}
 const hasGsap=!!(window.gsap && window.ScrollTrigger);
@@ -257,13 +268,18 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     sctx.fillStyle=style.color;
     sctx.fillText(atomText.textContent,0,h/2);
 
-    const data=sctx.getImageData(0,0,w*sampleScale,h*sampleScale).data;
+    // stride by the canvas's real (whole-number) size, not w*sampleScale: devicePixelRatio is often fractional
+    // (browser zoom 110% = 1.1, some scaling setups = 1.0000000298...), which made every pixel index fractional,
+    // read back undefined, and left zero particles so the word vanished
+    const sampleW=sample.width;
+    const sampleH=sample.height;
+    const data=sctx.getImageData(0,0,sampleW,sampleH).data;
     const spacing=Math.max(3,Math.round(3.5*sampleScale));
     const particles=[];
 
-    for(let y=0;y<h*sampleScale;y+=spacing){
-      for(let x=0;x<w*sampleScale;x+=spacing){
-        const i=(y*w*sampleScale+x)*4;
+    for(let y=0;y<sampleH;y+=spacing){
+      for(let x=0;x<sampleW;x+=spacing){
+        const i=(y*sampleW+x)*4;
         if(data[i+3]>120){
           particles.push({
             homeX:x/sampleScale,homeY:y/sampleScale,
@@ -275,6 +291,9 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
         }
       }
     }
+
+    // never swap the real text out for an empty canvas
+    if(!particles.length)return;
 
     atomParticles=particles;
     atomWrap.classList.add("atom-ready");
@@ -486,18 +505,18 @@ if(aboutReveals.length && "IntersectionObserver" in window){
   aboutReveals.forEach(el=>aboutMediaObserver.observe(el));
 }
 
-// lappy DIY/pre-built cards fade/slide in the first time they scroll into view
-const lappyOptions=document.querySelectorAll(".lappy-option");
-if(lappyOptions.length && "IntersectionObserver" in window){
-  const lappyOptionsObserver=new IntersectionObserver((entries)=>{
+// lappy DIY/pre-built cards and the spec configurator fade/slide in the first time they scroll into view
+const lappyReveals=document.querySelectorAll(".lappy-option, .lappy-configurator");
+if(lappyReveals.length && "IntersectionObserver" in window){
+  const lappyRevealObserver=new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{
       if(entry.isIntersecting){
         entry.target.classList.add("in-view");
-        lappyOptionsObserver.unobserve(entry.target);
+        lappyRevealObserver.unobserve(entry.target);
       }
     });
   },{threshold:0,rootMargin:"0px 0px -15% 0px"});
-  lappyOptions.forEach(el=>lappyOptionsObserver.observe(el));
+  lappyReveals.forEach(el=>lappyRevealObserver.observe(el));
 }
 
 // lappy spec configurator click a spec witch will swap the laptop image and expand its placeholder description
@@ -559,6 +578,24 @@ if(footerTop){
     scrollTo({top:0,behavior:"smooth"});
   });
 }
+
+// same-page links (the buy now buttons -> #lappyOptions) glide there instead of teleporting. done here rather than
+// with css scroll-behavior:smooth, because that also smooths the instant scroll jumps ScrollTrigger makes when it
+// re-measures its pinned sections, which throws them off. bare "#" placeholder links are left alone
+const smoothScrollReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.addEventListener("click",e=>{
+  const link=e.target.closest('a[href^="#"]');
+  if(!link)return;
+
+  const target=document.getElementById(link.getAttribute("href").slice(1));
+  if(!target)return;
+
+  // honours the target's css scroll-margin-top, so a section can ask to land a little lower (clear of the nav)
+  const margin=parseFloat(getComputedStyle(target).scrollMarginTop)||0;
+
+  e.preventDefault();
+  scrollTo({top:target.getBoundingClientRect().top+scrollY-margin,behavior:smoothScrollReduced?"auto":"smooth"});
+});
 
 // canvas background
 const canvas=document.getElementById("canvas");

@@ -567,3 +567,51 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
 
   .lappy-panel--cta .lappy-panel-body{padding:0;}
 }
+
+/* closing "buy now" banner: same image card as .about-banner, with a title + button laid over it */
+.lappy-buy-banner{margin-top:40px;}
+
+.lappy-buy-banner-copy{
+  position:absolute;
+  z-index:1;
+  inset:0 48px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  gap:24px;
+  padding:48px;
+  text-align:center;
+}
+
+/* the dark fade lives on its own layer so it can zoom in step with the image on hover
+   (.about-banner:hover img scales 1.1), while the title + button stay put */
+.lappy-buy-banner-copy::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  border-radius:28px;
+
+  background:linear-gradient(to top, rgba(0,0,0,.55), transparent 60%);
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-buy-banner:hover .lappy-buy-banner-copy::before{transform:scale(1.1);}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-buy-banner-copy::before{transition:none;}
+}
+
+.lappy-buy-banner-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2rem,5vw,4.4rem);
+  line-height:1.05;
+  color:#fff;
+}
+
+@media (max-width:650px){
+  .lappy-buy-banner-copy{inset:0 24px; padding:28px; gap:16px;}
+}

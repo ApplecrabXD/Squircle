@@ -1313,6 +1313,40 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
 .footer-top:hover{transform:translateY(-4px); background:rgba(0,0,0,.065);}
 
+/* acknowledgement of country + LGBTQIA+ welcome, each with a small flag image (Assets/Flag) */
+.footer-acknowledge{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+
+  max-width:1400px;
+  margin:0 auto 32px;
+  padding:32px 48px 0;
+  border-top:1px solid color-mix(in srgb, var(--line) 12%, transparent);
+}
+
+.footer-ack-item{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--line);
+}
+
+.footer-ack-item span:last-child{opacity:.7;}
+
+.footer-flag{
+  flex:0 0 auto;
+  width:42px;
+  aspect-ratio:3/2;
+  margin-top:3px;
+  border-radius:4px;
+  object-fit:cover;
+}
+
 .footer-bottom{
   padding:0 48px 32px;
 
@@ -1447,6 +1481,12 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
 
   .footer-col{align-items:center;}
   .footer-top{justify-self:center;}
+
+  .footer-acknowledge{
+    grid-template-columns:1fr;
+    gap:24px;
+    padding:28px 24px 0;
+  }
 }
 
 /* reduced motion */

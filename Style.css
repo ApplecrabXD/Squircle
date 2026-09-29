@@ -237,7 +237,8 @@ html,body{
 /* liquid glass */
 .nav-logo,
 .nav-links,
-.nav-menu{
+.nav-menu,
+.nav-buy{
   pointer-events:auto;
 
   background:rgba(0,0,0,.035);
@@ -263,7 +264,8 @@ html,body{
 /* uinfied gover state */
 .nav-orb:hover .nav-logo,
 .nav-orb:hover .nav-links,
-.nav-orb:hover .nav-menu{
+.nav-orb:hover .nav-menu,
+.nav-buy:hover{
   background:rgba(0,0,0,.065);
   border-color:rgba(0,0,0,.14);
   box-shadow:0 14px 35px rgba(0,0,0,.1),inset 0 1px 1px rgba(255,255,255,.8);
@@ -427,11 +429,95 @@ html,body{
   transform:translateY(-1px);
 }
 
+/* product-page buy pill: tucked behind the middle orb (z-index -1 inside the navbar's own stacking context)
+   and drops out from under the glass once the hero is scrolled past. Script.js toggles .nav-buy-shown */
+.nav-buy{
+  position:absolute;
+  z-index:-1;
+  top:calc(100% + 10px);
+  left:0;
+  right:0;
+  width:fit-content;
+  margin-inline:auto;
+
+  display:flex;
+  align-items:center;
+  gap:12px;
+  height:44px;
+  padding:5px 5px 5px 18px;
+  border-radius:100px;
+
+  white-space:nowrap;
+
+  visibility:hidden;
+  opacity:0;
+  transform:translateY(-58px) scale(.9);
+
+  /* hiding: quick tuck back up. visibility flips only after the tuck finishes so it doesn't vanish mid-animation */
+  transition:
+    transform .45s cubic-bezier(.22,1,.36,1),
+    opacity .3s ease,
+    scale .35s cubic-bezier(.22,1,.36,1),
+    visibility 0s linear .45s,
+    background .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+/* showing: springy drop that overshoots a touch then settles */
+.navbar.nav-buy-shown .nav-buy{
+  visibility:visible;
+  opacity:1;
+  transform:none;
+
+  transition:
+    transform .6s cubic-bezier(.34,1.56,.64,1),
+    opacity .3s ease,
+    scale .35s cubic-bezier(.22,1,.36,1),
+    visibility 0s,
+    background .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+/* the individual scale property so the hover grow doesn't fight the show/hide transform */
+.nav-buy:hover{scale:1.05;}
+
+.nav-buy-name{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:14px;
+  color:var(--line);
+}
+
+.nav-buy-price{
+  font-family:"obliqua",sans-serif;
+  font-size:13px;
+  color:var(--line);
+  opacity:.7;
+}
+
+/* two classes so it outranks the plain .btn sizing further down the file (one class lost to it and the button
+   rendered full size, spilling out of the pill). height:100% fills the pill's inner height exactly, and with
+   the same 5px inset on every side its rounded end sits concentric inside the pill's, so nothing gets clipped */
+.nav-buy .nav-buy-btn{
+  height:100%;
+  padding:0 14px;
+  font-size:13px;
+  line-height:1;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .nav-buy,
+  .navbar.nav-buy-shown .nav-buy{transition:opacity .2s ease, visibility 0s;}
+  .nav-buy{transform:none;}
+}
+
 /* dark mode */
 @media (prefers-color-scheme:dark){
   .nav-logo,
   .nav-links,
-  .nav-menu{
+  .nav-menu,
+  .nav-buy{
     background:rgba(255,255,255,.015);
     border-color:rgba(255,255,255,.08);
     box-shadow:
@@ -441,7 +527,8 @@ html,body{
 
   .nav-logo:hover,
   .nav-links:hover,
-  .nav-menu:hover{
+  .nav-menu:hover,
+  .nav-buy:hover{
     background:rgba(255,255,255,.08);
     border-color:rgba(255,255,255,.2);
     box-shadow:0 12px 35px rgba(0,0,0,.4),inset 0 1px 1px rgba(255,255,255,.2);
@@ -455,7 +542,8 @@ html,body{
 /* scroll zones orange/purple/black need to workout a light them */
 html[data-zone] .nav-logo,
 html[data-zone] .nav-links,
-html[data-zone] .nav-menu{
+html[data-zone] .nav-menu,
+html[data-zone] .nav-buy{
   background:rgba(255,255,255,.05);
   border-color:rgba(255,255,255,.14);
   box-shadow:0 8px 30px rgba(0,0,0,.2), inset 0 1px 1px rgba(255,255,255,.15);
@@ -463,7 +551,8 @@ html[data-zone] .nav-menu{
 
 html[data-zone] .nav-orb:hover .nav-logo,
 html[data-zone] .nav-orb:hover .nav-links,
-html[data-zone] .nav-orb:hover .nav-menu{
+html[data-zone] .nav-orb:hover .nav-menu,
+html[data-zone] .nav-buy:hover{
   background:rgba(255,255,255,.11);
   border-color:rgba(255,255,255,.25);
   box-shadow:0 12px 35px rgba(0,0,0,.25),inset 0 1px 1px rgba(255,255,255,.25);
@@ -1313,6 +1402,40 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
 .footer-top:hover{transform:translateY(-4px); background:rgba(0,0,0,.065);}
 
+/* acknowledgement of country + LGBTQIA+ welcome, each with a small flag image (Assets/Flag) */
+.footer-acknowledge{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+
+  max-width:1400px;
+  margin:0 auto 32px;
+  padding:32px 48px 0;
+  border-top:1px solid color-mix(in srgb, var(--line) 12%, transparent);
+}
+
+.footer-ack-item{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:14px;
+  line-height:1.6;
+  color:var(--line);
+}
+
+.footer-ack-item span:last-child{opacity:.7;}
+
+.footer-flag{
+  flex:0 0 auto;
+  width:42px;
+  aspect-ratio:3/2;
+  margin-top:3px;
+  border-radius:4px;
+  object-fit:cover;
+}
+
 .footer-bottom{
   padding:0 48px 32px;
 
@@ -1347,6 +1470,8 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   .navbar{top:18px; left:18px; right:18px;}
   .nav-links{gap:2px;}
   .nav-links a{padding:9px 12px; font-size:13px;}
+  .nav-buy{top:calc(100% + 8px);}
+  .nav-buy-name{display:none;}
 
   /* scroll animation is desktop-only mobile gets stacked hero */
   .hero-wrap{height:auto;}
@@ -1447,6 +1572,12 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
 
   .footer-col{align-items:center;}
   .footer-top{justify-self:center;}
+
+  .footer-acknowledge{
+    grid-template-columns:1fr;
+    gap:24px;
+    padding:28px 24px 0;
+  }
 }
 
 /* reduced motion */

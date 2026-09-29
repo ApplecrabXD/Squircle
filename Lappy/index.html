@@ -75,6 +75,13 @@
     <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
   </div>
 
+  <!-- drops out from under the nav once the hero is scrolled past (Script.js) -->
+  <div class="nav-buy" id="navBuy">
+    <span class="nav-buy-name">Lappy 13 Pro</span>
+    <span class="nav-buy-price">From $1,499</span>
+    <a href="#lappyOptions" class="btn btn-fill nav-buy-btn">Buy Now</a>
+  </div>
+
 </nav>
 
 <section class="lappy-hero">
@@ -162,13 +169,152 @@
       <article class="lappy-panel lappy-panel--cta">
         <div class="lappy-panel-body">
           <h2 class="lappy-panel-title" data-fx="scale">This is<br>Lappy 13 Pro.</h2>
-          <a href="#" class="btn btn-fill" data-fx="up">Buy Now</a>
+          <a href="#" class="btn btn-fill" data-fx="up">Configure Now</a>
         </div>
       </article>
 
     </div>
   </div>
 </section>
+
+<section class="lappy-options" id="lappyOptions">
+  <div class="lappy-options-grid">
+
+    <article class="lappy-option">
+      <div class="lappy-option-media">
+        <img src="../Assets/Temp/16x9.png" alt="DIY Lappy 13 Pro build, placeholder image">
+      </div>
+      <h2 class="lappy-option-title" style="text-align: center;">DIY</h2>
+      <p class="lappy-option-text" style="text-align: justify;">Build it yourself. Order the barebones chassis, then source and fit your own RAM, storage, and ports at your own pace — it's your build, your parts, your call.</p>
+      <a href="#" class="btn btn-fill lappy-option-btn">Configure Now</a>
+    </article>
+
+    <article class="lappy-option">
+      <div class="lappy-option-media">
+        <img src="../Assets/Temp/16x9.png" alt="Pre-built Lappy 13 Pro, placeholder image">
+      </div>
+      <h2 class="lappy-option-title" style="text-align: center;">Pre-Built</h2>
+      <p class="lappy-option-text" style="text-align: justify;">We build it for you. Every part picked, fitted, and tested before it ships, so it all just works and none of the stress lands on you.</p>
+      <a href="#" class="btn btn-fill lappy-option-btn">Configure Now</a>
+    </article>
+
+  </div>
+</section>
+
+<section class="lappy-configurator" id="lappyConfigurator">
+
+  <div class="lappy-configurator-media">
+    <img id="lappyConfiguratorImg" src="../Assets/Lappy/Logo in laptop.png" alt="Lappy 13 Pro laptop">
+  </div>
+
+  <div class="lappy-spec-list">
+    <span class="lappy-spec-indicator" aria-hidden="true"></span>
+
+    <button type="button" class="lappy-spec-btn is-active" data-image="../Assets/Lappy/Logo in laptop.png">
+      <span class="lappy-spec-label">CPU</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: choose from a range of Intel processors, from everyday to desktop-class performance.</span></span>
+    </button>
+
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+      <span class="lappy-spec-label">RAM</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: configure anywhere from 8GB up to 64GB, upgradeable yourself later on.</span></span>
+    </button>
+
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+      <span class="lappy-spec-label">Storage</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: pick your drive size and swap it out yourself whenever you need more room.</span></span>
+    </button>
+
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+      <span class="lappy-spec-label">Cooling</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: dual-fan or passive cooling options to match how hard you push it.</span></span>
+    </button>
+
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+      <span class="lappy-spec-label">Expansion Cards</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: choose which swappable port modules ship in each of the four bays.</span></span>
+    </button>
+
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+      <span class="lappy-spec-label">Customisation</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: pick a panel colour and engraving to make it unmistakably yours.</span></span>
+    </button>
+  </div>
+
+</section>
+
+<section class="about-banner lappy-buy-banner">
+  <img src="../Assets/Temp/16x9.png" alt="Lappy 13 Pro laptop, placeholder image">
+  <div class="lappy-buy-banner-copy">
+    <h2 class="lappy-buy-banner-title">Lappy 13 Pro</h2>
+    <a href="#lappyOptions" class="btn btn-fill">Buy Now</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+
+  <div class="marquee marquee-a footer-marquee">
+    <div class="marquee-track">
+      <span class="marquee-set">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+      <span class="marquee-set" aria-hidden="true">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+    </div>
+  </div>
+
+  <div class="footer-main">
+
+    <div class="footer-brand">
+      <div class="footer-blocks">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+      <p class="footer-tagline">Placeholder tagline about Squircle goes here &mdash; swap this for the real copy once it's ready.</p>
+    </div>
+
+    <nav class="footer-links">
+      <div class="footer-col">
+        <h4 class="footer-heading">Site</h4>
+        <a href="../index.html">Home</a>
+        <a href="../shop.html">Shop</a>
+        <a href="../support.html">Support</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Company</h4>
+        <a href="../about.html">About Us</a>
+        <a href="../knowlage.html">Knowlage Base</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter / X</a>
+        <a href="#">TikTok</a>
+      </div>
+    </nav>
+
+    <button class="footer-top" id="footerTop" aria-label="Back to top">↑</button>
+
+  </div>
+
+  <div class="footer-acknowledge" style="text-align: justify;">
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="../Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
+      <span>We acknowledge the Kaurna people as the traditional owners and custodians of the Adelaide region. We respect their spiritual relationship with their country, and recognise that their cultural and heritage beliefs are just as important to the living Kaurna people today. We pay our respects to Elders past, present, and emerging, and extend that respect to all First Nations peoples. Always was, always will be, Aboriginal land.</span>
+    </p>
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="../Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
+      <span>Squircle is a safe and welcoming space for everyone. We proudly support and celebrate the LGBTQIA+ community, whoever you are and whoever you love.</span>
+    </p>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; 2026 Squircle. All rights reserved.</span>
+  </div>
+
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>

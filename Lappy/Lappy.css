@@ -11,6 +11,9 @@
   gap:40px;
 
   padding:160px 8% 80px;
+
+  /* the laptop's slide-in starts off to the right; clip (not hidden) so it can't cause a sideways scroll */
+  overflow-x:clip;
 }
 
 .lappy-hero-copy{
@@ -55,6 +58,38 @@
 
 @media (prefers-reduced-motion: reduce){
   .lappy-hero-laptop img{animation:none;}
+}
+
+/* hero entrance: waits for the splash to hand off to the nav (same #splash.loaded sibling hook the nav logo
+   uses), or plays straight away on repeat visits where the splash is skipped. keyframes rather than transitions
+   so it always plays, even when .loaded lands before the first paint. the from-states mirror the showcase's
+   data-fx moves (up / scale / right) so the whole page speaks the same motion language */
+#splash:not(.loaded) ~ .lappy-hero .lappy-hero-title,
+#splash:not(.loaded) ~ .lappy-hero .lappy-hero-laptop{opacity:0;}
+
+#splash.loaded ~ .lappy-hero .lappy-hero-title{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) both;}
+#splash.loaded ~ .lappy-hero .hero-title-atom{animation:lappy-hero-pop .9s cubic-bezier(.22,1,.36,1) .25s both;}
+#splash.loaded ~ .lappy-hero .lappy-hero-laptop{animation:lappy-hero-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
+
+@keyframes lappy-hero-rise{
+  from{opacity:0; transform:translateY(70px) rotate(-3deg);}
+  to{opacity:1; transform:none;}
+}
+
+@keyframes lappy-hero-pop{
+  from{opacity:0; transform:scale(.6) rotate(6deg);}
+  to{opacity:1; transform:none;}
+}
+
+@keyframes lappy-hero-slide{
+  from{opacity:0; transform:translateX(140px) rotate(4deg);}
+  to{opacity:1; transform:none;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  #splash.loaded ~ .lappy-hero .lappy-hero-title,
+  #splash.loaded ~ .lappy-hero .hero-title-atom,
+  #splash.loaded ~ .lappy-hero .lappy-hero-laptop{animation:none;}
 }
 
 .lappy-marquee{
@@ -120,6 +155,11 @@
 /* alternate the two "loudest" brand accents panel to panel so each feature reads distinctly */
 .lappy-panel:nth-of-type(even){--panel-accent:var(--accent-2);}
 
+/* the showcase lives in the orange scroll zone, where an orange accent would vanish into the background. the orange
+   panels flip theirs to white (with orange tag text), the same swap .btn-fill makes there; purple panels read fine */
+html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whiteline);}
+html[data-zone="orange"] .lappy-panel:nth-of-type(odd) .lappy-panel-tag{color:var(--accent);}
+
 .lappy-panel-media{
   position:relative;
   z-index:1;
@@ -155,6 +195,8 @@
 
   pointer-events:none;
   user-select:none;
+
+  transition:color .35s ease;
 }
 
 /* text sits on its own frosted card instead of directly on the canvas art behind it.
@@ -184,8 +226,18 @@
   .lappy-panel-body{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
 }
 
-/* lappy always sits in a scroll zone (dark canvas), so this is what actually applies */
+/* lappy always sits in one scroll zone or another, so this is what actually applies */
 html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
+
+/* on orange, the saturate() boost turns the card a hot red-orange that washes out the white copy, so there it
+   goes smoked instead: a touch darker, no boost. (:not(--cta) keeps the cta's no-box body from gaining a blur) */
+html[data-zone="orange"] .lappy-panel:not(.lappy-panel--cta) .lappy-panel-body{
+  background:rgba(0,0,0,.14);
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+}
+
+.lappy-panel-body{transition:background .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease;}
 
 .lappy-panel-tag{
   display:inline-flex;
@@ -198,6 +250,8 @@ html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color
   letter-spacing:.06em;
   text-transform:uppercase;
   color:#fff;
+
+  transition:background .35s ease, color .35s ease;
 }
 
 .lappy-panel-title{
@@ -227,7 +281,12 @@ html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color
   font-size:clamp(1.6rem,2.6vw,2.2rem);
   line-height:1;
   color:var(--accent-3);
+
+  transition:color .35s ease;
 }
+
+/* yellow on the orange zone is too low-contrast to read, so the stat goes white there */
+html[data-zone="orange"] .lappy-panel-stat{color:var(--whiteline);}
 
 .lappy-panel-stat small{
   font-family:"obliqua",sans-serif;
@@ -262,6 +321,323 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 
 .lappy-panel--cta .lappy-panel-title{font-size:clamp(2.6rem,6.5vw,5.6rem);}
 
+/* DIY vs. pre-built comparison: two image+copy cards side by side */
+.lappy-options{
+  position:relative;
+  z-index:1;
+  padding:120px 8%;
+
+  /* buy now links land here; drop a bit lower so the card images clear the nav's buy pill */
+  scroll-margin-top:40px;
+}
+
+.lappy-options-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:clamp(24px,4vw,48px);
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.lappy-option{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.lappy-option-media{
+  aspect-ratio:16/9;
+  border-radius:24px;
+  overflow:hidden;
+  background:color-mix(in srgb, var(--line) 6%, transparent);
+
+  opacity:0;
+  transform:translateY(48px);
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    transform .9s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease;
+}
+
+.lappy-option.in-view .lappy-option-media{opacity:1;transform:translateY(0);}
+
+.lappy-option.in-view .lappy-option-media:hover{
+  transform:translateY(-12px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+  transition-duration:.4s;
+}
+
+.lappy-option-media img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  pointer-events:none;
+
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-option-media:hover img{transform:scale(1.1);}
+
+.lappy-option-title,
+.lappy-option-text{
+  opacity:0;
+  transform:translateY(24px);
+  transition:
+    opacity .7s cubic-bezier(.22,1,.36,1),
+    transform .7s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-option.in-view .lappy-option-title{opacity:1;transform:translateY(0);transition-delay:.15s;}
+.lappy-option.in-view .lappy-option-text{opacity:.8;transform:translateY(0);transition-delay:.28s;}
+
+/* fade only (no slide) so this doesn't fight .btn's own hover-scale transform transition */
+.lappy-option-btn{
+  align-self:center;
+  opacity:0;
+  transition:opacity .7s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-option.in-view .lappy-option-btn{opacity:1;transition-delay:.4s;}
+
+.lappy-option-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.9rem,3.4vw,3.2rem);
+  line-height:1.15;
+  color:var(--line);
+}
+
+.lappy-option-text{
+  max-width:58ch;
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.6;
+  color:var(--line);
+}
+
+/* second card lags a touch behind the first so the pair doesn't reveal as one flat block */
+.lappy-option:nth-child(2) .lappy-option-media{transition-delay:.12s;}
+.lappy-option:nth-child(2).in-view .lappy-option-title{transition-delay:.27s;}
+.lappy-option:nth-child(2).in-view .lappy-option-text{transition-delay:.4s;}
+.lappy-option:nth-child(2).in-view .lappy-option-btn{transition-delay:.52s;}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-option-media,
+  .lappy-option-media img,
+  .lappy-option-title,
+  .lappy-option-text,
+  .lappy-option-btn{transition:none;}
+
+  .lappy-option-media,
+  .lappy-option-title,
+  .lappy-option-btn{opacity:1;transform:none;}
+
+  .lappy-option-text{opacity:.8;transform:none;}
+}
+
+@media (max-width:650px){
+  .lappy-options{padding:70px 24px;}
+  .lappy-options-grid{grid-template-columns:1fr; gap:48px;}
+}
+
+/* spec configurator: laptop on the left, a click-to-expand spec list on the right.
+   the sliding accent pill behind the active row reuses the .nav-indicator idea,
+   just measured vertically instead of horizontally */
+.lappy-configurator{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(32px,6vw,80px);
+
+  padding:100px 8%;
+
+  /* the reveal slides rows in from the right; clip so that can't cause a sideways scroll */
+  overflow-x:clip;
+}
+
+.lappy-configurator-media{
+  flex:0 0 auto;
+  width:min(42vw,520px);
+}
+
+.lappy-configurator-media img{
+  display:block;
+  max-width:100%;
+  height:auto;
+  margin:0 auto;
+
+  user-select:none;
+  pointer-events:none;
+
+  transition:opacity .25s ease;
+}
+
+.lappy-spec-list{
+  position:relative;
+  flex:0 1 380px;
+  max-width:420px;
+  margin-left:clamp(16px,4vw,56px);
+
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.lappy-spec-indicator{
+  position:absolute;
+  z-index:0;
+  left:0;
+  right:0;
+  top:0;
+  height:0;
+
+  border-radius:28px;
+  background:var(--accent);
+}
+
+.lappy-spec-btn{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:4px;
+
+  width:100%;
+  padding:12px 22px;
+  border-radius:100px;
+  background:rgba(0,0,0,.035);
+  border:1px solid rgba(0,0,0,.08);
+
+  text-align:left;
+  cursor:pointer;
+
+  transition:transform .25s ease, background .35s ease, border-color .35s ease, border-radius .45s ease;
+}
+
+html[data-zone] .lappy-spec-btn{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
+
+.lappy-spec-btn:hover{transform:scale(1.02);}
+
+.lappy-spec-btn.is-active{
+  background:transparent;
+  border-color:transparent;
+  border-radius:28px;
+  transform:scale(1.03);
+}
+
+/* the zone rule above outranks .lappy-spec-btn.is-active on specificity alone (same
+   leading-html quirk noted earlier by .lappy-panel--cta), so it's beaten at its own level here */
+html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:transparent;}
+
+.lappy-spec-label{
+  display:block;
+  width:100%;
+  text-align:center;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1rem,1.6vw,1.3rem);
+  line-height:1.2;
+  color:var(--line);
+
+  transition:color .35s ease;
+}
+
+.lappy-spec-btn.is-active .lappy-spec-label{color:#fff;}
+
+.lappy-spec-desc-wrap{
+  display:grid;
+  grid-template-rows:0fr;
+  width:100%;
+  transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-spec-btn.is-active .lappy-spec-desc-wrap{grid-template-rows:1fr;}
+
+.lappy-spec-desc{
+  display:block;
+  overflow:hidden;
+  min-height:0;
+
+  max-width:52ch;
+  font-family:"obliqua",sans-serif;
+  font-size:.9rem;
+  line-height:1.5;
+  color:var(--line);
+  opacity:0;
+
+  transition:opacity .3s ease;
+}
+
+.lappy-spec-btn.is-active .lappy-spec-desc{opacity:.85; color:#fff;}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-configurator-media img,
+  .lappy-spec-indicator,
+  .lappy-spec-btn,
+  .lappy-spec-label,
+  .lappy-spec-desc-wrap,
+  .lappy-spec-desc{transition:none;}
+}
+
+/* configurator reveal (Script.js adds .in-view): the laptop swings in from the left, then the spec rows slide in
+   from the right one after another. keyframes, not transitions, so this never fights the rows' own hover/active
+   transitions. rows move with the separate `translate` property (not `transform`, which their scale hover owns)
+   and only sideways, so the accent pill's vertical measuring in Script.js stays right mid-reveal. the pill
+   rides in with the first row, which is the active one on load */
+.lappy-configurator-media,
+.lappy-spec-btn,
+.lappy-spec-indicator{opacity:0;}
+
+.lappy-configurator.in-view .lappy-configurator-media{animation:lappy-config-from-left 1s cubic-bezier(.22,1,.36,1) both;}
+
+.lappy-configurator.in-view .lappy-spec-btn,
+.lappy-configurator.in-view .lappy-spec-indicator{animation:lappy-config-from-right .8s cubic-bezier(.22,1,.36,1) .15s both;}
+
+.lappy-configurator.in-view .lappy-spec-btn:nth-of-type(2){animation-delay:.22s;}
+.lappy-configurator.in-view .lappy-spec-btn:nth-of-type(3){animation-delay:.29s;}
+.lappy-configurator.in-view .lappy-spec-btn:nth-of-type(4){animation-delay:.36s;}
+.lappy-configurator.in-view .lappy-spec-btn:nth-of-type(5){animation-delay:.43s;}
+.lappy-configurator.in-view .lappy-spec-btn:nth-of-type(6){animation-delay:.5s;}
+
+@keyframes lappy-config-from-left{
+  from{opacity:0; transform:translateX(-140px) rotate(-4deg);}
+  to{opacity:1; transform:none;}
+}
+
+@keyframes lappy-config-from-right{
+  from{opacity:0; translate:80px 0;}
+  to{opacity:1; translate:0 0;}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-configurator-media,
+  .lappy-spec-btn,
+  .lappy-spec-indicator{opacity:1;}
+
+  .lappy-configurator.in-view .lappy-configurator-media,
+  .lappy-configurator.in-view .lappy-spec-btn,
+  .lappy-configurator.in-view .lappy-spec-indicator{animation:none;}
+}
+
+@media (max-width:900px){
+  .lappy-configurator{flex-direction:column;}
+  .lappy-configurator-media{width:min(70vw,380px);}
+  .lappy-spec-list{max-width:none; width:100%; margin-left:0;}
+}
+
+@media (max-width:650px){
+  .lappy-configurator{padding:70px 24px;}
+  .lappy-spec-btn{padding:10px 18px;}
+}
+
 @media (max-width:650px){
   .lappy-showcase{height:auto;}
 
@@ -295,4 +671,52 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
   }
 
   .lappy-panel--cta .lappy-panel-body{padding:0;}
+}
+
+/* closing "buy now" banner: same image card as .about-banner, with a title + button laid over it */
+.lappy-buy-banner{margin-top:40px;}
+
+.lappy-buy-banner-copy{
+  position:absolute;
+  z-index:1;
+  inset:0 48px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  gap:24px;
+  padding:48px;
+  text-align:center;
+}
+
+/* the dark fade lives on its own layer so it can zoom in step with the image on hover
+   (.about-banner:hover img scales 1.1), while the title + button stay put */
+.lappy-buy-banner-copy::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  inset:0;
+  border-radius:28px;
+
+  background:linear-gradient(to top, rgba(0,0,0,.55), transparent 60%);
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.lappy-buy-banner:hover .lappy-buy-banner-copy::before{transform:scale(1.1);}
+
+@media (prefers-reduced-motion:reduce){
+  .lappy-buy-banner-copy::before{transition:none;}
+}
+
+.lappy-buy-banner-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2rem,5vw,4.4rem);
+  line-height:1.05;
+  color:#fff;
+}
+
+@media (max-width:650px){
+  .lappy-buy-banner-copy{inset:0 24px; padding:28px; gap:16px;}
 }

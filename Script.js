@@ -1,3 +1,5 @@
+// You are not expected to understand this 
+ 
  (() => {
 
 const splash=document.getElementById("splash");
@@ -115,6 +117,17 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
   });
 
   navLinksContainer.addEventListener("mouseleave", () => {navIndicator.style.opacity = "0";});
+}
+
+// product page buy pill drops out from under the nav once the hero is mostly scrolled away, tucks back at the top.
+// the -30% top margin means "hero's bottom edge has risen above 30% of the screen" rather than waiting for all of it to leave
+const navbar=document.querySelector(".navbar");
+const navBuy=document.getElementById("navBuy");
+const navBuyHero=document.querySelector(".lappy-hero");
+if(navbar && navBuy && navBuyHero && "IntersectionObserver" in window){
+  new IntersectionObserver(([entry])=>{
+    navbar.classList.toggle("nav-buy-shown",!entry.isIntersecting);
+  },{rootMargin:"-30% 0px 0px 0px"}).observe(navBuyHero);
 }
 
 // gsap setup (holy cow gasp is so cool why havent i used it before)
@@ -240,11 +253,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
 
     // sample onto an offscreen canvas rendered well above the on-screen resolution, then
     // scale particle positions back down by the same factor. at the real display size,
-    // Gecko (Firefox/Zen) anti-aliases this font's small glyph edges patchily enough that
-    // the sample grid below reads gaps that aren't visually there (confirmed: rendering the
-    // text several times larger fixes it, stripping the font's hint instructions doesn't -
-    // so it's edge coverage at small sizes, not glyph shape). oversampling gives every grid
-    // point much finer glyph detail to read alpha from, without changing the on-screen size.
+    // Gecko anti-aliases this font's small glyph edges patchily enough that
     const sampleScale=atomDpr*4;
 
     const sample=document.createElement("canvas");
@@ -259,13 +268,18 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     sctx.fillStyle=style.color;
     sctx.fillText(atomText.textContent,0,h/2);
 
-    const data=sctx.getImageData(0,0,w*sampleScale,h*sampleScale).data;
+    // stride by the canvas's real (whole-number) size, not w*sampleScale: devicePixelRatio is often fractional
+    // (browser zoom 110% = 1.1, some scaling setups = 1.0000000298...), which made every pixel index fractional,
+    // read back undefined, and left zero particles so the word vanished
+    const sampleW=sample.width;
+    const sampleH=sample.height;
+    const data=sctx.getImageData(0,0,sampleW,sampleH).data;
     const spacing=Math.max(3,Math.round(3.5*sampleScale));
     const particles=[];
 
-    for(let y=0;y<h*sampleScale;y+=spacing){
-      for(let x=0;x<w*sampleScale;x+=spacing){
-        const i=(y*w*sampleScale+x)*4;
+    for(let y=0;y<sampleH;y+=spacing){
+      for(let x=0;x<sampleW;x+=spacing){
+        const i=(y*sampleW+x)*4;
         if(data[i+3]>120){
           particles.push({
             homeX:x/sampleScale,homeY:y/sampleScale,
@@ -277,6 +291,9 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
         }
       }
     }
+
+    // never swap the real text out for an empty canvas
+    if(!particles.length)return;
 
     atomParticles=particles;
     atomWrap.classList.add("atom-ready");
@@ -335,8 +352,8 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     requestAnimationFrame(tickAtoms);
   }
 
-  // force-load SuperMalibu specifically (not the CSS fallback stack) before the first
-  // sample, matching the single-family font string buildAtomParticles now uses to paint.
+  // force-load SuperMalibu specifically before the first sample
+  // , matching the single-family font string buildAtomParticles now uses to paint.
   const atomStyle=getComputedStyle(atomText);
   const atomFontSpec=`${atomStyle.fontWeight} ${atomStyle.fontSize} "SuperMalibu"`;
 
@@ -389,7 +406,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
   });
 }
 
-// lappy feature showcase: horizontal scroll-jacked panels, text flies in from all directions as each panel pans into view
+// lappy feature showcase horizontal scroll-jacked panels text flies in from all directions as each panel pans into view
 const lappyShowcaseWrap=document.getElementById("lappyShowcase");
 const lappyShowcaseSticky=document.getElementById("lappyShowcaseSticky");
 const lappyShowcaseTrack=document.getElementById("lappyShowcaseTrack");
@@ -397,7 +414,7 @@ const lappyPanels=lappyShowcaseTrack ? Array.from(lappyShowcaseTrack.children) :
 
 if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && lappyPanels.length){
 
-  // per data-fx value, where each bit of text starts before it settles into place
+  // per data fx value
   const fxFrom={
     up:{y:70,rotate:-3},
     down:{y:-70,rotate:3},
@@ -423,8 +440,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
         }
       });
 
-      // each panel's text pieces get their own scrubbed reveal, mapped onto the
-      // horizontal pan via containerAnimation instead of the page's vertical scroll
+      // each panel's text pieces get their own scrubbed reveal, mapped onto the horizontal pan via containerAnimation 
       const fxTweens=[];
 
       lappyPanels.forEach(panel=>{
@@ -461,7 +477,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
   });
 }
 
-// about/more info section reveal (scribble accent draws in once, first time it scrolls into view)
+// about/more info section reveal scribble accent draws in only first scroll into view
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){
   const aboutObserver=new IntersectionObserver((entries)=>{
@@ -489,6 +505,72 @@ if(aboutReveals.length && "IntersectionObserver" in window){
   aboutReveals.forEach(el=>aboutMediaObserver.observe(el));
 }
 
+// lappy DIY/pre-built cards and the spec configurator fade/slide in the first time they scroll into view
+const lappyReveals=document.querySelectorAll(".lappy-option, .lappy-configurator");
+if(lappyReveals.length && "IntersectionObserver" in window){
+  const lappyRevealObserver=new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("in-view");
+        lappyRevealObserver.unobserve(entry.target);
+      }
+    });
+  },{threshold:0,rootMargin:"0px 0px -15% 0px"});
+  lappyReveals.forEach(el=>lappyRevealObserver.observe(el));
+}
+
+// lappy spec configurator click a spec witch will swap the laptop image and expand its placeholder description
+const lappyConfiguratorImg=document.getElementById("lappyConfiguratorImg");
+const lappySpecList=document.querySelector(".lappy-spec-list");
+const lappySpecIndicator=document.querySelector(".lappy-spec-indicator");
+const lappySpecBtns=document.querySelectorAll(".lappy-spec-btn");
+
+if(lappyConfiguratorImg && lappySpecList && lappySpecIndicator && lappySpecBtns.length){
+
+  function moveSpecIndicator(btn){
+    const btnRect=btn.getBoundingClientRect();
+    const listRect=lappySpecList.getBoundingClientRect();
+
+    lappySpecIndicator.style.top=`${btnRect.top-listRect.top}px`;
+    lappySpecIndicator.style.height=`${btnRect.height}px`;
+  }
+
+  // the row's own height animates as its description opens/closes so the pill remasured ever fram rathen than keyframing
+  function trackSpecIndicator(btn,duration=500){
+    const start=performance.now();
+
+    (function step(now){
+      moveSpecIndicator(btn);
+      if(now-start<duration)requestAnimationFrame(step);
+    })(start);
+  }
+
+  function setActiveSpec(btn){
+    if(btn.classList.contains("is-active"))return;
+
+    lappySpecBtns.forEach(b=>b.classList.toggle("is-active",b===btn));
+    trackSpecIndicator(btn);
+
+    const nextImage=btn.dataset.image;
+    if(nextImage && lappyConfiguratorImg.getAttribute("src")!==nextImage){
+      lappyConfiguratorImg.style.opacity="0";
+      setTimeout(()=>{
+        lappyConfiguratorImg.src=nextImage;
+        lappyConfiguratorImg.style.opacity="1";
+      },250);
+    }
+  }
+
+  lappySpecBtns.forEach(btn=>btn.addEventListener("click",()=>setActiveSpec(btn)));
+
+  const initialSpecBtn=document.querySelector(".lappy-spec-btn.is-active")||lappySpecBtns[0];
+  requestAnimationFrame(()=>moveSpecIndicator(initialSpecBtn));
+  addEventListener("resize",()=>{
+    const current=document.querySelector(".lappy-spec-btn.is-active")||lappySpecBtns[0];
+    moveSpecIndicator(current);
+  });
+}
+
 // footer back-to-top
 const footerTop=document.getElementById("footerTop");
 if(footerTop){
@@ -496,6 +578,24 @@ if(footerTop){
     scrollTo({top:0,behavior:"smooth"});
   });
 }
+
+// same-page links (the buy now buttons -> #lappyOptions) glide there instead of teleporting. done here rather than
+// with css scroll-behavior:smooth, because that also smooths the instant scroll jumps ScrollTrigger makes when it
+// re-measures its pinned sections, which throws them off. bare "#" placeholder links are left alone
+const smoothScrollReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.addEventListener("click",e=>{
+  const link=e.target.closest('a[href^="#"]');
+  if(!link)return;
+
+  const target=document.getElementById(link.getAttribute("href").slice(1));
+  if(!target)return;
+
+  // honours the target's css scroll-margin-top, so a section can ask to land a little lower (clear of the nav)
+  const margin=parseFloat(getComputedStyle(target).scrollMarginTop)||0;
+
+  e.preventDefault();
+  scrollTo({top:target.getBoundingClientRect().top+scrollY-margin,behavior:smoothScrollReduced?"auto":"smooth"});
+});
 
 // canvas background
 const canvas=document.getElementById("canvas");
@@ -587,7 +687,7 @@ function getPoint(line,x,time){
   let y=line.baseY+wave1*line.amplitude+wave2*15+wave3*10;
 
 
-  /* Mouse reaction */
+  // Mouse reaction
   if(mouse.active &&!("ontouchstart" in window)){
     const dx=x-mouse.x;
     const dy=y-mouse.y;
@@ -647,14 +747,18 @@ function drawLine(line,time){
 }
 
 
-// scroll-driven background zones: hero+product = orange, about = purple, footer = black.
-// html[data-zone] (read by Style.css) drives --line/buttons/nav/footer; the canvas fill
-// itself is interpolated here so the color wash is smooth instead of a hard cut.
+// scroll driven background zones, the same black > orange > purple > black run on both pages:
+//   home:  hero = black till its scroll-hijack engages, products = orange, about = purple, banner centre on = black
+//   lappy: hero + first banner = black, feature showcase = orange, DIY/pre-built + specs = purple, closing banner centre on = black
+// html[data-zone] (Style.css) drives --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
 const zoneSections={
   productWrap:document.getElementById("productWrap"),
   aboutWrap:document.querySelector(".about-wrap"),
   aboutBanner:document.querySelector(".about-banner"),
-  footer:document.querySelector(".site-footer")
+  footer:document.querySelector(".site-footer"),
+  lappyShowcase:document.getElementById("lappyShowcase"),
+  lappyOptions:document.getElementById("lappyOptions"),
+  lappyBuyBanner:document.querySelector(".lappy-buy-banner")
 };
 
 function hexToRgb(hex){
@@ -669,28 +773,39 @@ const zoneColors={
   black:hexToRgb(zoneRootStyle.getPropertyValue("--zone-dark"))
 };
 
-// transition midpoints, in document Y coordinates; remeasured whenever layout can shift.
-// zoneT0 holds black through the page's resting/loaded state, igniting to orange shortly
-// after the hero's scroll-hijack actually starts engaging, rather than being orange instantly
+// transition midpoints to Y coordinates remeasured whenever layout can shift. zoneT0 holds black untill igniting to orange
+// after the hero's scroll-hijack engaging, rather than being orange instantly
 let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
 function measureZones(){
-  const{productWrap,aboutWrap,aboutBanner,footer}=zoneSections;
-  if(!heroWrap||!productWrap||!aboutWrap||!aboutBanner||!footer)return;
+  const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner}=zoneSections;
 
-  const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
-  const bannerCenter=aboutBanner.offsetTop+aboutBanner.offsetHeight/2;
+  if(heroWrap&&productWrap&&aboutWrap&&aboutBanner&&footer){
+    const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
+    const bannerCenter=aboutBanner.offsetTop+aboutBanner.offsetHeight/2;
 
-  zoneT0=heroWrap.offsetTop+innerHeight;
-  zoneT1=(productBottom+aboutWrap.offsetTop)/2;
-  zoneT2=bannerCenter;
+    zoneT0=heroWrap.offsetTop+innerHeight;
+    zoneT1=(productBottom+aboutWrap.offsetTop)/2;
+    zoneT2=bannerCenter;
+  }
+  // lappy: orange ignites as the feature showcase arrives (so it's full orange before the pin starts), purple as
+  // the DIY/pre-built cards take over, black from the closing banner's centre, same hand-off as the home banner
+  else if(lappyShowcase&&lappyOptions&&lappyBuyBanner){
+    zoneT0=lappyShowcase.offsetTop;
+    zoneT1=lappyOptions.offsetTop;
+    zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
+  }
+  else return;
+
   docMaxScroll=Math.max(0,document.documentElement.scrollHeight-innerHeight);
 }
 measureZones();
 addEventListener("resize",measureZones);
 addEventListener("load",measureZones);
 
-// footer's own content is often too short for the "look ahead" sample below to ever
-// reach zoneT2 before scrolling bottoms out, so the page-bottom case is guaranteed here
+// the page also changes height without a resize (web fonts landing late, spec rows expanding), so re-measure then too
+if("ResizeObserver" in window)new ResizeObserver(measureZones).observe(document.body);
+
+// footer's own content is often too short for the look ahead. sample below to ever reach zoneT2 before scrolling bottoms out
 function isAtBottom(scrollTop){
   return scrollTop>=docMaxScroll-1;
 }
@@ -841,7 +956,7 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
       ],
       mercyLines:[
         "* You spared SANS.",
-        "* SANS: \"kid, that's not really how this works. but nice try.\""
+        "* SANS: \"kid, that's not really how this works. but im tired. you win.\""
       ]
     }
   };
@@ -1086,7 +1201,7 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
   dbOverlay.addEventListener("click",e=>{if(e.target===dbOverlay)dbCloseBattle();});
 }
 
-// easter egg: click the hero laptop to play Flappy Squircle
+// easter egg laptop hero to play Flappy bird but as squircle
 const flappyTrigger=document.getElementById("heroLaptop");
 const flappyGame=document.getElementById("flappyGame");
 const flappyCanvas=document.getElementById("flappyCanvas");
@@ -1114,7 +1229,7 @@ if(flappyTrigger && flappyGame && flappyCanvas && flappyScoreEl && flappyBestEl 
   const flPipeImg=new Image();
   flPipeImg.src="Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
 
-  let flState="idle"; // idle | playing | over
+  let flState="idle"; // idle playing over
   let flBirdY,flBirdVel,flBirdRot,flPipes,flScore,flBest=0,flLast,flPipeTimer,flRaf;
 
   function flReset(){

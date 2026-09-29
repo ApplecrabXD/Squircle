@@ -1,4 +1,5 @@
-/* Lappy 13 Pro product page: styles specific to Lappy/index.html only */
+/* product page styles, shared by every product page (Lappy/, Gammy Pro Max/, Ally Maxx/, Nuker/, Flippy 6 Pro/,
+   Watchy 3/). they all reuse the same lappy-* markup, since Lappy was the first, so Script.js drives them all the same way */
 
 .lappy-hero{
   position:relative;

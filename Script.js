@@ -20,7 +20,7 @@ if(splash && loadingBar && sessionStorage.getItem(introKey)==="1"){
 }else if(splash && loadingBar){
   sessionStorage.setItem(introKey,"1");
 
-  const minimumTime=2500;
+  const minimumTime=2500; //i think this line is beeing intprted in sec rather then ms by web-kit
   const startTime=performance.now();
 
   let pageLoaded=false;

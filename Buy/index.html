@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buy Lappy 13 Pro</title>
+<link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
+<link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
+<link rel="stylesheet" href="../Style.css">
+<link rel="stylesheet" href="../Products.css">
+<link rel="stylesheet" href="../Buy.css">
+</head>
+
+<!-- one buy page for every product: ?product=lappy (or gammy, ally, flippy, watchy, nuker) picks which one.
+     the steps themselves are built by Buy.js from its catalogue, so prices + options all live in one place -->
+
+<body class="buy-page">
+
+<div id="splash">
+  <div class="splash-center">
+    <div class="building-blocks">
+      <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
+      <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
+      <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
+      <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
+    </div>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="navbar">
+
+  <div class="nav-orb">
+    <a href="/" class="nav-logo">
+      <img src="../Assets/Logos/Logo.svg" alt="Squircle">
+
+      <div class="nav-building-blocks">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+    </a>
+  </div>
+
+  <div class="nav-orb">
+    <div class="nav-links">
+      <div class="nav-indicator"></div>
+      <a href="../index.html">Home</a>
+      <a href="../shop.html">Shop</a>
+      <a href="../support.html">Support</a>
+      <a href="../about.html">About Us</a>
+    </div>
+  </div>
+
+  <div class="nav-orb">
+    <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
+  </div>
+
+</nav>
+
+<section class="lappy-hero">
+  <div class="lappy-hero-copy">
+    <p class="buy-hero-tag">Buy <span data-buy-name>Lappy 13 Pro</span></p>
+    <h1 class="lappy-hero-title">Make it<br>
+      <span class="hero-title-atom">
+        <span class="hero-title-atom-text">Yours</span>
+        <canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas>
+      </span>
+    </h1>
+    <p class="buy-hero-price">From <span data-buy-from>$1,499</span></p>
+    <div class="hero-buttons buy-hero-buttons">
+      <button type="button" class="btn btn-fill" id="buyStart">Start Building</button>
+      <a href="../Lappy/" class="btn btn-outline" id="buyLearn">Learn More</a>
+    </div>
+  </div>
+
+  <div class="lappy-hero-laptop">
+    <img id="buyHeroImg" src="../Assets/Lappy/Logo%20in%20laptop.png" alt="Lappy 13 Pro, placeholder image">
+  </div>
+</section>
+
+<section class="buy-config" id="buyConfig">
+  <div class="buy-layout">
+
+    <!-- the stage: sticks beside the steps and shows the build as it comes together -->
+    <aside class="buy-stage" aria-label="Your build">
+      <div class="buy-stage-frame" id="buyStageFrame">
+
+        <div class="buy-stage-top">
+          <span class="buy-stage-name" data-buy-name>Lappy 13 Pro</span>
+          <span class="buy-stage-price" id="buyStagePrice"><span data-buy-total>$1,499</span></span>
+        </div>
+
+        <div class="buy-stage-view">
+          <span class="buy-stage-glow" aria-hidden="true"></span>
+          <div class="buy-stage-tilt" id="buyStageTilt">
+            <div class="buy-stage-float">
+              <div class="buy-stage-media" id="buyStageMedia">
+                <img id="buyStageImg" src="../Assets/Lappy/Logo%20in%20laptop.png" alt="Lappy 13 Pro, placeholder image">
+                <span class="buy-stage-tint" id="buyStageTint" aria-hidden="true"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="buy-stage-foot">
+          <nav class="buy-dots" id="buyDots" aria-label="Configurator steps"></nav>
+          <span class="buy-stage-step" id="buyStageStep">01 / 09 · Product</span>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- Buy.js renders one .buy-step per choice in here, ahead of the review -->
+    <form class="buy-steps" id="buyForm" aria-label="Configure your build" novalidate>
+
+      <section class="buy-step buy-step--review" id="buyReview">
+        <span class="buy-step-index" id="buyReviewIndex" aria-hidden="true">09</span>
+        <div class="buy-step-body">
+          <h2 class="buy-step-head">
+            <span class="buy-step-title">Review.</span>
+            <span class="buy-step-question">Your new <span data-buy-name>Lappy 13 Pro</span>.</span>
+          </h2>
+          <p class="buy-step-help" id="buyReviewNote">Make your picks and your build lands here.</p>
+
+          <div class="buy-review-card">
+            <ul class="buy-review-list" id="buyReviewList"></ul>
+
+            <div class="buy-review-total">
+              <span class="buy-review-total-label">Total</span>
+              <span class="buy-review-price" data-buy-total>$1,499</span>
+            </div>
+          </div>
+
+          <div class="buy-review-buttons">
+            <button type="submit" class="btn btn-fill">Add to Bag</button>
+            <button type="button" class="btn btn-outline" id="buyShare">Share</button>
+          </div>
+
+          <p class="buy-review-small">Squircle is a demo site. Nothing here is actually for sale.</p>
+        </div>
+      </section>
+
+    </form>
+
+  </div>
+
+  <p class="buy-sr" id="buyLive" aria-live="polite"></p>
+</section>
+
+<div class="marquee marquee-a lappy-marquee">
+  <div class="marquee-track">
+    <span class="marquee-set">Your Build&nbsp;• Your Parts&nbsp;• Your Call&nbsp;• Fully Repairable&nbsp;• </span>
+    <span class="marquee-set" aria-hidden="true">Your Build&nbsp;• Your Parts&nbsp;• Your Call&nbsp;• Fully Repairable&nbsp;• </span>
+  </div>
+</div>
+
+<section class="about-banner lappy-buy-banner">
+  <img src="../Assets/Temp/16x9.png" alt="Placeholder image">
+  <div class="lappy-buy-banner-copy">
+    <h2 class="lappy-buy-banner-title">Need a hand?</h2>
+    <a href="../support.html" class="btn btn-fill">Get Support</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+
+  <div class="marquee marquee-a footer-marquee">
+    <div class="marquee-track">
+      <span class="marquee-set">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+      <span class="marquee-set" aria-hidden="true">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+    </div>
+  </div>
+
+  <div class="footer-main">
+
+    <div class="footer-brand">
+      <div class="footer-blocks">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+      <p class="footer-tagline">Squircle. Let's Have Some Fun.</p>
+    </div>
+
+    <nav class="footer-links">
+      <div class="footer-col">
+        <h4 class="footer-heading">Site</h4>
+        <a href="../index.html">Home</a>
+        <a href="../shop.html">Shop</a>
+        <a href="../support.html">Support</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Company</h4>
+        <a href="../about.html">About Us</a>
+        <a href="../knowlage.html">Knowlage Base</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter / X</a>
+        <a href="#">TikTok</a>
+      </div>
+    </nav>
+
+    <button class="footer-top" id="footerTop" aria-label="Back to top">↑</button>
+
+  </div>
+
+  <div class="footer-acknowledge" style="text-align: justify;">
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="../Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
+      <span>We acknowledge the Kaurna people as the traditional owners and custodians of the Adelaide region. We respect their spiritual relationship with their country, and recognise that their cultural and heritage beliefs are just as important to the living Kaurna people today. We pay our respects to Elders past, present, and emerging, and extend that respect to all First Nations peoples. Always was, always will be, Aboriginal land.</span>
+    </p>
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="../Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
+      <span>Squircle is a safe and welcoming space for everyone. We proudly support and celebrate the LGBTQIA+ community, whoever you are and whoever you love.</span>
+    </p>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; 2026 Squircle. All rights reserved.</span>
+  </div>
+
+</footer>
+
+<!-- "add to bag" celebration. it's a demo site, so this owns up to that instead of pretending to take an order -->
+<dialog class="buy-dialog" id="buyDialog" aria-labelledby="buyDialogTitle">
+  <div class="buy-confetti" id="buyConfetti" aria-hidden="true"></div>
+  <div class="buy-dialog-card">
+    <div class="buy-dialog-blocks" aria-hidden="true">
+      <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+      <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+      <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+      <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+    </div>
+    <h2 class="buy-dialog-title" id="buyDialogTitle">Nice build!</h2>
+    <p class="buy-dialog-text">Your <span data-buy-name>Lappy 13 Pro</span> is all specced out:</p>
+    <p class="buy-dialog-summary" id="buyDialogSummary"></p>
+    <p class="buy-dialog-price" data-buy-total>$1,499</p>
+    <p class="buy-dialog-note">Squircle's a demo, so nothing's actually for sale and no money changes hands. But if it were, this is exactly what we'd build you.</p>
+    <div class="buy-dialog-buttons">
+      <button type="button" class="btn btn-fill" data-buy-close>Keep Tweaking</button>
+      <a href="../index.html" class="btn btn-outline">Back Home</a>
+    </div>
+  </div>
+</dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<script src="../Script.js"></script>
+<script src="../Buy.js"></script>
+
+</body>
+</html>

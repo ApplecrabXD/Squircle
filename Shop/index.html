@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Squircle</title>
+<link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
+<link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
+<link rel="stylesheet" href="../Style.css">
+<link rel="stylesheet" href="../Products.css">
+<link rel="stylesheet" href="../Shop.css">
+</head>
+
+<!-- every product in one place: filters down the left, the products on the right. the cards are plain html below,
+     each one carrying its category + price in data attributes, and Shop.js filters and sorts them -->
+
+<body class="shop-page">
+
+<div id="splash">
+  <div class="splash-center">
+    <div class="building-blocks">
+      <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
+      <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
+      <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
+      <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
+    </div>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="navbar">
+
+  <div class="nav-orb">
+    <a href="/" class="nav-logo">
+      <img src="../Assets/Logos/Logo.svg" alt="Squircle">
+
+      <div class="nav-building-blocks">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+    </a>
+  </div>
+
+  <div class="nav-orb">
+    <div class="nav-links">
+      <div class="nav-indicator"></div>
+      <a href="../index.html">Home</a>
+      <a href="../Shop/">Shop</a>
+      <a href="../support.html">Support</a>
+      <a href="../about.html">About Us</a>
+    </div>
+  </div>
+
+  <div class="nav-orb">
+    <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
+  </div>
+
+</nav>
+
+<section class="lappy-hero">
+  <div class="lappy-hero-copy">
+    <p class="shop-hero-tag">Shop Squircle</p>
+    <h1 class="lappy-hero-title">Find Your<br>
+      <span class="hero-title-atom">
+        <span class="hero-title-atom-text">Squircle</span>
+        <canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas>
+      </span>
+    </h1>
+    <p class="shop-hero-text">Six products. Every one fully repairable.</p>
+    <div class="hero-buttons shop-hero-buttons">
+      <a href="#shop" class="btn btn-fill">Shop All</a>
+      <a href="../Buy/" class="btn btn-outline">Build Your Own</a>
+    </div>
+  </div>
+
+  <div class="lappy-hero-laptop">
+    <img src="../Assets/Lappy/Logo%20in%20laptop.png" alt="Lappy 13 Pro laptop with the Squircle logo on screen">
+  </div>
+</section>
+
+<section class="shop" id="shop" aria-labelledby="shopTitle">
+  <div class="shop-layout">
+
+    <!-- sticks beside the grid on desktop, folds away above it on smaller screens -->
+    <aside class="shop-filters" id="shopFilters" aria-label="Product filters">
+      <div class="shop-filters-frame">
+
+        <div class="shop-filters-head">
+          <h2 class="shop-filters-title">Filters <span class="shop-filters-count" id="shopActive" hidden></span></h2>
+          <button type="button" class="shop-reset" data-shop-reset disabled>Reset</button>
+          <button type="button" class="shop-filters-toggle" id="shopToggle" aria-expanded="false" aria-controls="shopFiltersBody">
+            <span id="shopToggleText">Show</span>
+            <span class="shop-filters-toggle-icon" aria-hidden="true">+</span>
+          </button>
+        </div>
+
+        <div class="shop-filters-body" id="shopFiltersBody">
+          <form class="shop-filters-inner" id="shopForm" autocomplete="off" aria-label="Filter and sort products">
+
+            <!-- a product can be in more than one category (gammy's a computer and it's for gaming) -->
+            <fieldset class="shop-group">
+              <legend class="shop-group-title">Category</legend>
+              <div class="shop-chips">
+                <label class="shop-chip"><input type="checkbox" name="category" value="computers"><span class="shop-chip-tick" aria-hidden="true"></span><span class="shop-chip-name">Computers</span><span class="shop-chip-count">2</span></label>
+                <label class="shop-chip"><input type="checkbox" name="category" value="gaming"><span class="shop-chip-tick" aria-hidden="true"></span><span class="shop-chip-name">Gaming</span><span class="shop-chip-count">2</span></label>
+                <label class="shop-chip"><input type="checkbox" name="category" value="mobile"><span class="shop-chip-tick" aria-hidden="true"></span><span class="shop-chip-name">Mobile</span><span class="shop-chip-count">2</span></label>
+                <label class="shop-chip"><input type="checkbox" name="category" value="home"><span class="shop-chip-tick" aria-hidden="true"></span><span class="shop-chip-name">Home</span><span class="shop-chip-count">1</span></label>
+              </div>
+            </fieldset>
+
+            <div class="shop-group">
+              <label class="shop-group-title" for="shopPrice">Price</label>
+              <span class="shop-price-value" id="shopPriceValue" aria-hidden="true">Any Price</span>
+              <input class="shop-range" type="range" id="shopPrice" name="max" min="350" max="3000" step="50" value="3000">
+              <div class="shop-range-ends" aria-hidden="true"><span>$350</span><span>$3,000</span></div>
+            </div>
+
+            <fieldset class="shop-group">
+              <legend class="shop-group-title">Sort By</legend>
+              <div class="shop-sort" id="shopSort">
+                <span class="shop-sort-indicator" aria-hidden="true"></span>
+                <label class="shop-sort-option"><input type="radio" name="sort" value="featured" checked><span>Featured</span></label>
+                <label class="shop-sort-option"><input type="radio" name="sort" value="price-asc"><span>Price: Low to High</span></label>
+                <label class="shop-sort-option"><input type="radio" name="sort" value="price-desc"><span>Price: High to Low</span></label>
+                <label class="shop-sort-option"><input type="radio" name="sort" value="name"><span>Name: A to Z</span></label>
+              </div>
+            </fieldset>
+
+          </form>
+        </div>
+
+      </div>
+    </aside>
+
+    <div class="shop-results">
+
+      <div class="shop-results-head">
+        <h2 class="shop-results-title" id="shopTitle">All Products</h2>
+        <p class="shop-results-count" id="shopCount" aria-live="polite">6 products</p>
+      </div>
+
+      <!-- written in "featured" order. data-category can hold more than one, space separated -->
+      <ul class="shop-grid" id="shopGrid">
+
+        <li class="shop-item" data-product="lappy" data-name="Lappy 13 Pro" data-category="computers" data-price="1499">
+          <article class="shop-card">
+            <a href="../Lappy/" class="shop-card-media" tabindex="-1" aria-hidden="true">
+              <img src="../Assets/Temp/16x9.png" alt="">
+            </a>
+            <div class="shop-card-body">
+              <h3 class="shop-card-name">Lappy 13 Pro</h3>
+              <p class="shop-card-text">The laptop you can fix yourself.</p>
+              <div class="shop-card-foot">
+                <p class="shop-card-price"><small>From</small> $1,499</p>
+                <div class="shop-card-buttons">
+                  <a href="../Buy/?product=lappy" class="btn btn-fill" aria-label="Buy Now, Lappy 13 Pro">Buy Now</a>
+                  <a href="../Lappy/" class="btn btn-outline" aria-label="Learn More about Lappy 13 Pro">Learn More</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li class="shop-item" data-product="gammy" data-name="Gammy Pro Max" data-category="computers gaming" data-price="2999">
+          <article class="shop-card">
+            <a href="../Gammy%20Pro%20Max/" class="shop-card-media" tabindex="-1" aria-hidden="true">
+              <img src="../Assets/Temp/16x9.png" alt="">
+            </a>
+            <div class="shop-card-body">
+              <h3 class="shop-card-name">Gammy Pro Max</h3>
+              <p class="shop-card-text">The liquid-cooled gaming PC.</p>
+              <div class="shop-card-foot">
+                <p class="shop-card-price"><small>From</small> $2,999</p>
+                <div class="shop-card-buttons">
+                  <a href="../Buy/?product=gammy" class="btn btn-fill" aria-label="Buy Now, Gammy Pro Max">Buy Now</a>
+                  <a href="../Gammy%20Pro%20Max/" class="btn btn-outline" aria-label="Learn More about Gammy Pro Max">Learn More</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li class="shop-item" data-product="ally" data-name="Ally Maxx" data-category="gaming" data-price="999">
+          <article class="shop-card">
+            <a href="../Ally%20Maxx/" class="shop-card-media" tabindex="-1" aria-hidden="true">
+              <img src="../Assets/Temp/16x9.png" alt="">
+            </a>
+            <div class="shop-card-body">
+              <h3 class="shop-card-name">Ally Maxx</h3>
+              <p class="shop-card-text">The handheld that plays anywhere.</p>
+              <div class="shop-card-foot">
+                <p class="shop-card-price"><small>From</small> $999</p>
+                <div class="shop-card-buttons">
+                  <a href="../Buy/?product=ally" class="btn btn-fill" aria-label="Buy Now, Ally Maxx">Buy Now</a>
+                  <a href="../Ally%20Maxx/" class="btn btn-outline" aria-label="Learn More about Ally Maxx">Learn More</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li class="shop-item" data-product="flippy" data-name="Flippy 6 Pro" data-category="mobile" data-price="1699">
+          <article class="shop-card">
+            <a href="../Flippy%206%20Pro/" class="shop-card-media" tabindex="-1" aria-hidden="true">
+              <img src="../Assets/Temp/16x9.png" alt="">
+            </a>
+            <div class="shop-card-body">
+              <h3 class="shop-card-name">Flippy 6 Pro</h3>
+              <p class="shop-card-text">The phone that folds in half.</p>
+              <div class="shop-card-foot">
+                <p class="shop-card-price"><small>From</small> $1,699</p>
+                <div class="shop-card-buttons">
+                  <a href="../Buy/?product=flippy" class="btn btn-fill" aria-label="Buy Now, Flippy 6 Pro">Buy Now</a>
+                  <a href="../Flippy%206%20Pro/" class="btn btn-outline" aria-label="Learn More about Flippy 6 Pro">Learn More</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li class="shop-item" data-product="watchy" data-name="Watchy 3" data-category="mobile" data-price="549">
+          <article class="shop-card">
+            <a href="../Watchy%203/" class="shop-card-media" tabindex="-1" aria-hidden="true">
+              <img src="../Assets/Temp/16x9.png" alt="">
+            </a>
+            <div class="shop-card-body">
+              <h3 class="shop-card-name">Watchy 3</h3>
+              <p class="shop-card-text">The watch that tracks it all.</p>
+              <div class="shop-card-foot">
+                <p class="shop-card-price"><small>From</small> $549</p>
+                <div class="shop-card-buttons">
+                  <a href="../Buy/?product=watchy" class="btn btn-fill" aria-label="Buy Now, Watchy 3">Buy Now</a>
+                  <a href="../Watchy%203/" class="btn btn-outline" aria-label="Learn More about Watchy 3">Learn More</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+
+        <li class="shop-item" data-product="nuker" data-name="Nuker" data-category="home" data-price="349">
+          <article class="shop-card">
+            <a href="../Nuker/" class="shop-card-media" tabindex="-1" aria-hidden="true">
+              <img src="../Assets/Temp/16x9.png" alt="">
+            </a>
+            <div class="shop-card-body">
+              <h3 class="shop-card-name">Nuker</h3>
+              <p class="shop-card-text">The microwave you'll never throw out.</p>
+              <div class="shop-card-foot">
+                <p class="shop-card-price"><small>From</small> $349</p>
+                <div class="shop-card-buttons">
+                  <a href="../Buy/?product=nuker" class="btn btn-fill" aria-label="Buy Now, Nuker">Buy Now</a>
+                  <a href="../Nuker/" class="btn btn-outline" aria-label="Learn More about Nuker">Learn More</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        </li>
+
+      </ul>
+
+      <div class="shop-empty" id="shopEmpty" hidden>
+        <div class="shop-empty-blocks" aria-hidden="true">
+          <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+          <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+          <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+          <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+        </div>
+        <h3 class="shop-empty-title">Nothing fits that.</h3>
+        <p class="shop-empty-text">Try another category, or nudge the price up.</p>
+        <button type="button" class="btn btn-fill" data-shop-reset>Reset Filters</button>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="marquee marquee-b lappy-marquee" id="shopMarquee">
+  <div class="marquee-track">
+    <span class="marquee-set">Fully Repairable&nbsp;• DIY or Pre-Built&nbsp;• Five Colours&nbsp;• Your Build, Your Call&nbsp;• </span>
+    <span class="marquee-set" aria-hidden="true">Fully Repairable&nbsp;• DIY or Pre-Built&nbsp;• Five Colours&nbsp;• Your Build, Your Call&nbsp;• </span>
+  </div>
+</div>
+
+<section class="about-banner lappy-buy-banner">
+  <img src="../Assets/Temp/16x9.png" alt="Placeholder image">
+  <div class="lappy-buy-banner-copy">
+    <h2 class="lappy-buy-banner-title">Can't decide?</h2>
+    <a href="../support.html" class="btn btn-fill">Get Support</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+
+  <div class="marquee marquee-a footer-marquee">
+    <div class="marquee-track">
+      <span class="marquee-set">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+      <span class="marquee-set" aria-hidden="true">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+    </div>
+  </div>
+
+  <div class="footer-main">
+
+    <div class="footer-brand">
+      <div class="footer-blocks">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+      <p class="footer-tagline">Squircle. Let's Have Some Fun.</p>
+    </div>
+
+    <nav class="footer-links">
+      <div class="footer-col">
+        <h4 class="footer-heading">Site</h4>
+        <a href="../index.html">Home</a>
+        <a href="../Shop/">Shop</a>
+        <a href="../support.html">Support</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Company</h4>
+        <a href="../about.html">About Us</a>
+        <a href="../knowlage.html">Knowlage Base</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter / X</a>
+        <a href="#">TikTok</a>
+      </div>
+    </nav>
+
+    <button class="footer-top" id="footerTop" aria-label="Back to top">↑</button>
+
+  </div>
+
+  <div class="footer-acknowledge" style="text-align: justify;">
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="../Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
+      <span>We acknowledge the Kaurna people as the traditional owners and custodians of the Adelaide region. We respect their spiritual relationship with their country, and recognise that their cultural and heritage beliefs are just as important to the living Kaurna people today. We pay our respects to Elders past, present, and emerging, and extend that respect to all First Nations peoples. Always was, always will be, Aboriginal land.</span>
+    </p>
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="../Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
+      <span>Squircle is a safe and welcoming space for everyone. We proudly support and celebrate the LGBTQIA+ community, whoever you are and whoever you love.</span>
+    </p>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; 2026 Squircle. All rights reserved.</span>
+  </div>
+
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<script src="../Script.js"></script>
+<script src="../Shop.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,796 @@
+/* shop page (Shop/index.html): every product in one place, filters down the left and the product grid on the right.
+   the hero, marquee and closing banner are the product pages' lappy-* pieces from Products.css, so everything here is
+   the hero's extras plus the shop itself. Shop.js does the filtering */
+
+/* hero extras: the shared lappy-hero brings the title + floating product, these add the tag, line and buttons
+   (the same three the buy page adds) */
+.shop-hero-tag{
+  display:inline-block;
+  margin-bottom:28px;
+  padding:8px 20px;
+  border-radius:100px;
+  background:var(--accent);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.8rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#fff;
+}
+
+.shop-hero-text{
+  margin-top:20px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:1.15rem;
+  color:var(--shop-soft-75);
+}
+
+.shop-hero-buttons{justify-content:center;}
+
+/* <button>s wearing the .btn look (the empty state's reset) */
+button.btn{cursor:pointer;}
+
+/* softer text tones for copy that sits straight on the canvas. mixed into the zone colour rather than faded with
+   transparency, so they stay solid and the line art passes behind the letters instead of showing through them */
+.shop-page{
+  --shop-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
+  --shop-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
+}
+
+/* the extras join the hero entrance with the same rise as the title, each a beat behind it */
+#splash:not(.loaded) ~ .lappy-hero .shop-hero-tag,
+#splash:not(.loaded) ~ .lappy-hero .shop-hero-text,
+#splash:not(.loaded) ~ .lappy-hero .shop-hero-buttons{opacity:0;}
+
+#splash.loaded ~ .lappy-hero .shop-hero-tag{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .1s both;}
+#splash.loaded ~ .lappy-hero .shop-hero-text{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .3s both;}
+#splash.loaded ~ .lappy-hero .shop-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
+
+/* the shop */
+.shop{
+  position:relative;
+  z-index:1;
+  padding:120px 0 140px;
+
+  /* glass + selection colours, flipped per scroll zone below. a pick is the accent pill normally and goes white with
+     orange text on the orange zone, the same swap .btn-fill makes there */
+  --card-bg:rgba(0,0,0,.035);
+  --card-border:rgba(0,0,0,.08);
+  --pick-bg:var(--accent);
+  --pick-ink:#fff;
+  --glass:blur(25px) saturate(160%);
+
+  /* how far down the filters stick, clear of the nav */
+  --filters-top:112px;
+}
+
+html[data-zone] .shop{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
+
+/* smoked rather than white glass on orange, same as the buy page cards: a white tint there goes hot red-orange and
+   washes the copy out, and so does the saturate() boost */
+html[data-zone="orange"] .shop{
+  --card-bg:rgba(0,0,0,.1);
+  --card-border:rgba(255,255,255,.16);
+  --pick-bg:var(--whiteline);
+  --pick-ink:var(--accent);
+  --glass:blur(25px);
+}
+
+/* full width (no centred max-width) so the filters sit out at the side and big screens fit more cards per row */
+.shop-layout{
+  display:grid;
+  grid-template-columns:minmax(250px,300px) minmax(0,1fr);
+  align-items:start;
+  gap:clamp(24px,3vw,48px);
+
+  padding:0 48px;
+}
+
+/* filters: stick beside the grid for the whole run of products. if a short screen can't fit them all they scroll
+   inside their own glass */
+.shop-filters{
+  position:sticky;
+  top:var(--filters-top);
+}
+
+.shop-filters-frame{
+  max-height:calc(100vh - var(--filters-top) - 24px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+
+  padding:24px 22px 26px;
+  border-radius:28px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:var(--glass);
+  -webkit-backdrop-filter:var(--glass);
+
+  transition:background .35s ease, border-color .35s ease;
+}
+
+.shop-filters-head{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.shop-filters-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-right:auto;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:1.6rem;
+  line-height:1.1;
+  color:var(--line);
+}
+
+/* how many filters are on, a little pill beside the heading */
+.shop-filters-count{
+  display:inline-grid;
+  place-items:center;
+  min-width:24px;
+  height:24px;
+  padding:0 7px;
+  border-radius:100px;
+  background:var(--pick-bg);
+
+  font-family:"obliqua",sans-serif;
+  font-weight:700;
+  font-size:.75rem;
+  color:var(--pick-ink);
+
+  transition:background .35s ease, color .35s ease;
+}
+
+.shop-filters-count[hidden]{display:none;}
+
+/* reset: a plain text button with the same draw-in underline as the footer links */
+.shop-reset{
+  position:relative;
+  padding:0;
+  border:0;
+  background:none;
+
+  font-family:"obliqua",sans-serif;
+  font-size:.88rem;
+  color:var(--line);
+  cursor:pointer;
+
+  transition:opacity .25s ease;
+}
+
+.shop-reset::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-3px;
+  width:100%;
+  height:1px;
+
+  background:currentColor;
+
+  transform:scaleX(.35);
+  transform-origin:left;
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+}
+
+.shop-reset:hover::after{transform:scaleX(1);}
+.shop-reset:disabled{opacity:.35; cursor:default;}
+.shop-reset:disabled::after{transform:scaleX(0);}
+.shop-reset:focus-visible{outline:2px solid var(--line); outline-offset:4px; border-radius:4px;}
+
+/* show / hide, only on smaller screens where the filters fold away above the grid (see the 900px query) */
+.shop-filters-toggle{
+  display:none;
+  align-items:center;
+  gap:8px;
+  padding:8px 14px 8px 16px;
+  border-radius:100px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.88rem;
+  color:var(--line);
+  cursor:pointer;
+
+  transition:transform .25s ease, background .35s ease, border-color .35s ease;
+}
+
+.shop-filters-toggle:hover{transform:scale(1.04);}
+.shop-filters-toggle:focus-visible{outline:2px solid var(--line); outline-offset:3px;}
+
+.shop-filters-toggle-icon{
+  display:inline-block;
+  font-size:1.1rem;
+  line-height:1;
+  transition:rotate .35s cubic-bezier(.22,1,.36,1);
+}
+
+.shop-filters.is-open .shop-filters-toggle-icon{rotate:45deg;}
+
+/* always open on desktop. it's a one-row grid so smaller screens can fold it shut by animating the row (0fr <-> 1fr),
+   the same trick as the spec descriptions on the product pages */
+.shop-filters-body{
+  display:grid;
+  grid-template-rows:1fr;
+}
+
+.shop-filters-inner{min-height:0;}
+
+/* one group per filter (category / price / sort), split by a hairline */
+.shop-group{
+  min-width:0;
+  margin:0;
+  padding:22px 0 0;
+  border:0;
+}
+
+.shop-group + .shop-group{
+  margin-top:22px;
+  border-top:1px solid color-mix(in srgb, var(--line) 14%, transparent);
+}
+
+/* floating the legend takes it out of the fieldset's border-gap rendering so it lays out like any other heading */
+legend.shop-group-title{float:left; width:100%; padding:0;}
+legend.shop-group-title + *{clear:both;}
+
+.shop-group-title{
+  display:block;
+  margin-bottom:14px;
+
+  font-family:"obliqua",sans-serif;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+/* categories: full-width rows like the sort list below, but you can tick any number of them */
+.shop-chips{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.shop-chip{
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 18px 11px 12px;
+  border-radius:100px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.95rem;
+  color:var(--line);
+
+  cursor:pointer;
+  user-select:none;
+  transition:transform .25s ease, background .35s ease, border-color .35s ease, color .35s ease, opacity .35s ease;
+}
+
+.shop-chip:hover{transform:scale(1.02);}
+.shop-chip:active{transform:scale(.98);}
+
+/* nothing in it at the current price. still tickable, just quieter */
+.shop-chip.is-empty:not(:has(input:checked)){opacity:.45;}
+
+/* the real checkbox / radio stays in the label for keyboard + screen readers, it just isn't drawn
+   (same as the buy page options) */
+.shop-chip input,
+.shop-sort-option input{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+.shop-chip:has(input:focus-visible),
+.shop-sort-option:has(input:focus-visible){outline:2px solid var(--line); outline-offset:3px;}
+
+/* the ring that fills in and gets a tick when the chip is on */
+.shop-chip-tick{
+  position:relative;
+  flex:0 0 auto;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:1.5px solid currentColor;
+  opacity:.55;
+
+  transition:background .35s ease, border-color .35s ease, opacity .25s ease;
+}
+
+.shop-chip-tick::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:45%;
+  width:4px;
+  height:8px;
+
+  border:solid var(--pick-bg);
+  border-width:0 2px 2px 0;
+
+  translate:-50% -50%;
+  rotate:45deg;
+  scale:0;
+  transition:scale .3s cubic-bezier(.34,1.56,.64,1), border-color .35s ease;
+}
+
+.shop-chip-count{
+  margin-left:auto;
+  font-size:.78rem;
+  opacity:.6;
+}
+
+.shop-chip:has(input:checked){
+  background:var(--pick-bg);
+  border-color:var(--pick-bg);
+  color:var(--pick-ink);
+}
+
+.shop-chip:has(input:checked) .shop-chip-tick{background:var(--pick-ink); border-color:var(--pick-ink); opacity:1;}
+.shop-chip:has(input:checked) .shop-chip-tick::after{scale:1;}
+
+/* price: a max-price slider, the bit behind the thumb filled in the pick colour (Shop.js keeps --fill in step) */
+.shop-price-value{
+  display:block;
+  margin-bottom:12px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.45rem;
+  line-height:1.1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+/* yellow on the orange zone is too low-contrast to read, so it goes white there (same as the buy page prices) */
+html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
+
+.shop-range{
+  --fill:100%;
+  --track:linear-gradient(to right, var(--pick-bg) var(--fill), color-mix(in srgb, var(--line) 22%, transparent) var(--fill));
+  --thumb-ring:0 0 0 0 color-mix(in srgb, var(--pick-bg) 40%, transparent);
+
+  -webkit-appearance:none;
+  appearance:none;
+  display:block;
+  width:100%;
+  height:26px;
+  margin:0;
+
+  background:transparent;
+  cursor:pointer;
+}
+
+.shop-range:hover,
+.shop-range:focus-visible{--thumb-ring:0 0 0 7px color-mix(in srgb, var(--pick-bg) 40%, transparent);}
+
+.shop-range:focus-visible{outline:2px solid var(--line); outline-offset:4px; border-radius:100px;}
+
+/* each browser's track + thumb gets its own rule: one unknown pseudo-element in a selector list throws the whole rule away */
+.shop-range::-webkit-slider-runnable-track{
+  height:6px;
+  border-radius:100px;
+  background:var(--track);
+}
+
+.shop-range::-moz-range-track{
+  height:6px;
+  border-radius:100px;
+  background:var(--track);
+}
+
+.shop-range::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:22px;
+  height:22px;
+  margin-top:-8px;
+  border:0;
+  border-radius:50%;
+
+  background:var(--line);
+  box-shadow:0 4px 12px rgba(0,0,0,.25), var(--thumb-ring);
+
+  transition:box-shadow .25s ease;
+}
+
+.shop-range::-moz-range-thumb{
+  width:22px;
+  height:22px;
+  border:0;
+  border-radius:50%;
+
+  background:var(--line);
+  box-shadow:0 4px 12px rgba(0,0,0,.25), var(--thumb-ring);
+
+  transition:box-shadow .25s ease;
+}
+
+.shop-range-ends{
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:.78rem;
+  color:color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+/* sort: one pick only, so it gets the sliding pill (the same trick as .nav-indicator and the buy page options) rather
+   than the chips' tick */
+.shop-sort{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.shop-sort-indicator{
+  position:absolute;
+  z-index:0;
+  left:0;
+  right:0;
+  top:0;
+  height:0;
+  border-radius:100px;
+
+  background:var(--pick-bg);
+  opacity:0;
+
+  pointer-events:none;
+  transition:
+    top .45s cubic-bezier(.22,1,.36,1),
+    height .45s cubic-bezier(.22,1,.36,1),
+    opacity .25s ease,
+    background .35s ease;
+}
+
+.shop-sort-indicator.is-on{opacity:1;}
+
+.shop-sort-option{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  align-items:center;
+  padding:11px 18px;
+  border-radius:100px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.95rem;
+  color:var(--line);
+
+  cursor:pointer;
+  user-select:none;
+  transition:transform .25s ease, background .35s ease, border-color .35s ease, color .35s ease;
+}
+
+.shop-sort-option:hover{transform:scale(1.02);}
+.shop-sort-option:active{transform:scale(.98);}
+
+/* picked: the row goes clear so the pill behind it shows through (Shop.js sets .is-picked) */
+.shop-sort .shop-sort-option.is-picked{
+  background:transparent;
+  border-color:transparent;
+  color:var(--pick-ink);
+}
+
+/* results */
+.shop-results{min-width:0;}
+
+.shop-results-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:8px 24px;
+  margin-bottom:24px;
+}
+
+.shop-results-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2rem,3.4vw,3.2rem);
+  line-height:1.05;
+  color:var(--line);
+}
+
+.shop-results-count{
+  font-family:"obliqua",sans-serif;
+  font-size:13px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--shop-soft-75);
+}
+
+.shop-grid{
+  list-style:none;
+  margin:0;
+  padding:0;
+
+  /* as many ~300px+ columns as fit, up to 4: 2 on a small laptop, 3 at 1440, then 4 that stretch to fill anything
+     wider. a column can never be narrower than a quarter of the row, which is what stops a 5th fitting. auto-fill
+     keeps the empty columns when filtering leaves only a couple of cards, so they don't stretch out huge */
+  --gap:clamp(18px,2vw,28px);
+
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(max(min(300px,100%),(100% - 3 * var(--gap)) / 4),1fr));
+  gap:var(--gap);
+}
+
+/* the <li> is what Shop.js slides about when the order changes, the card inside it does the reveal and hover, so the
+   two never fight over the same property */
+.shop-item[hidden]{display:none;}
+
+.shop-card{
+  position:relative;
+  height:100%;
+
+  display:flex;
+  flex-direction:column;
+  padding:12px 12px 22px;
+  border-radius:28px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:var(--glass);
+  -webkit-backdrop-filter:var(--glass);
+
+  /* reveal on opacity/translate/rotate (with the stagger), hover on transform (without it) */
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    translate .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    rotate .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease,
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.shop-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+}
+
+.shop-card-media{
+  display:block;
+  aspect-ratio:4/3;
+  border-radius:20px;
+  overflow:hidden;
+
+  background:color-mix(in srgb, var(--line) 6%, transparent);
+}
+
+.shop-card-media img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  pointer-events:none;
+
+  transition:transform .6s cubic-bezier(.22,1,.36,1);
+}
+
+.shop-card:hover .shop-card-media img{transform:scale(1.1);}
+
+.shop-card-body{
+  flex:1 1 auto;
+
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding:18px 10px 0;
+}
+
+.shop-card-name{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.4rem,2vw,1.9rem);
+  line-height:1.1;
+  color:var(--line);
+}
+
+.shop-card-text{
+  font-family:"obliqua",sans-serif;
+  font-size:.98rem;
+  line-height:1.5;
+  color:color-mix(in srgb, var(--line) 75%, transparent);
+}
+
+/* price + buttons pinned to the bottom, so they line up across a row even when the copy above runs longer */
+.shop-card-foot{
+  margin-top:auto;
+  padding-top:16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:14px;
+}
+
+.shop-card-price{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.5rem;
+  line-height:1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
+
+.shop-card-price small{
+  font-family:"obliqua",sans-serif;
+  font-size:.72rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 65%, transparent);
+}
+
+.shop-card-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+/* two classes so it outranks the plain .btn sizing in Style.css */
+.shop-card .btn{padding:11px 22px; font-size:15px;}
+
+/* nothing matches: the logo blocks do their little dance (same as the splash) next to a way back out */
+.shop-empty{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+  padding:64px 24px;
+  border-radius:28px;
+
+  text-align:center;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:var(--glass);
+  -webkit-backdrop-filter:var(--glass);
+}
+
+.shop-empty[hidden]{display:none;}
+
+.shop-empty-blocks{
+  position:relative;
+  width:72px;
+  aspect-ratio:1;
+  margin-bottom:8px;
+}
+
+.shop-empty-blocks img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.shop-empty-blocks .block-orange{animation:orangeMove 1.5s ease-in-out infinite;}
+.shop-empty-blocks .block-purple{animation:purpleMove 1.5s ease-in-out infinite;}
+
+.shop-empty-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.8rem,3vw,2.6rem);
+  line-height:1.1;
+  color:var(--line);
+}
+
+.shop-empty-text{
+  max-width:36ch;
+  text-wrap:balance;
+
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.5;
+  color:color-mix(in srgb, var(--line) 75%, transparent);
+}
+
+.shop-empty .btn{margin-top:10px;}
+
+/* card reveal (Shop.js adds .in-view the first time each one scrolls in): the same rise as the rest of the site, cards
+   arriving together a beat apart. only while the grid has .has-reveal (Shop.js again), so without the script they're
+   all simply there. no transition into the hidden state, so hiding them at start-up can't play as a fade out */
+.shop-grid.has-reveal .shop-card:not(.in-view){
+  opacity:0;
+  translate:0 60px;
+  rotate:-2deg;
+  transition:none;
+}
+
+/* stacked layout: the filters sit above the grid and fold shut behind the show / hide button */
+@media (max-width:900px){
+  /* the top padding clears the nav, so "shop all" lands with the filters bar in full view */
+  .shop{padding:110px 0 100px;}
+  .shop-layout{display:block; padding:0 24px;}
+
+  .shop-filters{position:static; margin-bottom:32px;}
+
+  .shop-filters-frame{
+    max-height:none;
+    overflow:visible;
+    padding:16px 16px 16px 22px;
+  }
+
+  .shop-filters-title{font-size:1.4rem;}
+  .shop-filters-toggle{display:inline-flex;}
+
+  .shop-filters-body{
+    grid-template-rows:0fr;
+    transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1);
+  }
+
+  .shop-filters.is-open .shop-filters-body{grid-template-rows:1fr;}
+
+  /* hidden (not just clipped) while shut, so nothing in there can be tabbed to. the small padding/margin pair gives
+     focus rings and hover growth room before the clip. the room underneath goes on the last group rather than here,
+     so it folds away with everything else instead of leaving a sliver when shut */
+  .shop-filters-inner{
+    overflow:hidden;
+    margin:0 -6px;
+    padding:0 6px;
+
+    visibility:hidden;
+    transition:visibility 0s linear .45s;
+  }
+
+  .shop-filters-inner > :last-child{padding-bottom:6px;}
+  .shop-filters.is-open .shop-filters-inner{visibility:visible; transition-delay:0s;}
+}
+
+@media (max-width:650px){
+  .shop{padding:96px 0 80px;}
+  .shop-grid{grid-template-columns:1fr;}
+}
+
+/* reduced motion: no reveals, no sliding, no dancing blocks, everything simply there */
+@media (prefers-reduced-motion:reduce){
+  #splash.loaded ~ .lappy-hero .shop-hero-tag,
+  #splash.loaded ~ .lappy-hero .shop-hero-text,
+  #splash.loaded ~ .lappy-hero .shop-hero-buttons,
+  .shop-empty-blocks .block-orange,
+  .shop-empty-blocks .block-purple{animation:none;}
+
+  .shop-card,
+  .shop-card-media img,
+  .shop-chip,
+  .shop-chip-tick,
+  .shop-chip-tick::after,
+  .shop-sort-indicator,
+  .shop-sort-option,
+  .shop-filters-toggle,
+  .shop-filters-toggle-icon,
+  .shop-filters-body,
+  .shop-filters-inner{transition:none;}
+}

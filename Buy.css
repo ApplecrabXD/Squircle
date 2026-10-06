@@ -1,0 +1,1101 @@
+/* buy / configure page (Buy/index.html), one page for every product. Buy.js builds the steps from its catalogue.
+   the hero, marquee and closing banner are the product pages' lappy-* pieces from Products.css, so everything here is
+   the configurator itself: a sticky stage on the left that shows the build, one full-screen "page" per step on the right */
+
+/* hero extras: the shared lappy-hero brings the title + floating product, these add the tag, price and buttons */
+.buy-hero-tag{
+  display:inline-block;
+  margin-bottom:28px;
+  padding:8px 20px;
+  border-radius:100px;
+  background:var(--accent);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.8rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:#fff;
+}
+
+.buy-hero-price{
+  margin-top:20px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:1.15rem;
+  color:var(--buy-soft-75);
+}
+
+.buy-hero-buttons{justify-content:center;}
+
+/* <button>s wearing the .btn look (start building, add to bag, the nav pill) */
+button.btn{cursor:pointer;}
+
+/* softer text tones for copy that sits straight on the canvas. mixed into the zone colour rather than faded with
+   transparency, so they stay solid and the line art passes behind the letters instead of showing through them */
+.buy-page{
+  --buy-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
+  --buy-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
+}
+
+/* the extras join the hero entrance with the same rise as the title, each a beat behind it */
+#splash:not(.loaded) ~ .lappy-hero .buy-hero-tag,
+#splash:not(.loaded) ~ .lappy-hero .buy-hero-price,
+#splash:not(.loaded) ~ .lappy-hero .buy-hero-buttons{opacity:0;}
+
+#splash.loaded ~ .lappy-hero .buy-hero-tag{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .1s both;}
+#splash.loaded ~ .lappy-hero .buy-hero-price{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .3s both;}
+#splash.loaded ~ .lappy-hero .buy-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
+
+/* the configurator */
+.buy-config{
+  position:relative;
+  z-index:1;
+
+  /* step reveals slide in from the right; clip (not hidden, which would stop the stage sticking) so they can't
+     cause a sideways scroll */
+  overflow-x:clip;
+
+  /* glass + selection colours, flipped per scroll zone below. a pick is the accent pill normally and goes white with
+     orange text on the orange zone, the same swap .btn-fill makes there */
+  --card-bg:rgba(0,0,0,.035);
+  --card-border:rgba(0,0,0,.08);
+  --pick-bg:var(--accent);
+  --pick-ink:#fff;
+
+  /* stacked-layout stage: how far down it sticks (clear of the nav) and how tall it is */
+  --stage-top:94px;
+  --stage-h:clamp(210px,36vh,360px);
+}
+
+html[data-zone] .buy-config{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
+
+/* smoked rather than white glass on orange, same as the lappy panel cards: a white tint there goes hot red-orange and
+   washes the copy out */
+html[data-zone="orange"] .buy-config{
+  --card-bg:rgba(0,0,0,.1);
+  --card-border:rgba(255,255,255,.16);
+  --pick-bg:var(--whiteline);
+  --pick-ink:var(--accent);
+}
+
+.buy-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+  gap:clamp(32px,5vw,96px);
+
+  max-width:1400px;
+  margin:0 auto;
+  padding:0 48px;
+}
+
+/* stage: sticks for the whole run of steps. the top padding clears the nav and the buy pill that drops out under it */
+.buy-stage{
+  position:sticky;
+  top:0;
+  align-self:start;
+
+  height:100vh;
+  padding:152px 0 32px;
+}
+
+.buy-stage-frame{
+  position:relative;
+  height:100%;
+
+  display:flex;
+  flex-direction:column;
+  padding:24px 28px;
+  border-radius:28px;
+  overflow:hidden;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:blur(25px) saturate(160%);
+  -webkit-backdrop-filter:blur(25px) saturate(160%);
+
+  transition:background .35s ease, border-color .35s ease;
+}
+
+html[data-zone="orange"] .buy-stage-frame{backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px);}
+
+.buy-stage-top,
+.buy-stage-foot{
+  position:relative;
+  z-index:2;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.buy-stage-name{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(1.2rem,2vw,1.6rem);
+  color:var(--line);
+}
+
+.buy-stage-price{
+  position:relative;
+  flex:0 0 auto;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(1.2rem,2vw,1.6rem);
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+/* yellow on the orange zone is too low-contrast to read, so it goes white there (same as .lappy-panel-stat) */
+html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
+
+/* the "+ $300" that pops out beside the total when a pick changes it (Buy.js) */
+.buy-delta{
+  position:absolute;
+  top:50%;
+  right:calc(100% + 12px);
+
+  font-family:"obliqua",sans-serif;
+  font-weight:700;
+  font-size:.85rem;
+  white-space:nowrap;
+  color:var(--line);
+
+  pointer-events:none;
+  animation:buy-delta-pop 1.3s cubic-bezier(.22,1,.36,1) forwards;
+}
+
+@keyframes buy-delta-pop{
+  0%{opacity:0; transform:translate(10px,-50%) scale(.8);}
+  20%{opacity:1; transform:translate(0,-50%) scale(1);}
+  70%{opacity:1; transform:translate(0,-50%);}
+  100%{opacity:0; transform:translate(0,-130%);}
+}
+
+/* a size container, so the image inside can be capped by the space it actually has (cqw/cqh) */
+.buy-stage-view{
+  position:relative;
+  flex:1 1 0;
+  min-height:0;
+  margin:12px 0;
+
+  container-type:size;
+  display:grid;
+  place-items:center;
+}
+
+/* soft colour wash behind the product, picks up the chosen colour */
+.buy-stage-glow{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:min(80cqw,80cqh);
+  aspect-ratio:1;
+  border-radius:50%;
+  translate:-50% -50%;
+
+  background-color:var(--buy-glow,rgba(255,255,255,.2));
+  filter:blur(60px);
+  opacity:.55;
+
+  pointer-events:none;
+  transition:background-color .6s ease;
+}
+
+/* three layers so nothing fights over `transform`: tilt follows the cursor, float bobs, media takes the swap */
+.buy-stage-tilt{
+  position:relative;
+  z-index:1;
+  display:grid;
+  place-items:center;
+}
+
+.buy-stage-float{animation:lappy-float 4.5s ease-in-out infinite;}
+
+.buy-stage-media{
+  position:relative;
+  display:block;
+  line-height:0;
+  isolation:isolate;
+}
+
+.buy-stage-media img{
+  display:block;
+  width:auto;
+  height:auto;
+  max-width:min(100cqw,640px);
+  max-height:100cqh;
+  border-radius:20px;
+
+  filter:drop-shadow(0 30px 40px rgba(0,0,0,.25));
+
+  user-select:none;
+  pointer-events:none;
+}
+
+/* recolours the product for the colour step without needing a photo per colour: the chosen colour multiplied over the
+   image, masked to the image's own shape so the transparent bits around it stay clear. Buy.js points the mask at
+   whatever image is showing. once real per-colour photos exist, drop `tint` from the colours in Buy.js */
+.buy-stage-tint{
+  position:absolute;
+  inset:0;
+  border-radius:20px;
+
+  mix-blend-mode:multiply;
+  opacity:0;
+
+  -webkit-mask-size:100% 100%;
+  mask-size:100% 100%;
+  -webkit-mask-repeat:no-repeat;
+  mask-repeat:no-repeat;
+
+  pointer-events:none;
+  transition:background-color .5s ease, opacity .5s ease;
+}
+
+.buy-stage-tint.is-on{opacity:.9;}
+
+/* progress dots: one per step, the current one stretches into a pill. each is a 20px button around a smaller dot so
+   they're easy to hit */
+.buy-dots{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+}
+
+.buy-dot{
+  position:relative;
+  width:20px;
+  height:20px;
+  padding:0;
+  border:0;
+  background:none;
+  cursor:pointer;
+
+  transition:width .4s cubic-bezier(.22,1,.36,1);
+}
+
+.buy-dot::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:8px;
+  height:8px;
+  border-radius:100px;
+  translate:-50% -50%;
+
+  background:color-mix(in srgb, var(--line) 30%, transparent);
+
+  transition:width .4s cubic-bezier(.22,1,.36,1), background .35s ease, scale .25s ease, opacity .35s ease;
+}
+
+.buy-dot.is-answered::before{background:var(--line);}
+.buy-dot.is-current{width:34px;}
+.buy-dot.is-current::before{width:22px;}
+.buy-dot:not(:disabled):hover::before{scale:1.35;}
+.buy-dot:disabled{cursor:default;}
+.buy-dot:disabled::before{opacity:.45;}
+.buy-dot:focus-visible{outline:2px solid var(--line); outline-offset:-2px; border-radius:100px;}
+
+.buy-stage-step{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+
+  font-family:"obliqua",sans-serif;
+  font-size:13px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 70%, transparent);
+}
+
+/* steps: each one a full-screen page with its content centred, so finishing one and gliding to the next feels like
+   turning a page. Buy.js reads scroll-margin-top to know where a step should land */
+.buy-steps{
+  position:relative;
+  min-width:0;
+}
+
+.buy-step{
+  position:relative;
+  min-height:100vh;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:160px 0 72px;
+
+  scroll-margin-top:0;
+}
+
+/* big faded step number in the background, same idea as .lappy-panel-index */
+.buy-step-index{
+  position:absolute;
+  z-index:0;
+  top:16%;
+  right:0;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(6rem,13vw,11rem);
+  line-height:1;
+  color:var(--line);
+  opacity:.12;
+
+  pointer-events:none;
+  user-select:none;
+}
+
+.buy-step-body{
+  position:relative;
+  z-index:1;
+  min-width:0;
+  max-width:560px;
+
+  margin:0;
+  padding:0;
+  border:0;
+}
+
+/* floating the legend takes it out of the fieldset's border-gap rendering so it lays out like any other heading */
+legend.buy-step-head{float:left; width:100%; padding:0;}
+legend.buy-step-head + *{clear:both;}
+
+.buy-step-head{
+  margin-bottom:14px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.9rem,3vw,2.8rem);
+  line-height:1.12;
+}
+
+/* apple's "Model. Which is best for you?" pattern: the title solid, the question softer after it */
+.buy-step-title{color:var(--line);}
+.buy-step-question{color:var(--buy-soft-60);}
+
+.buy-step-help{
+  max-width:46ch;
+  margin-bottom:28px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.5;
+  color:var(--buy-soft-75);
+}
+
+/* options. the sliding pill behind the picked one is the same trick as .nav-indicator / .lappy-spec-indicator, but
+   measured in both directions so it works for rows, cards and swatches alike */
+.buy-options{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+
+  transition:opacity .5s ease;
+}
+
+.buy-options--cards{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+.buy-options--swatches{
+  flex-direction:row;
+  flex-wrap:wrap;
+  gap:12px;
+}
+
+.buy-options-indicator{
+  position:absolute;
+  z-index:0;
+  left:0;
+  top:0;
+  width:0;
+  height:0;
+  border-radius:22px;
+
+  background:var(--pick-bg);
+  opacity:0;
+
+  pointer-events:none;
+  transition:
+    left .45s cubic-bezier(.22,1,.36,1),
+    top .45s cubic-bezier(.22,1,.36,1),
+    width .45s cubic-bezier(.22,1,.36,1),
+    height .45s cubic-bezier(.22,1,.36,1),
+    opacity .25s ease,
+    background .35s ease;
+}
+
+.buy-options-indicator.is-on{opacity:1;}
+
+/* on the swatches it's a ring rather than a fill, so the colour inside still shows */
+.buy-options--swatches .buy-options-indicator{
+  border-radius:50%;
+  background:transparent;
+  border:2px solid var(--line);
+}
+
+.buy-option{
+  position:relative;
+  z-index:1;
+
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:18px 22px;
+  border-radius:22px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+
+  /* frosted like the lappy panel cards, so the canvas line art blurs away behind the copy */
+  backdrop-filter:blur(25px) saturate(160%);
+  -webkit-backdrop-filter:blur(25px) saturate(160%);
+
+  cursor:pointer;
+  transition:transform .25s ease, background .35s ease, border-color .35s ease;
+}
+
+html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px);}
+
+.buy-option:hover{transform:scale(1.02);}
+.buy-option:active{transform:scale(.98);}
+
+/* picked: the card goes clear so the indicator pill behind it shows through (Buy.js sets .is-picked). no blur either,
+   blurring the pill would just smudge its edges. three classes so it outranks the orange-zone rule above */
+.buy-options .buy-option.is-picked{
+  background:transparent;
+  border-color:transparent;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+/* the real radio stays in the label for keyboard + screen readers, it just isn't drawn */
+.buy-option input,
+.buy-swatch input{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+
+.buy-option:has(input:focus-visible),
+.buy-swatch:has(input:focus-visible){outline:2px solid var(--line); outline-offset:3px;}
+
+.buy-option-thumb{
+  flex:0 0 auto;
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  overflow:hidden;
+
+  background:color-mix(in srgb, var(--line) 8%, transparent);
+}
+
+.buy-option-thumb img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  user-select:none;
+  pointer-events:none;
+}
+
+.buy-option-text{
+  flex:1 1 auto;
+  min-width:0;
+
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.buy-option-name{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(1.05rem,1.5vw,1.25rem);
+  line-height:1.2;
+  color:var(--line);
+
+  transition:color .35s ease;
+}
+
+.buy-option-detail{
+  font-family:"obliqua",sans-serif;
+  font-size:.88rem;
+  line-height:1.45;
+  color:color-mix(in srgb, var(--line) 72%, transparent);
+
+  transition:color .35s ease;
+}
+
+.buy-option-price{
+  flex:0 0 auto;
+
+  font-family:"obliqua",sans-serif;
+  font-weight:700;
+  font-size:.92rem;
+  color:var(--line);
+
+  transition:color .35s ease;
+}
+
+.buy-option.is-picked .buy-option-name,
+.buy-option.is-picked .buy-option-price{color:var(--pick-ink);}
+.buy-option.is-picked .buy-option-detail{color:color-mix(in srgb, var(--pick-ink) 85%, transparent);}
+
+/* cards (the DIY / pre-built choice): image on top, copy under it, like the cards on the product pages */
+.buy-options--cards .buy-option{
+  flex-direction:column;
+  align-items:stretch;
+  gap:12px;
+  padding:12px 12px 18px;
+}
+
+.buy-options--cards .buy-option-thumb{
+  width:100%;
+  height:auto;
+  aspect-ratio:16/9;
+  border-radius:14px;
+}
+
+.buy-options--cards .buy-option-text,
+.buy-options--cards .buy-option-price{padding:0 8px;}
+
+/* swatches */
+.buy-swatch{
+  position:relative;
+  z-index:1;
+
+  width:58px;
+  height:58px;
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  cursor:pointer;
+  transition:transform .25s ease;
+}
+
+.buy-swatch:hover{transform:scale(1.1);}
+.buy-swatch:active{transform:scale(.95);}
+
+.buy-swatch-dot{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+
+  background:var(--swatch);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.35), 0 6px 16px rgba(0,0,0,.22);
+}
+
+.buy-swatch-name{
+  min-height:1.4em;
+  margin-top:18px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.4rem;
+  color:var(--line);
+}
+
+/* locked steps (an earlier step still needs a pick) stay readable but clearly out of reach. the fieldset is disabled
+   too, so their radios can't be clicked or tabbed into */
+.buy-step.is-locked .buy-options,
+.buy-step.is-locked .buy-swatch-name{opacity:.3;}
+
+.buy-step.is-locked .buy-option,
+.buy-step.is-locked .buy-swatch{cursor:default;}
+
+.buy-step.is-locked .buy-option:hover,
+.buy-step.is-locked .buy-swatch:hover{transform:none;}
+
+.buy-step-lock{
+  display:none;
+  align-self:flex-start;
+  position:relative;
+  z-index:1;
+
+  margin-top:24px;
+  padding:10px 20px;
+  border-radius:100px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:blur(25px);
+  -webkit-backdrop-filter:blur(25px);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.9rem;
+  color:var(--line);
+
+  cursor:pointer;
+  transition:transform .25s ease;
+}
+
+.buy-step-lock:hover{transform:scale(1.04);}
+.buy-step.is-locked .buy-step-lock{display:inline-flex;}
+
+/* "add to bag" with picks missing: the step it glides back to gives its options a shake */
+.buy-step.is-nudged .buy-options{animation:buy-nudge .5s ease;}
+
+@keyframes buy-nudge{
+  0%,100%{translate:0 0;}
+  20%{translate:-12px 0;}
+  40%{translate:10px 0;}
+  60%{translate:-7px 0;}
+  80%{translate:4px 0;}
+}
+
+/* review: the summary sits on its own frosted card, same glass as the stage. everything's a little tighter here than
+   on the other steps so add to bag still lands above the fold on a laptop screen */
+.buy-step--review{padding:136px 0 48px;}
+.buy-step--review .buy-step-help{margin-bottom:22px;}
+
+.buy-review-card{
+  padding:4px 24px 20px;
+  border-radius:28px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:blur(25px) saturate(160%);
+  -webkit-backdrop-filter:blur(25px) saturate(160%);
+}
+
+.buy-review-list{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.buy-review-row{
+  display:grid;
+  grid-template-columns:minmax(80px,.7fr) minmax(0,1.6fr) auto auto;
+  align-items:center;
+  gap:14px;
+  padding:9px 0;
+  border-bottom:1px solid color-mix(in srgb, var(--line) 18%, transparent);
+
+  font-family:"obliqua",sans-serif;
+  color:var(--line);
+}
+
+.buy-review-label{
+  font-size:12px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.buy-review-value{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.05rem;
+}
+
+.buy-review-cost{
+  font-size:.9rem;
+  color:color-mix(in srgb, var(--line) 80%, transparent);
+}
+
+.buy-review-row.is-missing .buy-review-value{color:color-mix(in srgb, var(--line) 45%, transparent);}
+
+.buy-review-change{
+  position:relative;
+  padding:0;
+  border:0;
+  background:none;
+
+  font-family:"obliqua",sans-serif;
+  font-size:.85rem;
+  color:var(--line);
+  cursor:pointer;
+}
+
+/* same draw-in underline as the footer links */
+.buy-review-change::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-3px;
+  width:100%;
+  height:1px;
+
+  background:currentColor;
+
+  transform:scaleX(.35);
+  transform-origin:left;
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+}
+
+.buy-review-change:hover::after{transform:scaleX(1);}
+.buy-review-row.is-missing .buy-review-change{font-weight:700;}
+
+.buy-review-total{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:16px;
+}
+
+.buy-review-total-label{
+  font-family:"obliqua",sans-serif;
+  font-size:13px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.buy-review-price{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(2rem,3.4vw,2.8rem);
+  line-height:1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
+
+.buy-review-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-top:22px;
+}
+
+.buy-review-small{
+  margin-top:12px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:.82rem;
+  color:var(--buy-soft-60);
+}
+
+/* step reveal (Buy.js adds .in-view the first time a step scrolls in). the heading rises and the options slide in from
+   the right one after another, the same moves as the product page configurator. options travel on `translate` so it
+   never fights their own hover scale on `transform` */
+.buy-step-index,
+.buy-step-head,
+.buy-step-help,
+.buy-option,
+.buy-swatch,
+.buy-swatch-name,
+.buy-review-card,
+.buy-review-buttons,
+.buy-review-small{opacity:0;}
+
+/* the picked pill only shows once its step has arrived, otherwise it'd float there before the options it sits behind */
+.buy-step:not(.in-view) .buy-options-indicator{visibility:hidden;}
+
+.buy-step.in-view .buy-step-index{animation:buy-index-pop .9s cubic-bezier(.22,1,.36,1) both;}
+.buy-step.in-view .buy-step-head{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) both;}
+.buy-step.in-view .buy-step-help{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .08s both;}
+
+.buy-step.in-view .buy-option,
+.buy-step.in-view .buy-swatch{animation:lappy-config-from-right .8s cubic-bezier(.22,1,.36,1) both; animation-delay:calc(.15s + var(--i,0) * .06s);}
+
+.buy-step.in-view .buy-options-indicator{animation:buy-slide-in .8s cubic-bezier(.22,1,.36,1) .15s both;}
+.buy-step.in-view .buy-swatch-name{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .35s both;}
+
+.buy-step.in-view .buy-review-card{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .15s both;}
+.buy-step.in-view .buy-review-buttons{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .3s both;}
+.buy-step.in-view .buy-review-small{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .45s both;}
+
+/* ends on the number's resting .12 opacity rather than lappy-hero-pop's full 1 */
+@keyframes buy-index-pop{
+  from{opacity:0; transform:scale(.6) rotate(6deg);}
+  to{opacity:.12; transform:none;}
+}
+
+/* movement only, the indicator's own opacity says whether anything is picked */
+@keyframes buy-slide-in{
+  from{translate:80px 0;}
+  to{translate:0 0;}
+}
+
+/* "add to bag" dialog. the dialog itself fills the screen (so the confetti has room to fly) with the card centred in it.
+   [open] only, otherwise this display would beat the browser's own display:none for a closed dialog */
+.buy-dialog{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+
+  margin:0;
+  padding:24px;
+  border:0;
+  background:transparent;
+  overflow:hidden;
+}
+
+.buy-dialog[open]{display:grid; place-items:center;}
+
+.buy-dialog::backdrop{
+  background:rgba(9,14,17,.6);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+
+.buy-dialog[open]::backdrop{animation:buy-fade .4s ease both;}
+
+@keyframes buy-fade{from{opacity:0;}}
+
+.buy-dialog-card{
+  position:relative;
+  z-index:1;
+  width:min(100%,520px);
+
+  padding:44px 40px 36px;
+  border-radius:28px;
+
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter:blur(25px) saturate(160%);
+  -webkit-backdrop-filter:blur(25px) saturate(160%);
+  box-shadow:0 30px 80px rgba(0,0,0,.4), inset 0 1px 1px rgba(255,255,255,.15);
+
+  text-align:center;
+  color:var(--whiteline);
+}
+
+.buy-dialog[open] .buy-dialog-card{animation:lappy-hero-pop .7s cubic-bezier(.22,1,.36,1) both;}
+
+/* the splash screen's building blocks, doing their little dance as a celebration */
+.buy-dialog-blocks{
+  position:relative;
+  width:84px;
+  aspect-ratio:1;
+  margin:0 auto 22px;
+}
+
+.buy-dialog-blocks img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+.buy-dialog[open] .buy-dialog-blocks .block-orange{animation:orangeMove 1.5s ease-in-out infinite;}
+.buy-dialog[open] .buy-dialog-blocks .block-purple{animation:purpleMove 1.5s ease-in-out infinite;}
+
+.buy-dialog-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2rem,5vw,2.8rem);
+  line-height:1.05;
+}
+
+.buy-dialog-text{
+  margin-top:14px;
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  color:color-mix(in srgb, var(--whiteline) 80%, transparent);
+}
+
+.buy-dialog-summary{
+  margin-top:8px;
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.05rem;
+  line-height:1.5;
+}
+
+.buy-dialog-price{
+  margin-top:16px;
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:2.2rem;
+  line-height:1;
+  color:var(--accent-3);
+}
+
+.buy-dialog-note{
+  max-width:40ch;
+  margin:18px auto 0;
+  font-family:"obliqua",sans-serif;
+  font-size:.85rem;
+  line-height:1.55;
+  color:color-mix(in srgb, var(--whiteline) 65%, transparent);
+}
+
+.buy-dialog-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  margin-top:28px;
+}
+
+.buy-confetti{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+}
+
+.buy-confetti-piece{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:12px;
+  height:12px;
+  margin:-6px 0 0 -6px;
+  border-radius:4px;
+}
+
+/* screen-reader-only live total */
+.buy-sr{
+  position:absolute;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  clip-path:inset(50%);
+  white-space:nowrap;
+}
+
+/* short laptop screens (1366x768 and the like): the review squeezes up a little so add to bag stays above the fold */
+@media (min-width:901px) and (max-height:820px){
+  .buy-step--review .buy-step-head{font-size:clamp(1.7rem,2.6vw,2.3rem);}
+  .buy-step--review .buy-step-help{margin-bottom:16px;}
+  .buy-review-row{padding:6px 0;}
+  .buy-review-buttons{margin-top:18px;}
+}
+
+/* stacked layout: the stage turns into a compact strip stuck under the nav and the steps scroll up beneath it */
+@media (max-width:900px){
+  .buy-layout{display:block; padding:0 24px;}
+
+  .buy-stage{
+    z-index:2;
+    height:auto;
+    padding:var(--stage-top) 0 10px;
+  }
+
+  /* frosted fade across the top, so steps scrolling up under the nav blur out instead of clashing with it */
+  .buy-stage::before{
+    content:"";
+    position:absolute;
+    z-index:-1;
+    top:0;
+    left:-24px;
+    right:-24px;
+    height:calc(var(--stage-top) + 20px);
+
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    -webkit-mask-image:linear-gradient(#000 55%, transparent);
+    mask-image:linear-gradient(#000 55%, transparent);
+
+    pointer-events:none;
+  }
+
+  .buy-stage-frame{height:var(--stage-h); padding:14px 16px; border-radius:24px;}
+  .buy-stage-view{margin:6px 0;}
+  .buy-stage-name,
+  .buy-stage-price{font-size:1.15rem;}
+
+  .buy-step{
+    min-height:calc(100vh - var(--stage-top) - var(--stage-h) - 10px);
+    min-height:calc(100svh - var(--stage-top) - var(--stage-h) - 10px);
+    padding:36px 0 64px;
+
+    /* auto-scroll lands each step just under the stuck stage rather than behind it */
+    scroll-margin-top:calc(var(--stage-top) + var(--stage-h) + 10px);
+  }
+
+  .buy-step-index{top:16px; font-size:5.5rem;}
+  .buy-step-body{max-width:none;}
+}
+
+@media (max-width:650px){
+  .buy-config{--stage-top:82px; --stage-h:clamp(180px,30vh,280px);}
+
+  .buy-step-head{font-size:clamp(1.6rem,7vw,2rem);}
+  .buy-option{gap:12px; padding:14px 16px; border-radius:18px;}
+  .buy-options-indicator{border-radius:18px;}
+
+  /* no room for side-by-side image cards under the stage, so the build choice becomes rows like every other step */
+  .buy-options--cards{display:flex; flex-direction:column; gap:10px;}
+  .buy-options--cards .buy-option{flex-direction:row; align-items:center; gap:12px; padding:14px 16px;}
+  .buy-options--cards .buy-option-thumb{width:46px; height:46px; aspect-ratio:auto;}
+  .buy-options--cards .buy-option-text,
+  .buy-options--cards .buy-option-price{padding:0;}
+
+  .buy-swatch{width:52px; height:52px;}
+
+  /* nine dots plus the step label have to share a phone-width strip */
+  .buy-dot{width:16px;}
+  .buy-dot.is-current{width:28px;}
+  .buy-dot::before{width:6px; height:6px;}
+  .buy-dot.is-current::before{width:18px;}
+  .buy-stage-step{font-size:11px;}
+  .buy-swatch-dot{width:38px; height:38px;}
+
+  .buy-review-row{
+    grid-template-columns:minmax(0,1fr) auto;
+    grid-template-areas:"label change" "value cost";
+    row-gap:4px;
+  }
+
+  .buy-review-label{grid-area:label;}
+  .buy-review-value{grid-area:value;}
+  .buy-review-cost{grid-area:cost;}
+  .buy-review-change{grid-area:change; justify-self:end;}
+
+  .buy-dialog-card{padding:36px 22px 28px;}
+}
+
+/* reduced motion: no bobbing, no reveals, no sliding, everything simply there */
+@media (prefers-reduced-motion:reduce){
+  #splash.loaded ~ .lappy-hero .buy-hero-tag,
+  #splash.loaded ~ .lappy-hero .buy-hero-price,
+  #splash.loaded ~ .lappy-hero .buy-hero-buttons{animation:none;}
+
+  .buy-stage-float,
+  .buy-step.in-view .buy-step-index,
+  .buy-step.in-view .buy-step-head,
+  .buy-step.in-view .buy-step-help,
+  .buy-step.in-view .buy-option,
+  .buy-step.in-view .buy-swatch,
+  .buy-step.in-view .buy-options-indicator,
+  .buy-step.in-view .buy-swatch-name,
+  .buy-step.in-view .buy-review-card,
+  .buy-step.in-view .buy-review-buttons,
+  .buy-step.in-view .buy-review-small,
+  .buy-step.is-nudged .buy-options,
+  .buy-dialog[open] .buy-dialog-card,
+  .buy-dialog[open]::backdrop,
+  .buy-dialog[open] .buy-dialog-blocks .block-orange,
+  .buy-dialog[open] .buy-dialog-blocks .block-purple{animation:none;}
+
+  .buy-step-head,
+  .buy-step-help,
+  .buy-option,
+  .buy-swatch,
+  .buy-swatch-name,
+  .buy-review-card,
+  .buy-review-buttons,
+  .buy-review-small{opacity:1;}
+
+  .buy-step-index{opacity:.12;}
+  .buy-step:not(.in-view) .buy-options-indicator{visibility:visible;}
+
+  .buy-options-indicator,
+  .buy-option,
+  .buy-swatch,
+  .buy-dot,
+  .buy-dot::before,
+  .buy-stage-tint,
+  .buy-stage-glow{transition:none;}
+}

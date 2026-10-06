@@ -747,9 +747,10 @@ function drawLine(line,time){
 }
 
 
-// scroll driven background zones, the same black > orange > purple > black run on both pages:
+// scroll driven background zones, the same black > orange > purple > black run on every page:
 //   home:  hero = black till its scroll-hijack engages, products = orange, about = purple, banner centre on = black
 //   lappy: hero + first banner = black, feature showcase = orange, DIY/pre-built + specs = purple, closing banner centre on = black
+//   buy:   hero = black, configurator steps = orange, review = purple, closing banner centre on = black
 // html[data-zone] (Style.css) drives --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
 const zoneSections={
   productWrap:document.getElementById("productWrap"),
@@ -758,7 +759,9 @@ const zoneSections={
   footer:document.querySelector(".site-footer"),
   lappyShowcase:document.getElementById("lappyShowcase"),
   lappyOptions:document.getElementById("lappyOptions"),
-  lappyBuyBanner:document.querySelector(".lappy-buy-banner")
+  lappyBuyBanner:document.querySelector(".lappy-buy-banner"),
+  buyConfig:document.getElementById("buyConfig"),
+  buyReview:document.getElementById("buyReview")
 };
 
 function hexToRgb(hex){
@@ -777,7 +780,7 @@ const zoneColors={
 // after the hero's scroll-hijack engaging, rather than being orange instantly
 let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
 function measureZones(){
-  const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner}=zoneSections;
+  const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner,buyConfig,buyReview}=zoneSections;
 
   if(heroWrap&&productWrap&&aboutWrap&&aboutBanner&&footer){
     const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
@@ -792,6 +795,14 @@ function measureZones(){
   else if(lappyShowcase&&lappyOptions&&lappyBuyBanner){
     zoneT0=lappyShowcase.offsetTop;
     zoneT1=lappyOptions.offsetTop;
+    zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
+  }
+  // buy: orange as the configurator arrives, purple once the review step takes over, black from the closing banner's
+  // centre. the review sits inside the configurator's grid rather than straight in <body>, so its offsetTop would be
+  // relative to that; measuring it off the viewport gives the page position instead
+  else if(buyConfig&&buyReview&&lappyBuyBanner){
+    zoneT0=buyConfig.offsetTop;
+    zoneT1=buyReview.getBoundingClientRect().top+scrollY;
     zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
   }
   else return;

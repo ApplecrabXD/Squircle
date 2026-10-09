@@ -12,4 +12,8 @@ __Nothing on this website is for SALE!!! This website is intended as a demo.__
 
 Feel free to check the website out [Here](https://squircle.company/ "Squircle")
 
+<sub><sup>
+[WHY IS THERE CODE??? JUST MAKE THE LINK AND GIVE IT TO ME](https://squircle.company/ "Squircle")
+</sup></sub>
+
 </div>

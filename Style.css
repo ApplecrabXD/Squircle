@@ -104,6 +104,10 @@ html,body{
   100%{background-position:0 0;}
 }
 
+/* the intro already played this tab, so the inline script in every page's <head> sets html.intro-seen before anything
+   paints and the splash (loading bar and all) never shows up when moving between pages */
+html.intro-seen #splash{display:none;}
+
 #splash{
   position:fixed;
   inset:0;
@@ -113,7 +117,9 @@ html,body{
   align-items:center;
   justify-content:center;
 
-  background:var(--background);
+  /* always the dark zone colour, the intro needs it and it hands straight off into the black hero */
+  background:var(--zone-dark);
+  overflow:hidden;
 
   transition:opacity .7s ease,visibility .7s;
 }
@@ -126,6 +132,7 @@ html,body{
 
 .splash-center{
   position:relative;
+  z-index:1;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -192,7 +199,7 @@ html,body{
 
   transform:translateX(-50%);
 
-  background:color-mix(in srgb, var(--line) 15%, transparent);
+  background:color-mix(in srgb, var(--whiteline) 15%, transparent);
 
   overflow:hidden;
   transition:opacity .3s ease;
@@ -205,7 +212,7 @@ html,body{
   width:0%;
   height:100%;
 
-  background:var(--line);
+  background:var(--whiteline);
 
   transform:translateX(-50%);
 
@@ -214,6 +221,87 @@ html,body{
 
 #splash.loaded .loading-bar{
   width:100%;
+}
+
+/* osu!lazer style intro that plays once loading is done. Script.js builds these and drives them with a gsap timeline,
+   while it runs the logo's own css transition is off so it doesn't fight gsap (it comes back for the flight to the nav) */
+#splash.intro .building-blocks{transition:none;}
+
+.splash-welcome{
+  position:absolute;
+  inset:0;
+  z-index:2;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  margin:0;
+  pointer-events:none;
+  visibility:hidden;
+}
+
+/* thin and spaced out like osu!'s "welcome to osu!", the inline-block is so gsap can shake it during the glitch */
+.splash-welcome-text{
+  display:inline-block;
+  white-space:nowrap;
+
+  font-family:"azo-sans-web","obliqua",sans-serif;
+  font-weight:300;
+  font-size:clamp(1.3rem,3.4vw,2.6rem);
+  letter-spacing:.16em;
+  color:var(--whiteline);
+}
+
+/* the last word lands in the brand font, same as the hero's Squircle */
+.splash-welcome-text span{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  letter-spacing:.04em;
+  color:var(--accent);
+}
+
+.splash-glitch{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+}
+
+.splash-glitch span{
+  position:absolute;
+  left:0;
+  top:0;
+  visibility:hidden;
+}
+
+/* outline round the logo that draws itself in (pathLength 100), then gets sent out as the ripple */
+.splash-ring{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+
+  overflow:visible;
+  pointer-events:none;
+  visibility:hidden;
+}
+
+.splash-ring path{
+  fill:none;
+  stroke:var(--whiteline);
+  stroke-width:10;
+  stroke-dasharray:100;
+}
+
+.splash-flash{
+  position:absolute;
+  inset:0;
+  z-index:3;
+
+  background:#fff;
+  pointer-events:none;
+  visibility:hidden;
 }
 
 /* navbar */

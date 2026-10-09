@@ -10,21 +10,28 @@ const navBlocks=document.querySelector(".nav-building-blocks");
 
 // splash screen
 
-// once the intro has played once anywhere on the site this tab session, skip it afterwords
+// once the intro has played once anywhere on the site this tab session, skip it afterwords. the inline script in every
+// page's <head> already checked before anything painted (html.intro-seen hides the splash in Style.css) so moving between
+// pages never even flashes the loading bar, checking sessionStorage here as well covers a page that's missing it
 const introKey="squircleIntroSeen";
+let introSeen=document.documentElement.classList.contains("intro-seen");
+try{introSeen=introSeen || sessionStorage.getItem(introKey)==="1";}catch(e){}
 
-if(splash && loadingBar && sessionStorage.getItem(introKey)==="1"){
+if(splash && loadingBar && introSeen){
   splash.style.display="none";
   splash.classList.add("loaded");
-  
-}else if(splash && loadingBar){
-  sessionStorage.setItem(introKey,"1");
 
-  const minimumTime=2500; //i think this line is beeing intprted in sec rather then ms by web-kit
+}else if(splash && loadingBar){
+  try{sessionStorage.setItem(introKey,"1");}catch(e){}
+
+  const minimumTime=1000; // ms, the intro plays straight after this now so the loader only needs to be up long enough to see
   const startTime=performance.now();
 
   let pageLoaded=false;
   let loadingFinished=false;
+
+  // the intro's fonts aren't on screen till its first word, so the browser wouldn't fetch them till then either. start now
+  const introFonts=document.fonts ? Promise.all([document.fonts.load('300 1em "azo-sans-web"'),document.fonts.load('1em "SuperMalibu"')]).catch(()=>{}) : Promise.resolve();
 
 
   // Loading
@@ -46,6 +53,10 @@ if(splash && loadingBar && sessionStorage.getItem(introKey)==="1"){
   // move animation to nav
 function moveAnimationToNavbar(){
   if(!splashBlocks || !navBlocks){ splash.classList.add("loaded"); splash.style.display="none"; return; }
+
+  // the intro drove the logo with gsap, hand it back to the css transition this flight uses
+  if(window.gsap) gsap.set(splashBlocks,{clearProps:"transform"});
+  splash.classList.remove("intro");
 
   const loadContainer=document.querySelector(".loading-container");
   if(loadContainer) loadContainer.style.opacity="0";
@@ -79,16 +90,177 @@ function moveAnimationToNavbar(){
   setTimeout(()=>{splash.style.display="none";},1600);
 }
 
+  // osu!lazer style intro, plays once everything's loaded. the loader gets sucked into a point, "welcome to squircle"
+  // builds up a chunk a beat, squares and circles glitch in behind it, the four logo blocks line up like osu!'s ruleset
+  // icons and slam together into the logo, then a white flash swaps the splash for the page and the logo flies up to
+  // the nav same as before. clicking or pressing any key skips straight to the flash
+  function playIntro(){
+    const center=document.querySelector(".splash-center");
+    const loadContainer=document.querySelector(".loading-container");
+    const blocks=splashBlocks ? [".block-orange",".block-gray",".block-purple",".block-white"].map(c=>splashBlocks.querySelector(c)) : [];
+
+    // no gsap (cdn down) or reduced motion, straight up to the nav like it used to
+    if(!window.gsap || matchMedia("(prefers-reduced-motion: reduce)").matches || !navBlocks || !center || !loadContainer || blocks.length!==4 || blocks.includes(null)){
+      moveAnimationToNavbar();
+      return;
+    }
+
+    splash.classList.add("intro");
+
+    // the beat, in seconds from here. the gaps between the words, glitch, blocks and logo are lifted from osu!lazer's
+    // triangles intro, which is what makes it feel like it's hitting to music that isn't there
+    const at={wel:.85,welcome:1.05,welcomeTo:1.35,squircle:1.55,glitch:1.71,row1:2.1,row2:2.3,row3:2.5,impact:2.73,reveal:3.45};
+
+    // one size unit so it all scales with the screen, the row of blocks on the last beat is the widest thing that has to fit
+    const u=Math.min(innerWidth/950,innerHeight/380,1.5);
+    const rootStyle=getComputedStyle(document.documentElement);
+    const palette=["--accent","--accent-2","--accent-3","--whiteline"].map(v=>rootStyle.getPropertyValue(v).trim());
+
+    const welcome=document.createElement("p");
+    welcome.className="splash-welcome";
+    welcome.setAttribute("aria-hidden","true");
+    welcome.innerHTML='<span class="splash-welcome-text"></span>';
+    const welcomeText=welcome.firstChild;
+
+    // squares and circles in the brand colours for the glitch to flicker on and off
+    const glitch=document.createElement("div");
+    glitch.className="splash-glitch";
+    glitch.setAttribute("aria-hidden","true");
+
+    for(let i=0;i<24;i++){
+      const shape=document.createElement("span");
+      const size=(16+Math.random()*110)*Math.min(1,.4+u*.5);
+      const color=palette[i%palette.length];
+
+      shape.style.width=shape.style.height=size+"px";
+      shape.style.borderRadius=i%2 ? "50%" : "22%";
+      if(i%3) shape.style.border=`2px solid ${color}`;
+      else shape.style.background=color;
+
+      glitch.append(shape);
+    }
+
+    const flash=document.createElement("div");
+    flash.className="splash-flash";
+    flash.setAttribute("aria-hidden","true");
+
+    splash.prepend(glitch);
+    splash.append(welcome,flash);
+
+    // a rounded square just outside the orange block, turned into the same diamond. one draws itself in, the other is the ripple
+    const ringSvg='<svg class="splash-ring" viewBox="0 0 1280 1024" aria-hidden="true"><path pathLength="100" transform="rotate(45 640 512)" d="M360 112H920A120 120 0 0 1 1040 232V792A120 120 0 0 1 920 912H360A120 120 0 0 1 240 792V232A120 120 0 0 1 360 112Z"/></svg>';
+    splashBlocks.insertAdjacentHTML("beforeend",ringSvg+ringSvg);
+    const [ring,ripple]=splashBlocks.querySelectorAll(".splash-ring");
+    const ringPath=ring.querySelector("path");
+
+    const tl=gsap.timeline();
+
+    function skipIntro(){if(tl.time()<at.reveal) tl.seek("reveal");}
+    splash.addEventListener("pointerdown",skipIntro);
+    addEventListener("keydown",skipIntro);
+
+    // the bar finishes and everything gets sucked into a point. the dance only stops once it's too small to see the snap
+    tl.to(loadContainer,{width:0,duration:.3,ease:"power3.in"},.3)
+      .to(splashBlocks,{scale:0,duration:.42,ease:"back.in(2.2)"},.25)
+      .set(blocks,{animation:"none"},.7);
+
+    // welcome to squircle, a chunk a beat, slowly spreading out like osu!'s does. the spacing is worked out in px from
+    // the font size, gsap measures the (still empty) text to convert em and gets 0. autoRound off or it widens in
+    // whole px steps and the text visibly jumps
+    const welcomeSize=parseFloat(getComputedStyle(welcomeText).fontSize);
+
+    tl.set(welcome,{autoAlpha:1},at.wel)
+      .fromTo(welcomeText,{letterSpacing:welcomeSize*.16},{letterSpacing:welcomeSize*.4,duration:at.row1-at.wel,ease:"none",autoRound:false,immediateRender:false},at.wel);
+
+    [[at.wel,"wel"],[at.welcome,"welcome"],[at.welcomeTo,"welcome to"],[at.squircle,"welcome to <span>squircle</span>"]].forEach(([t,text])=>{
+      tl.call(()=>{welcomeText.innerHTML=text;},null,t)
+        .fromTo(welcomeText,{scale:1.08},{scale:1,duration:.18,ease:"power2.out",immediateRender:false},t);
+    });
+
+    // glitch, random shapes flicker in for a frame or three while the text splits into orange and purple
+    const shapes=[...glitch.children];
+    let nextShape=0;
+
+    for(let t=at.glitch;t<at.row1-.03;t+=.035){
+      for(let i=0;i<3;i++){
+        const shape=shapes[nextShape++%shapes.length];
+        tl.set(shape,{x:Math.random()*innerWidth-60,y:Math.random()*innerHeight-60,rotation:Math.random()<.5?0:45,autoAlpha:.35+Math.random()*.65},t)
+          .set(shape,{autoAlpha:0},Math.min(t+.05+Math.random()*.06,at.row1));
+      }
+
+      const split=(1+Math.random()*3)*Math.max(u,.6);
+      tl.set(welcomeText,{x:(Math.random()-.5)*8,textShadow:`${split}px 0 ${palette[0]}, ${-split}px 0 ${palette[1]}`},t);
+    }
+
+    tl.set(welcome,{autoAlpha:0},at.row1)
+      .set(welcomeText,{x:0,textShadow:"none"},at.row1);
+
+    // the four blocks line up like osu!'s ruleset icons, bigger and closer together every beat. the shapes are all
+    // different sizes inside their svgs (these fractions of the box), so each one gets scaled to read the same size
+    const box=splashBlocks.offsetWidth;
+    const shapeSize=[.5224,.4315,.2521,.1398]; // orange square, gray circle, purple square, white circle
+    const glowColor=["rgba(204,51,15,.8)","rgba(237,237,237,.35)","rgba(142,13,171,.85)","rgba(237,237,237,.6)"];
+
+    tl.set(splashBlocks,{scale:1},at.row1);
+
+    // [beat, icon size, gap, punch] sizes in u. the last row skips the punch since the slam takes straight over
+    [[at.row1,52,130,1.1],[at.row2,104,40,1.1],[at.row3,190,16,1]].forEach(([t,size,gap,punch])=>{
+      const s=size*u;
+      const scaleOf=i=>s/(shapeSize[i]*box);
+
+      tl.set(blocks,{
+        x:i=>(i-1.5)*(s+gap*u),
+        scale:i=>scaleOf(i)*punch,
+        rotation:i=>i===0?-45:0,
+        // drop-shadow gets scaled along with the block, so divide that back out to keep every glow the same on screen
+        filter:i=>`drop-shadow(0 0 ${(s*.22/scaleOf(i)).toFixed(1)}px ${glowColor[i]})`
+      },t);
+
+      if(punch!==1) tl.to(blocks,{scale:scaleOf,duration:.16,ease:"power2.out"},t);
+    });
+
+    // slam! they fly into the middle and stack back up into the logo, orange turning into its diamond on the way
+    tl.to(blocks,{x:0,scale:1,rotation:i=>i===2?90:0,duration:at.impact-at.row3-.04,ease:"power3.in"},at.row3+.04)
+      .set(blocks,{filter:"none"},at.impact)
+      .set(splashBlocks,{scale:1.12},at.impact)
+      .to(splashBlocks,{scale:1,duration:.3,ease:"power3.out"},at.impact)
+      .set(center,{x:7*u,y:-5*u},at.impact)
+      .set(center,{x:-5*u,y:4*u},at.impact+.04)
+      .set(center,{x:3*u,y:-2*u},at.impact+.08)
+      .set(center,{x:0,y:0},at.impact+.12);
+
+    // the lazer logo bit, an outline draws itself round the logo while it winds up
+    tl.set(ring,{autoAlpha:1},at.impact)
+      .fromTo(ringPath,{strokeDashoffset:100},{strokeDashoffset:0,duration:at.reveal-at.impact-.05,ease:"power2.inOut",immediateRender:false},at.impact)
+      .to(splashBlocks,{scale:.9,duration:at.reveal-at.impact-.3,ease:"power2.in"},at.impact+.3);
+
+    // flash! the splash goes see-through under it so the page is there when it fades, and the logo pops and ripples out
+    tl.addLabel("reveal",at.reveal)
+      .set(flash,{autoAlpha:1},"reveal")
+      .to(flash,{autoAlpha:0,duration:1,ease:"power2.out"},"reveal")
+      .set(splash,{backgroundColor:"transparent"},"reveal")
+      .set(splashBlocks,{scale:1.18},"reveal")
+      .to(splashBlocks,{scale:1,duration:.6,ease:"back.out(2.5)"},"reveal")
+      .to(ring,{scale:1.6,autoAlpha:0,duration:.8,ease:"power2.out"},"reveal")
+      .set(ripple,{autoAlpha:.6},"reveal")
+      .to(ripple,{scale:2.4,autoAlpha:0,duration:1.1,ease:"power2.out"},"reveal")
+      .call(()=>{
+        splash.removeEventListener("pointerdown",skipIntro);
+        removeEventListener("keydown",skipIntro);
+        moveAnimationToNavbar();
+      },null,at.reveal+.65);
+  }
+
   // end splash screen
   function finishSplash(){
     if(!pageLoaded || loadingFinished)return; loadingFinished=true;
-    
-    const elapsed=performance.now()-startTime;
-    const remaining=Math.max(0,minimumTime-elapsed);
 
     loadingBar.style.width="100%";
 
-    setTimeout(()=>{moveAnimationToNavbar();},remaining);
+    // the intro's fonts get a couple of seconds at most, one slow font shouldn't hold the whole site up
+    Promise.race([introFonts,new Promise(done=>setTimeout(done,2000))]).then(()=>{
+      setTimeout(playIntro,Math.max(0,minimumTime-(performance.now()-startTime)));
+    });
   }
 
   window.addEventListener("load",()=>{pageLoaded=true; finishSplash();});

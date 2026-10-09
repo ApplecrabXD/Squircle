@@ -935,8 +935,6 @@ function drawLine(line,time){
 //   home:  hero = black till its scroll-hijack engages, products = orange, about = purple, banner centre on = black
 //   lappy: hero + first banner = black, feature showcase = orange, DIY/pre-built + specs = purple, closing banner centre on = black
 //   buy:   hero = black, configurator steps = orange, review = purple, closing banner centre on = black
-//   shop:  hero = black, filters + products = orange, closing marquee = purple, closing banner centre on = black
-//   about: hero = black, what's a squircle + story = orange, four blocks + behind the scenes = purple, closing banner centre on = black
 // html[data-zone] (Style.css) drives --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
 const zoneSections={
   productWrap:document.getElementById("productWrap"),
@@ -947,11 +945,7 @@ const zoneSections={
   lappyOptions:document.getElementById("lappyOptions"),
   lappyBuyBanner:document.querySelector(".lappy-buy-banner"),
   buyConfig:document.getElementById("buyConfig"),
-  buyReview:document.getElementById("buyReview"),
-  shop:document.getElementById("shop"),
-  shopMarquee:document.getElementById("shopMarquee"),
-  aboutusName:document.getElementById("aboutusName"),
-  aboutusBlocks:document.getElementById("aboutusBlocks")
+  buyReview:document.getElementById("buyReview")
 };
 
 function hexToRgb(hex){
@@ -970,7 +964,7 @@ const zoneColors={
 // after the hero's scroll-hijack engaging, rather than being orange instantly
 let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
 function measureZones(){
-  const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner,buyConfig,buyReview,shop,shopMarquee,aboutusName,aboutusBlocks}=zoneSections;
+  const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner,buyConfig,buyReview}=zoneSections;
 
   if(heroWrap&&productWrap&&aboutWrap&&aboutBanner&&footer){
     const productBottom=productWrap.offsetTop+productWrap.offsetHeight;
@@ -993,20 +987,6 @@ function measureZones(){
   else if(buyConfig&&buyReview&&lappyBuyBanner){
     zoneT0=buyConfig.offsetTop;
     zoneT1=buyReview.getBoundingClientRect().top+scrollY;
-    zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
-  }
-  // shop: orange as the filters + products arrive, purple once they've been scrolled past (the marquee after them),
-  // black from the closing banner's centre. filtering changes the grid's height, the ResizeObserver below catches that
-  else if(shop&&shopMarquee&&lappyBuyBanner){
-    zoneT0=shop.offsetTop;
-    zoneT1=shopMarquee.offsetTop;
-    zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
-  }
-  // about: orange as "what's a squircle" arrives (so it's full orange before its pin starts), purple once the four
-  // blocks take over, black from the closing banner's centre
-  else if(aboutusName&&aboutusBlocks&&lappyBuyBanner){
-    zoneT0=aboutusName.offsetTop;
-    zoneT1=aboutusBlocks.offsetTop;
     zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
   }
   else return;

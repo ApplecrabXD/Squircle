@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buy Lappy 13 Pro</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
-<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
-<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../Style.css">
 <link rel="stylesheet" href="../Products.css">
@@ -54,7 +52,8 @@
     <div class="nav-links">
       <div class="nav-indicator"></div>
       <a href="../index.html">Home</a>
-      <a href="../Shop/">Shop</a>
+      <a href="../shop.html">Shop</a>
+      <a href="../support.html">Support</a>
       <a href="../about.html">About Us</a>
     </div>
   </div>
@@ -67,12 +66,14 @@
 
 <section class="lappy-hero">
   <div class="lappy-hero-copy">
+    <p class="buy-hero-tag">Buy <span data-buy-name>Lappy 13 Pro</span></p>
     <h1 class="lappy-hero-title">Make it<br>
       <span class="hero-title-atom">
         <span class="hero-title-atom-text">Yours</span>
         <canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas>
       </span>
     </h1>
+    <p class="buy-hero-price">From <span data-buy-from>$1,499</span></p>
     <div class="hero-buttons buy-hero-buttons">
       <button type="button" class="btn btn-fill" id="buyStart">Start Building</button>
       <a href="../Lappy/" class="btn btn-outline" id="buyLearn">Learn More</a>
@@ -164,7 +165,7 @@
   <img src="../Assets/Temp/16x9.png" alt="Placeholder image">
   <div class="lappy-buy-banner-copy">
     <h2 class="lappy-buy-banner-title">Need a hand?</h2>
-    <a href="#" class="btn btn-fill">Placeholder</a>
+    <a href="../support.html" class="btn btn-fill">Get Support</a>
   </div>
 </section>
 
@@ -193,8 +194,8 @@
       <div class="footer-col">
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
-        <a href="../Shop/">Shop</a>
-        <a href="#">Placeholder</a>
+        <a href="../shop.html">Shop</a>
+        <a href="../support.html">Support</a>
       </div>
 
       <div class="footer-col">

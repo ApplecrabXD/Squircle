@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="Style.css">
 </head>
@@ -80,8 +82,7 @@
     <div class="nav-links">
       <div class="nav-indicator"></div> <!--why dose this work why did i do it like this-->
       <a href="index.html">Home</a>
-      <a href="shop.html">Shop</a>
-      <a href="support.html">Support</a>
+      <a href="Shop/">Shop</a>
       <a href="about.html">About Us</a>
     </div>
   </div>
@@ -106,7 +107,7 @@
         </span>
       </h1>
       <div class="hero-buttons">
-        <a href="shop.html" class="btn btn-fill">Shop Now</a>
+        <a href="Shop/" class="btn btn-fill">Shop Now</a>
         <a href="knowlage.html" class="btn btn-outline">Knowlage Base</a>
       </div>
     </div>
@@ -150,42 +151,52 @@
 
         <article class="product-card product-card--alt"> <!-- why am i useing mutltable clases for the same elements-->
           <div class="product-media">
-            <img src="Assets/Temp/9x16.jpg" alt="Placeholder product 2">
+            <a href="Gammy%20Pro%20Max/">
+              <img src="Assets/Temp/9x16.jpg" alt="Gammy Pro Max">
+            </a>
           </div>
-          <h3 class="product-name">Placeholder Product 2</h3>
-          <a href="#" class="btn btn-fill product-buy">Buy Now</a>
+          <h3 class="product-name">Gammy Pro Max</h3>
+          <a href="Gammy%20Pro%20Max/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
         <article class="product-card">
           <div class="product-media">
-            <img src="Assets/Temp/9x16.jpg" alt="Placeholder product 3">
+            <a href="Ally%20Maxx/">
+              <img src="Assets/Temp/9x16.jpg" alt="Ally Maxx">
+            </a>
           </div>
-          <h3 class="product-name">Placeholder Product 3</h3>
-          <a href="#" class="btn btn-fill product-buy">Buy Now</a>
+          <h3 class="product-name">Ally Maxx</h3>
+          <a href="Ally%20Maxx/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
         <article class="product-card product-card--alt">
           <div class="product-media">
-            <img src="Assets/Temp/9x16.jpg" alt="Placeholder product 4">
+            <a href="Flippy%206%20Pro/">
+              <img src="Assets/Temp/9x16.jpg" alt="Flippy 6 Pro">
+            </a>
           </div>
-          <h3 class="product-name">Placeholder Product 4</h3>
-          <a href="#" class="btn btn-fill product-buy">Buy Now</a>
+          <h3 class="product-name">Flippy 6 Pro</h3>
+          <a href="Flippy%206%20Pro/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
         <article class="product-card">
           <div class="product-media">
-            <img src="Assets/Temp/9x16.jpg" alt="Placeholder product 5">
+            <a href="Watchy%203/">
+              <img src="Assets/Temp/9x16.jpg" alt="Watchy 3">
+            </a>
           </div>
-          <h3 class="product-name">Placeholder Product 5</h3>
-          <a href="#" class="btn btn-fill product-buy">Buy Now</a>
+          <h3 class="product-name">Watchy 3</h3>
+          <a href="Watchy%203/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
         <article class="product-card product-card--alt">
           <div class="product-media">
-            <img src="Assets/Temp/9x16.jpg" alt="Placeholder product 6">
+            <a href="Nuker/">
+              <img src="Assets/Temp/9x16.jpg" alt="Nuker">
+            </a>
           </div>
-          <h3 class="product-name">Placeholder Product 6</h3>
-          <a href="#" class="btn btn-fill product-buy">Buy Now</a>
+          <h3 class="product-name">Nuker</h3>
+          <a href="Nuker/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
       </div>
@@ -249,15 +260,15 @@
         <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
         <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
       </div>
-      <p class="footer-tagline">Placeholder tagline about Squircle goes here &mdash; swap this for the real copy once it's ready.</p>
+      <p class="footer-tagline">Squircle. Let's Have Some Fun.</p>
     </div>
 
     <nav class="footer-links">
       <div class="footer-col">
         <h4 class="footer-heading">Site</h4>
         <a href="index.html">Home</a>
-        <a href="shop.html">Shop</a>
-        <a href="support.html">Support</a>
+        <a href="Shop/">Shop</a>
+        <a href="#">Placeholder</a>
       </div>
 
       <div class="footer-col">

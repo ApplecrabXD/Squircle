@@ -160,6 +160,8 @@ html,body{
 
 #splash .block-orange{animation:orangeMove 1.5s ease-in-out infinite;}
 #splash .block-purple{animation:purpleMove 1.5s ease-in-out infinite;}
+#splash .block-gray,
+#splash .block-white{animation:blockPulse 1.5s ease-in-out infinite;}
 
 @keyframes orangeMove{
   0%,20%{transform:rotate(-45deg);}
@@ -171,6 +173,14 @@ html,body{
   0%,20%{transform:rotate(0deg);}
   50%,70%{transform:rotate(90deg);}
   100%{transform:rotate(0deg);}
+}
+
+/* the circles' part of the dance: same holds as the squares' turns so they all move together. uses the separate
+   scale property, not transform, so it never fights the rotate the blocks sit at */
+@keyframes blockPulse{
+  0%,20%{scale:1;}
+  50%,70%{scale:1.12;}
+  100%{scale:1;}
 }
 
 .loading-container{
@@ -335,6 +345,14 @@ html,body{
 
 .nav-orb:hover .nav-logo .block-orange{animation:navOrangeMove .8s ease-in-out;}
 .nav-orb:hover .nav-logo .block-purple{animation:navPurpleMove .8s ease-in-out;}
+.nav-orb:hover .nav-logo .block-gray,
+.nav-orb:hover .nav-logo .block-white{animation:navPulse .8s ease-in-out;}
+
+@keyframes navPulse{
+  0%{scale:1;}
+  50%{scale:1.12;}
+  100%{scale:1;}
+}
 
 @keyframes navOrangeMove{
   0%{transform:rotate(-45deg);}
@@ -1319,6 +1337,8 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 /* idle wiggle reusing splash screen animation */
 .footer-blocks .block-orange{animation:orangeMove 3s ease-in-out infinite;}
 .footer-blocks .block-purple{animation:purpleMove 3s ease-in-out infinite;}
+.footer-blocks .block-gray,
+.footer-blocks .block-white{animation:blockPulse 3s ease-in-out infinite;}
 
 .footer-tagline{
   max-width:32ch;
@@ -1584,12 +1604,16 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
 @media (prefers-reduced-motion:reduce){
   #splash .block-orange,
   #splash .block-purple,
+  #splash .block-gray,
+  #splash .block-white,
   .loading-bar,
   .marquee-track,
   .grain{animation:none;}
 
   .footer-blocks .block-orange,
-  .footer-blocks .block-purple{animation:none;}
+  .footer-blocks .block-purple,
+  .footer-blocks .block-gray,
+  .footer-blocks .block-white{animation:none;}
 
   .about-scribble-text,
   .about-scribble-circle path{transition:none;}

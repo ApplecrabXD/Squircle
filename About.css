@@ -684,18 +684,14 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 .aboutus-blocks-tile:is([data-active="purple"],[data-active="all"]) [data-block="purple"]{animation:aboutus-turn 2.4s ease-in-out infinite;}
 
 .aboutus-blocks-tile:is([data-active="gray"],[data-active="all"]) [data-block="gray"],
-.aboutus-blocks-tile:is([data-active="white"],[data-active="all"]) [data-block="white"]{animation:aboutus-pulse 2.4s ease-in-out infinite;}
+.aboutus-blocks-tile:is([data-active="white"],[data-active="all"]) [data-block="white"]{animation:blockPulse 2.4s ease-in-out infinite;}
 
+/* blockPulse lives in Style.css, shared with every other animated logo. the turn is this page's own since these blocks
+   sit at the svg's own angle rather than the splash's */
 @keyframes aboutus-turn{
   0%,20%{rotate:0deg;}
   50%,70%{rotate:var(--turn);}
   100%{rotate:0deg;}
-}
-
-@keyframes aboutus-pulse{
-  0%,20%{scale:1;}
-  50%,70%{scale:1.12;}
-  100%{scale:1;}
 }
 
 .aboutus-rules{

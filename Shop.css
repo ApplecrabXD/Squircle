@@ -698,6 +698,8 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
 
 .shop-empty-blocks .block-orange{animation:orangeMove 1.5s ease-in-out infinite;}
 .shop-empty-blocks .block-purple{animation:purpleMove 1.5s ease-in-out infinite;}
+.shop-empty-blocks .block-gray,
+.shop-empty-blocks .block-white{animation:blockPulse 1.5s ease-in-out infinite;}
 
 .shop-empty-title{
   font-family:"SuperMalibu","obliqua",sans-serif;
@@ -780,7 +782,9 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
   #splash.loaded ~ .lappy-hero .shop-hero-text,
   #splash.loaded ~ .lappy-hero .shop-hero-buttons,
   .shop-empty-blocks .block-orange,
-  .shop-empty-blocks .block-purple{animation:none;}
+  .shop-empty-blocks .block-purple,
+  .shop-empty-blocks .block-gray,
+  .shop-empty-blocks .block-white{animation:none;}
 
   .shop-card,
   .shop-card-media img,

@@ -62,10 +62,8 @@ function moveAnimationToNavbar(){
   const deltaY=navY-splashY;
   const scale=navRect.width/splashRect.width;
 
-  const orange=splashBlocks.querySelector(".block-orange");
-  const purple=splashBlocks.querySelector(".block-purple");
-  if(orange) orange.style.animation="none";
-  if(purple) purple.style.animation="none";
+  // every block stops dancing for the flight up to the nav
+  splashBlocks.querySelectorAll("img").forEach(block=>{block.style.animation="none";});
 
   // move to the nav icon position
   splashBlocks.style.transform=`translate(${deltaX}px, ${deltaY}px) scale(${scale})`;

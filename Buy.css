@@ -890,6 +890,8 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
 
 .buy-dialog[open] .buy-dialog-blocks .block-orange{animation:orangeMove 1.5s ease-in-out infinite;}
 .buy-dialog[open] .buy-dialog-blocks .block-purple{animation:purpleMove 1.5s ease-in-out infinite;}
+.buy-dialog[open] .buy-dialog-blocks .block-gray,
+.buy-dialog[open] .buy-dialog-blocks .block-white{animation:blockPulse 1.5s ease-in-out infinite;}
 
 .buy-dialog-title{
   font-family:"SuperMalibu","obliqua",sans-serif;
@@ -1077,7 +1079,9 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-dialog[open] .buy-dialog-card,
   .buy-dialog[open]::backdrop,
   .buy-dialog[open] .buy-dialog-blocks .block-orange,
-  .buy-dialog[open] .buy-dialog-blocks .block-purple{animation:none;}
+  .buy-dialog[open] .buy-dialog-blocks .block-purple,
+  .buy-dialog[open] .buy-dialog-blocks .block-gray,
+  .buy-dialog[open] .buy-dialog-blocks .block-white{animation:none;}
 
   .buy-step-head,
   .buy-step-help,

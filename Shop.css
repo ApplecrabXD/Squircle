@@ -2,22 +2,8 @@
    the hero, marquee and closing banner are the product pages' lappy-* pieces from Products.css, so everything here is
    the hero's extras plus the shop itself. Shop.js does the filtering */
 
-/* hero extras: the shared lappy-hero brings the title + floating product, these add the tag, line and buttons
-   (the same three the buy page adds) */
-.shop-hero-tag{
-  display:inline-block;
-  margin-bottom:28px;
-  padding:8px 20px;
-  border-radius:100px;
-  background:var(--accent);
-
-  font-family:"obliqua",sans-serif;
-  font-size:.8rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:#fff;
-}
-
+/* hero extras: the shared lappy-hero brings the title + floating product, these add the line and buttons
+   (the same two the buy page adds) */
 .shop-hero-text{
   margin-top:20px;
 
@@ -39,11 +25,9 @@ button.btn{cursor:pointer;}
 }
 
 /* the extras join the hero entrance with the same rise as the title, each a beat behind it */
-#splash:not(.loaded) ~ .lappy-hero .shop-hero-tag,
 #splash:not(.loaded) ~ .lappy-hero .shop-hero-text,
 #splash:not(.loaded) ~ .lappy-hero .shop-hero-buttons{opacity:0;}
 
-#splash.loaded ~ .lappy-hero .shop-hero-tag{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .1s both;}
 #splash.loaded ~ .lappy-hero .shop-hero-text{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .3s both;}
 #splash.loaded ~ .lappy-hero .shop-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
 
@@ -778,7 +762,6 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
 
 /* reduced motion: no reveals, no sliding, no dancing blocks, everything simply there */
 @media (prefers-reduced-motion:reduce){
-  #splash.loaded ~ .lappy-hero .shop-hero-tag,
   #splash.loaded ~ .lappy-hero .shop-hero-text,
   #splash.loaded ~ .lappy-hero .shop-hero-buttons,
   .shop-empty-blocks .block-orange,

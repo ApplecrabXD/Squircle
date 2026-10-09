@@ -13,7 +13,7 @@
   --card-border:rgba(0,0,0,.08);
   --glass:blur(25px) saturate(160%);
 
-  /* tag pills + the name chips. the accent pill normally, white with orange text on the orange zone, the same swap
+  /* the name chips. the accent pill normally, white with orange text on the orange zone, the same swap
      .btn-fill makes there */
   --pick-bg:var(--accent);
   --pick-ink:#fff;
@@ -49,22 +49,6 @@ html[data-zone="orange"] .aboutus-page{
 }
 
 /* shared type */
-.aboutus-hero-tag,
-.aboutus-tag{
-  display:inline-flex;
-  padding:8px 20px;
-  border-radius:100px;
-  background:var(--pick-bg);
-
-  font-family:"obliqua",sans-serif;
-  font-size:.8rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:var(--pick-ink);
-
-  transition:background .35s ease, color .35s ease;
-}
-
 .aboutus-title{
   font-family:"SuperMalibu","obliqua",sans-serif;
   font-weight:400;
@@ -81,7 +65,7 @@ html[data-zone="orange"] .aboutus-page{
   color:var(--aboutus-soft-75);
 }
 
-/* centred tag + title (+ lede) opening each section */
+/* centred title (+ lede) opening each section */
 .aboutus-head{
   display:flex;
   flex-direction:column;
@@ -104,10 +88,8 @@ html[data-zone="orange"] .aboutus-page{
 }
 
 
-/* hero extras: the shared lappy-hero brings the title, these add the tag, line, buttons and the logo in place of a
+/* hero extras: the shared lappy-hero brings the title, these add the line, buttons and the logo in place of a
    product shot */
-.aboutus-hero-tag{margin-bottom:28px;}
-
 .aboutus-hero-text{
   max-width:32ch;
   margin:20px auto 0;
@@ -123,12 +105,10 @@ html[data-zone="orange"] .aboutus-page{
 
 /* the extras join the hero entrance with the same rise as the title, each a beat behind it, and the logo slides in
    like the product pages' hero shot */
-#splash:not(.loaded) ~ .lappy-hero .aboutus-hero-tag,
 #splash:not(.loaded) ~ .lappy-hero .aboutus-hero-text,
 #splash:not(.loaded) ~ .lappy-hero .aboutus-hero-buttons,
 #splash:not(.loaded) ~ .lappy-hero .aboutus-hero-visual{opacity:0;}
 
-#splash.loaded ~ .lappy-hero .aboutus-hero-tag{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .1s both;}
 #splash.loaded ~ .lappy-hero .aboutus-hero-text{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .3s both;}
 #splash.loaded ~ .lappy-hero .aboutus-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
 #splash.loaded ~ .lappy-hero .aboutus-hero-visual{animation:lappy-hero-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
@@ -957,7 +937,6 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 
 /* reduced motion: no float, no teardown glide, no dancing blocks, everything simply there */
 @media (prefers-reduced-motion:reduce){
-  #splash.loaded ~ .lappy-hero .aboutus-hero-tag,
   #splash.loaded ~ .lappy-hero .aboutus-hero-text,
   #splash.loaded ~ .lappy-hero .aboutus-hero-buttons,
   #splash.loaded ~ .lappy-hero .aboutus-hero-visual,

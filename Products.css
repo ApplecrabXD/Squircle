@@ -159,9 +159,8 @@
 .lappy-panel:nth-of-type(even){--panel-accent:var(--accent-2);}
 
 /* the showcase lives in the orange scroll zone, where an orange accent would vanish into the background. the orange
-   panels flip theirs to white (with orange tag text), the same swap .btn-fill makes there; purple panels read fine */
+   panels flip theirs to white, the same swap .btn-fill makes there; purple panels read fine */
 html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whiteline);}
-html[data-zone="orange"] .lappy-panel:nth-of-type(odd) .lappy-panel-tag{color:var(--accent);}
 
 .lappy-panel-media{
   position:relative;
@@ -241,21 +240,6 @@ html[data-zone="orange"] .lappy-panel:not(.lappy-panel--cta) .lappy-panel-body{
 }
 
 .lappy-panel-body{transition:background .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease;}
-
-.lappy-panel-tag{
-  display:inline-flex;
-  padding:8px 20px;
-  border-radius:100px;
-  background:var(--panel-accent);
-
-  font-family:"obliqua",sans-serif;
-  font-size:.8rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:#fff;
-
-  transition:background .35s ease, color .35s ease;
-}
 
 .lappy-panel-title{
   font-family:"SuperMalibu","obliqua",sans-serif;

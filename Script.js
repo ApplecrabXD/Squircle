@@ -647,6 +647,20 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
   });
 }
 
+// the scribble's word gets a span per letter so Style.css can pop them in (and back out on hover) one after another
+document.querySelectorAll(".about-scribble-text").forEach(word=>{
+  const letters=[...word.textContent.trim()];
+  word.textContent="";
+  word.style.setProperty("--n",letters.length);
+  letters.forEach((letter,i)=>{
+    const span=document.createElement("span");
+    span.className="about-scribble-letter";
+    span.style.setProperty("--i",i);
+    span.textContent=letter;
+    word.appendChild(span);
+  });
+});
+
 // about/more info section reveal scribble accent draws in only first scroll into view
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){

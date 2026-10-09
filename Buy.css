@@ -2,15 +2,7 @@
    the hero, marquee and closing banner are the product pages' lappy-* pieces from Products.css, so everything here is
    the configurator itself: a sticky stage on the left that shows the build, one full-screen "page" per step on the right */
 
-/* hero extras: the shared lappy-hero brings the title + floating product, these add the price and buttons */
-.buy-hero-price{
-  margin-top:20px;
-
-  font-family:"obliqua",sans-serif;
-  font-size:1.15rem;
-  color:var(--buy-soft-75);
-}
-
+/* hero extras: the shared lappy-hero brings the title + floating product, these add the buttons */
 .buy-hero-buttons{justify-content:center;}
 
 /* <button>s wearing the .btn look (start building, add to bag, the nav pill) */
@@ -23,11 +15,9 @@ button.btn{cursor:pointer;}
   --buy-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
 }
 
-/* the extras join the hero entrance with the same rise as the title, each a beat behind it */
-#splash:not(.loaded) ~ .lappy-hero .buy-hero-price,
+/* the buttons join the hero entrance with the same rise as the title, a beat behind it */
 #splash:not(.loaded) ~ .lappy-hero .buy-hero-buttons{opacity:0;}
 
-#splash.loaded ~ .lappy-hero .buy-hero-price{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .3s both;}
 #splash.loaded ~ .lappy-hero .buy-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
 
 /* the configurator */
@@ -1044,7 +1034,6 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
 
 /* reduced motion: no bobbing, no reveals, no sliding, everything simply there */
 @media (prefers-reduced-motion:reduce){
-  #splash.loaded ~ .lappy-hero .buy-hero-price,
   #splash.loaded ~ .lappy-hero .buy-hero-buttons{animation:none;}
 
   .buy-stage-float,

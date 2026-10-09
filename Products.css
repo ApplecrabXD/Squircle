@@ -74,16 +74,7 @@
 #splash.loaded ~ .lappy-hero .hero-title-atom{animation:lappy-hero-pop .9s cubic-bezier(.22,1,.36,1) .25s both;}
 #splash.loaded ~ .lappy-hero .lappy-hero-laptop{animation:lappy-hero-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
 
-@keyframes lappy-hero-rise{
-  from{opacity:0; transform:translateY(70px) rotate(-3deg);}
-  to{opacity:1; transform:none;}
-}
-
-@keyframes lappy-hero-pop{
-  from{opacity:0; transform:scale(.6) rotate(6deg);}
-  to{opacity:1; transform:none;}
-}
-
+/* lappy-hero-rise + lappy-hero-pop live in Style.css, the home hero uses them too */
 @keyframes lappy-hero-slide{
   from{opacity:0; transform:translateX(140px) rotate(4deg);}
   to{opacity:1; transform:none;}

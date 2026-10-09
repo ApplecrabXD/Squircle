@@ -687,8 +687,9 @@ html[data-zone] .nav-indicator{
   left:8%;
   z-index:3;
 
-  max-width:560px;
+  max-width:none;
   transform:translateY(-50%);
+  text-align:center;
 
   will-change:transform,opacity;
 }
@@ -696,11 +697,13 @@ html[data-zone] .nav-indicator{
 .hero-copy,
 .hero-behind,
 .btn{font-family:"SuperMalibu","obliqua",sans-serif;}
+/* same size + two lines as every other page's hero title (.lappy-hero-title in Products.css) */
 .hero-title{
   font-weight:400;
-  font-size:clamp(3rem,7.5vw,6.2rem);
+  font-size:clamp(2.4rem,5.5vw,6.2rem);
   line-height:1.05;
   color:var(--line);
+  white-space:nowrap;
 }
 
 .hero-title span{color:var(--accent);}
@@ -727,6 +730,34 @@ html[data-zone] .nav-indicator{
   flex-wrap:wrap;
   gap:16px;
   margin-top:36px;
+}
+
+.hero-copy .hero-buttons{justify-content:center;}
+
+/* hero entrance, the same rise + pop the other pages' heroes do (Products.css), waiting on the same #splash.loaded hook.
+   it moves the title and buttons rather than .hero-copy itself since gsap fades that one out on scroll */
+#splash:not(.loaded) ~ .hero-wrap .hero-title,
+#splash:not(.loaded) ~ .hero-wrap .hero-buttons{opacity:0;}
+
+#splash.loaded ~ .hero-wrap .hero-title{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) both;}
+#splash.loaded ~ .hero-wrap .hero-title-atom{animation:lappy-hero-pop .9s cubic-bezier(.22,1,.36,1) .25s both;}
+#splash.loaded ~ .hero-wrap .hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
+
+/* shared with every page's hero, so they live here rather than Products.css (the home page doesn't load that one) */
+@keyframes lappy-hero-rise{
+  from{opacity:0; transform:translateY(70px) rotate(-3deg);}
+  to{opacity:1; transform:none;}
+}
+
+@keyframes lappy-hero-pop{
+  from{opacity:0; transform:scale(.6) rotate(6deg);}
+  to{opacity:1; transform:none;}
+}
+
+@media (prefers-reduced-motion: reduce){
+  #splash.loaded ~ .hero-wrap .hero-title,
+  #splash.loaded ~ .hero-wrap .hero-title-atom,
+  #splash.loaded ~ .hero-wrap .hero-buttons{animation:none;}
 }
 
 /* arrow that slides animation on hover */
@@ -1052,6 +1083,9 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   color:var(--line);
 }
 
+/* the "Squircle" scribble over About Us. the first time it scrolls into view (Script.js adds .in-view) the letters pop in
+   one after another and the marker loop gets drawn round them. hovering it undoes the lot, last letter first with the
+   loop winding back, so "About Us" can be read underneath, and moving off scribbles it back on again */
 .about-scribble{
   position:absolute;
   left:50%;
@@ -1061,11 +1095,7 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   display:inline-block;
   transform:translate(-50%,-50%) rotate(-20deg);
   pointer-events:none;
-
-  transition:opacity .3s ease;
 }
-
-.about-heading:hover .about-scribble{opacity:0;}
 
 .about-scribble-text{
   position:relative;
@@ -1079,9 +1109,37 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   color:var(--accent);
   white-space:nowrap;
 
+  /* hovering the word counts as hovering the heading too, not just the About Us under it. it's the word's own box
+     and that never moves, so the hover can't flicker on and off while the letters shrink away */
+  pointer-events:auto;
+}
+
+/* Script.js wraps each letter in one of these, with its place in the word as --i (S is 0) and the letter count as --n */
+.about-scribble-letter{
+  display:inline-block;
+  transform-origin:50% 70%;
+
+  /* hidden: before it's been seen, and while it's hovered */
   opacity:0;
-  transform:scale(.5);
-  transition:transform .6s cubic-bezier(.34,1.56,.64,1),opacity .4s ease;
+  transform:translateY(.35em) scale(.3) rotate(var(--tilt,-24deg));
+
+  /* the undo, quick and last letter first */
+  transition:
+    transform .24s cubic-bezier(.55,0,1,.45) calc((var(--n,1) - 1 - var(--i,0)) * 16ms),
+    opacity .2s ease calc((var(--n,1) - 1 - var(--i,0)) * 16ms);
+}
+
+/* every other letter leans the other way so they don't all pop in the same */
+.about-scribble-letter:nth-child(even){--tilt:20deg;}
+
+.about-heading.in-view:not(:hover) .about-scribble-letter{
+  opacity:1;
+  transform:none;
+
+  /* the pop in, springy and first letter first */
+  transition:
+    transform .6s cubic-bezier(.34,1.56,.64,1) calc(var(--i,0) * 55ms),
+    opacity .25s ease calc(var(--i,0) * 55ms);
 }
 
 .about-scribble-circle{
@@ -1097,13 +1155,20 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   stroke:var(--accent);
   stroke-width:3;
   stroke-linecap:round;
-  stroke-dasharray:100;
-  stroke-dashoffset:100;
-  transition:stroke-dashoffset .9s ease .35s;
+  /* the gap's a hair longer than the loop (pathLength 100) and hidden sits in the middle of it. a plain 100 / 100 left
+     a zero length dash right on the loop's end, which the round cap still drew as a dot */
+  stroke-dasharray:100 101;
+  stroke-dashoffset:100.5;
+
+  /* the undo, winds back the way it was drawn */
+  transition:stroke-dashoffset .35s cubic-bezier(.55,0,.45,1);
 }
 
-.about-heading.in-view .about-scribble-text{opacity:1;transform:scale(1);}
-.about-heading.in-view .about-scribble-circle path{stroke-dashoffset:0;}
+/* starts from the S end once a few letters are in, and closes as the last one lands */
+.about-heading.in-view:not(:hover) .about-scribble-circle path{
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset .75s cubic-bezier(.65,0,.35,1) .3s;
+}
 
 .about-text{
   max-width:36ch;
@@ -1604,6 +1669,11 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     transform:none;
   }
 
+  .hero-title{
+    white-space:normal;
+    font-size:clamp(2rem,9vw,3rem);
+  }
+
   .hero-buttons{justify-content:center;}
 
   .hero-laptop{
@@ -1703,8 +1773,12 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   .footer-blocks .block-gray,
   .footer-blocks .block-white{animation:none;}
 
-  .about-scribble-text,
-  .about-scribble-circle path{transition:none;}
+  /* the scribble doesn't pop or draw, it just fades in and out */
+  .about-scribble-letter,
+  .about-heading.in-view:not(:hover) .about-scribble-letter{transform:none; transition:opacity .3s ease;}
+
+  .about-scribble-circle path{stroke-dashoffset:0; opacity:0; transition:opacity .3s ease;}
+  .about-heading.in-view:not(:hover) .about-scribble-circle path{opacity:1; transition:opacity .3s ease;}
 
   .about-media,
   .about-media img,

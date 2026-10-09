@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Squircle</title>
+<link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
+<link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
+<link rel="stylesheet" href="Style.css">
+<link rel="stylesheet" href="Products.css">
+<link rel="stylesheet" href="About.css">
+</head>
+
+<!-- who squircle is, in four parts: the hero logo comes apart, the name morphs from a square to a circle and back,
+     the story draws itself in, then the logo's four blocks each get their rule. the hero, marquee and closing banner
+     are borrowed from the product pages (Products.css), everything else lives in About.css + About.js -->
+
+<body class="aboutus-page">
+
+<div id="splash">
+  <div class="splash-center">
+    <div class="building-blocks">
+      <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
+      <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
+      <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
+      <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
+    </div>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="navbar">
+
+  <div class="nav-orb">
+    <a href="/" class="nav-logo">
+      <img src="Assets/Logos/Logo.svg" alt="Squircle">
+
+      <div class="nav-building-blocks">
+        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+    </a>
+  </div>
+
+  <div class="nav-orb">
+    <div class="nav-links">
+      <div class="nav-indicator"></div>
+      <a href="index.html">Home</a>
+      <a href="Shop/">Shop</a>
+      <a href="support.html">Support</a>
+      <a href="about.html">About Us</a>
+    </div>
+  </div>
+
+  <div class="nav-orb">
+    <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
+  </div>
+
+</nav>
+
+<section class="lappy-hero">
+  <div class="lappy-hero-copy">
+    <p class="aboutus-hero-tag">About Us</p>
+    <h1 class="lappy-hero-title">Made to be<br>
+      <span class="hero-title-atom">
+        <span class="hero-title-atom-text">Opened</span>
+        <canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas>
+      </span>
+    </h1>
+    <p class="aboutus-hero-text">Hi, we're Squircle. We make tech you can open, fix and keep.</p>
+    <div class="hero-buttons aboutus-hero-buttons">
+      <a href="#aboutusName" class="btn btn-fill">Our Story</a>
+      <a href="Shop/" class="btn btn-outline">Shop Now</a>
+    </div>
+  </div>
+
+  <!-- the logo's four blocks stacked back up. hover (or tap) and it comes apart like a teardown, About.js -->
+  <div class="aboutus-hero-visual">
+    <button type="button" class="aboutus-logo" id="aboutusLogo" aria-pressed="false" aria-label="Take the Squircle logo apart">
+      <span class="aboutus-logo-tilt" id="aboutusLogoTilt">
+        <span class="aboutus-logo-stack">
+          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+        </span>
+      </span>
+    </button>
+    <p class="aboutus-logo-hint" aria-hidden="true"><span class="aboutus-hint-hover">Hover</span><span class="aboutus-hint-tap">Tap</span> to take it apart</p>
+  </div>
+</section>
+
+<div class="marquee marquee-b lappy-marquee">
+  <div class="marquee-track">
+    <span class="marquee-set">Part Square&nbsp;• Part Circle&nbsp;• Fully Repairable&nbsp;• Let's Have Some Fun&nbsp;• </span>
+    <span class="marquee-set" aria-hidden="true">Part Square&nbsp;• Part Circle&nbsp;• Fully Repairable&nbsp;• Let's Have Some Fun&nbsp;• </span>
+  </div>
+</div>
+
+<!-- what's a squircle: pinned on desktop while scrolling morphs the shape square > circle > squircle and the copy
+     steps through one beat at a time. on phones (or with reduced motion) the beats are just a list -->
+<section class="aboutus-name" id="aboutusName" aria-labelledby="aboutusNameTitle">
+  <div class="aboutus-name-sticky" id="aboutusNameSticky">
+
+    <div class="aboutus-name-stage" id="aboutusNameStage" aria-hidden="true">
+      <svg class="aboutus-name-svg" viewBox="-130 -130 260 260">
+        <rect class="aboutus-name-guide" x="-100" y="-100" width="200" height="200"></rect>
+        <circle class="aboutus-name-guide" r="100"></circle>
+        <path class="aboutus-name-shape" id="aboutusNameShape"></path>
+      </svg>
+      <p class="aboutus-name-formula"><span>|x|<sup>n</sup> + |y|<sup>n</sup> = 1</span><span class="aboutus-name-n" id="aboutusNameN">n = 4.0</span></p>
+    </div>
+
+    <div class="aboutus-name-copy">
+      <p class="aboutus-tag">The Name</p>
+      <h2 class="aboutus-title" id="aboutusNameTitle">What's a Squircle?</h2>
+
+      <div class="aboutus-name-chips" id="aboutusNameChips" aria-hidden="true">
+        <span class="aboutus-name-chip-indicator"></span>
+        <span class="aboutus-name-chip">Square</span>
+        <span class="aboutus-name-chip">Circle</span>
+        <span class="aboutus-name-chip">Squircle</span>
+      </div>
+
+      <div class="aboutus-name-beats">
+        <div class="aboutus-name-beat">
+          <h3 class="aboutus-name-beat-title">Start with a square.</h3>
+          <p class="aboutus-text">Strong and solid. Everything lines up and everything has its place. A bit stiff, though.</p>
+        </div>
+        <div class="aboutus-name-beat">
+          <h3 class="aboutus-name-beat-title">Now take a circle.</h3>
+          <p class="aboutus-text">Smooth and friendly, with no corners to catch on. A bit hard to stack, though.</p>
+        </div>
+        <div class="aboutus-name-beat">
+          <h3 class="aboutus-name-beat-title">Meet in the middle.</h3>
+          <p class="aboutus-text">That's a squircle: solid like a square, friendly like a circle. It's the shape of everything we make, and how we like to work. A bit of both.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="aboutus-story" id="aboutusStory" aria-labelledby="aboutusStoryTitle">
+  <header class="aboutus-head">
+    <p class="aboutus-tag">Our Story</p>
+    <h2 class="aboutus-title" id="aboutusStoryTitle">It started with a drawer.</h2>
+  </header>
+
+  <!-- the line draws itself down as you scroll and each chapter swings in from its own side -->
+  <div class="aboutus-timeline" id="aboutusTimeline">
+    <span class="aboutus-timeline-line" aria-hidden="true"><span class="aboutus-timeline-fill" id="aboutusTimelineFill"></span></span>
+
+    <ol class="aboutus-chapters">
+      <li class="aboutus-chapter">
+        <span class="aboutus-chapter-dot" aria-hidden="true"></span>
+        <span class="aboutus-chapter-index" aria-hidden="true">01</span>
+        <div class="aboutus-chapter-card">
+          <p class="aboutus-chapter-year">2021</p>
+          <h3 class="aboutus-chapter-title">The drawer of dead gadgets.</h3>
+          <p class="aboutus-text">You know the one. A phone with a tired battery, a laptop missing one key, a watch that just stopped. All glued shut, and all cheaper to bin than to fix.</p>
+        </div>
+      </li>
+
+      <li class="aboutus-chapter">
+        <span class="aboutus-chapter-dot" aria-hidden="true"></span>
+        <span class="aboutus-chapter-index" aria-hidden="true">02</span>
+        <div class="aboutus-chapter-card">
+          <p class="aboutus-chapter-year">2022</p>
+          <h3 class="aboutus-chapter-title">One rule: it has to open.</h3>
+          <p class="aboutus-text">So we gave ourselves a rule. If we make it, you can open it. No glue, no rivets, no special tools. One screwdriver, and every part comes out.</p>
+        </div>
+      </li>
+
+      <li class="aboutus-chapter">
+        <span class="aboutus-chapter-dot" aria-hidden="true"></span>
+        <span class="aboutus-chapter-index" aria-hidden="true">03</span>
+        <div class="aboutus-chapter-card">
+          <p class="aboutus-chapter-year">2023</p>
+          <h3 class="aboutus-chapter-title">Lappy, on a kitchen table.</h3>
+          <p class="aboutus-text">The first Lappy came together on a kitchen table in Adelaide. Swappable ports, upgradeable RAM and a back panel that lifts right off. It worked, and people wanted one.</p>
+        </div>
+      </li>
+
+      <li class="aboutus-chapter">
+        <span class="aboutus-chapter-dot" aria-hidden="true"></span>
+        <span class="aboutus-chapter-index" aria-hidden="true">04</span>
+        <div class="aboutus-chapter-card">
+          <p class="aboutus-chapter-year">2026</p>
+          <h3 class="aboutus-chapter-title">Six products later.</h3>
+          <p class="aboutus-text">Now there's a gaming PC, a handheld, a folding phone, a watch&hellip; and a microwave. Yes, really. Different shapes, same rule: if it breaks, you can fix it.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- the numbers count up (the glue counts down) the first time they scroll in. the html holds the real values -->
+  <ul class="aboutus-stats" id="aboutusStats">
+    <li class="aboutus-stat"><span class="aboutus-stat-num" data-from="250" data-to="0">0</span><span class="aboutus-stat-label">Grams of glue</span></li>
+    <li class="aboutus-stat"><span class="aboutus-stat-num" data-to="1">1</span><span class="aboutus-stat-label">Screwdriver needed</span></li>
+    <li class="aboutus-stat"><span class="aboutus-stat-num" data-to="6">6</span><span class="aboutus-stat-label">Products</span></li>
+    <li class="aboutus-stat"><span class="aboutus-stat-num" data-to="100" data-suffix="%">100%</span><span class="aboutus-stat-label">Swappable parts</span></li>
+  </ul>
+</section>
+
+<!-- the logo sticks beside the rules and lights up whichever block the rule in the middle of the screen is about.
+     each card carries its own little copy of the logo too, which is all phones get -->
+<section class="aboutus-blocks" id="aboutusBlocks" aria-labelledby="aboutusBlocksTitle">
+  <header class="aboutus-head">
+    <p class="aboutus-tag">What We Stand For</p>
+    <h2 class="aboutus-title" id="aboutusBlocksTitle">Four blocks, four rules.</h2>
+    <p class="aboutus-lede">Our logo is four blocks stacked inside each other. Each one stands for something, and together they make Squircle.</p>
+  </header>
+
+  <div class="aboutus-blocks-layout">
+
+    <div class="aboutus-blocks-stage" aria-hidden="true">
+      <div class="aboutus-blocks-tile aboutus-set" id="aboutusBlocksLogo">
+        <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+        <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+        <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+        <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+      </div>
+    </div>
+
+    <ol class="aboutus-rules">
+      <li class="aboutus-rule" data-block="orange">
+        <div class="aboutus-rule-card">
+          <span class="aboutus-mini aboutus-set" data-active="orange" aria-hidden="true">
+            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+          </span>
+          <div class="aboutus-rule-body">
+            <p class="aboutus-rule-index">The orange square</p>
+            <h3 class="aboutus-rule-title">Open by design.</h3>
+            <p class="aboutus-text">Everything we make comes apart with one screwdriver. No glue, no rivets, no secrets. If you can't open it, you don't really own it.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="aboutus-rule" data-block="gray">
+        <div class="aboutus-rule-card">
+          <span class="aboutus-mini aboutus-set" data-active="gray" aria-hidden="true">
+            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+          </span>
+          <div class="aboutus-rule-body">
+            <p class="aboutus-rule-index">The grey circle</p>
+            <h3 class="aboutus-rule-title">Built to last.</h3>
+            <p class="aboutus-text">Good parts, spares for years and upgrades whenever you want them. The greenest gadget is the one you never have to replace.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="aboutus-rule" data-block="purple">
+        <div class="aboutus-rule-card">
+          <span class="aboutus-mini aboutus-set" data-active="purple" aria-hidden="true">
+            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+          </span>
+          <div class="aboutus-rule-body">
+            <p class="aboutus-rule-index">The purple square</p>
+            <h3 class="aboutus-rule-title">Your build, your call.</h3>
+            <p class="aboutus-text">Grab a DIY kit and fit every part yourself, or let us build it for you. Either way, you pick what goes inside.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="aboutus-rule" data-block="white">
+        <div class="aboutus-rule-card">
+          <span class="aboutus-mini aboutus-set" data-active="white" aria-hidden="true">
+            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+          </span>
+          <div class="aboutus-rule-body">
+            <p class="aboutus-rule-index">The white circle</p>
+            <h3 class="aboutus-rule-title">Have some fun.</h3>
+            <p class="aboutus-text">Five colours, swappable panels and a secret or two hidden around this site. Tech should make you smile.</p>
+          </div>
+        </div>
+      </li>
+
+      <li class="aboutus-rule aboutus-rule--all" data-block="all">
+        <h3 class="aboutus-rule-title">Stack them up.</h3>
+        <p class="aboutus-text">Four blocks. One Squircle.</p>
+      </li>
+    </ol>
+
+  </div>
+</section>
+
+<!-- owning up, same as the buy page does: it's a school project, not a shop -->
+<section class="aboutus-maker" aria-labelledby="aboutusMakerTitle">
+  <div class="aboutus-maker-card">
+    <p class="aboutus-tag">Behind the Scenes</p>
+    <h2 class="aboutus-title" id="aboutusMakerTitle">Squircle isn't a real company. Yet.</h2>
+    <p class="aboutus-text">It's a Web Dev final project, designed and built by <strong>ApplecrabXD</strong>. Every page is plain HTML, CSS and JavaScript with no frameworks, and GSAP doing the scroll magic. Nothing here is actually for sale, but every line of code is real.</p>
+    <ul class="aboutus-maker-tools" aria-label="Built with">
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+      <li>GSAP</li>
+      <li>Canvas</li>
+    </ul>
+    <div class="hero-buttons aboutus-maker-buttons">
+      <a href="https://github.com/ApplecrabXD/Squircle" class="btn btn-fill" target="_blank" rel="noopener">See the Code</a>
+      <a href="Shop/" class="btn btn-outline">Visit the Shop</a>
+    </div>
+  </div>
+</section>
+
+<section class="about-banner lappy-buy-banner">
+  <img src="Assets/Temp/16x9.png" alt="Placeholder image">
+  <div class="lappy-buy-banner-copy">
+    <h2 class="lappy-buy-banner-title">Let's Have Some Fun.</h2>
+    <a href="Shop/" class="btn btn-fill">Shop Now</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+
+  <div class="marquee marquee-a footer-marquee">
+    <div class="marquee-track">
+      <span class="marquee-set">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+      <span class="marquee-set" aria-hidden="true">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+    </div>
+  </div>
+
+  <div class="footer-main">
+
+    <div class="footer-brand">
+      <div class="footer-blocks">
+        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+      <p class="footer-tagline">Squircle. Let's Have Some Fun.</p>
+    </div>
+
+    <nav class="footer-links">
+      <div class="footer-col">
+        <h4 class="footer-heading">Site</h4>
+        <a href="index.html">Home</a>
+        <a href="Shop/">Shop</a>
+        <a href="support.html">Support</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Company</h4>
+        <a href="about.html">About Us</a>
+        <a href="knowlage.html">Knowlage Base</a>
+        <a href="#">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter / X</a>
+        <a href="#">TikTok</a>
+      </div>
+    </nav>
+
+    <button class="footer-top" id="footerTop" aria-label="Back to top">↑</button>
+
+  </div>
+
+  <div class="footer-acknowledge" style="text-align: justify;">
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
+      <span>We acknowledge the Kaurna people as the traditional owners and custodians of the Adelaide region. We respect their spiritual relationship with their country, and recognise that their cultural and heritage beliefs are just as important to the living Kaurna people today. We pay our respects to Elders past, present, and emerging, and extend that respect to all First Nations peoples. Always was, always will be, Aboriginal land.</span>
+    </p>
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
+      <span>Squircle is a safe and welcoming space for everyone. We proudly support and celebrate the LGBTQIA+ community, whoever you are and whoever you love.</span>
+    </p>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; 2026 Squircle. All rights reserved.</span>
+  </div>
+
+</footer>
+
+<!-- easter egg: type "deltarune" or "undertale" to start a battle (same one as the home page, Script.js runs it) -->
+<div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
+  <div class="db-scene">
+    <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">
+  </div>
+
+  <div class="db-hp" id="dbHp" hidden>
+    <span class="db-hp-name" id="dbHpName">KRIS</span>
+    <span class="db-hp-lv">LV 1</span>
+    <div class="db-hp-bar"><div class="db-hp-fill" id="dbHpFill"></div></div>
+    <span class="db-hp-num" id="dbHpNum">20 / 20</span>
+  </div>
+
+  <div class="db-board" id="dbBoard" hidden>
+    <img class="db-heart" id="dbHeart" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Heart.webp" alt="">
+  </div>
+
+  <div class="db-textbox">
+    <p class="db-text" id="deltaruneText"></p>
+    <div class="db-menu" id="dbMenu" hidden>
+      <button type="button" data-act="fight">FIGHT</button>
+      <button type="button" data-act="act">ACT</button>
+      <button type="button" data-act="item">ITEM</button>
+      <button type="button" data-act="mercy">MERCY</button>
+    </div>
+  </div>
+
+  <button class="db-close" id="deltaruneClose" type="button">Close (Esc)</button>
+</div>
+<audio id="deltaruneAudio" preload="none"></audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<script src="Script.js"></script>
+<script src="About.js"></script>
+
+</body>
+</html>

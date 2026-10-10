@@ -737,13 +737,22 @@ html[data-zone] .nav-indicator{
 /* hero entrance, the same rise + pop the other pages' heroes do (Products.css), waiting on the same #splash.loaded hook.
    it moves the title and buttons rather than .hero-copy itself since gsap fades that one out on scroll */
 #splash:not(.loaded) ~ .hero-wrap .hero-title,
-#splash:not(.loaded) ~ .hero-wrap .hero-buttons{opacity:0;}
+#splash:not(.loaded) ~ .hero-wrap .hero-buttons,
+#splash:not(.loaded) ~ .hero-wrap .hero-laptop img{opacity:0;}
 
 #splash.loaded ~ .hero-wrap .hero-title{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) both;}
 #splash.loaded ~ .hero-wrap .hero-title-atom{animation:lappy-hero-pop .9s cubic-bezier(.22,1,.36,1) .25s both;}
 #splash.loaded ~ .hero-wrap .hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
+#splash.loaded ~ .hero-wrap .hero-laptop img{animation:hero-laptop-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
 
-/* shared with every page's hero, so they live here rather than Products.css (the home page doesn't load that one) */
+/* the laptop slides in like every other page's hero shot (lappy-hero-slide in Products.css), but on the separate
+   translate + rotate properties, since gsap already owns .hero-laptop's transform and Script.js's bounce owns the img's */
+@keyframes hero-laptop-slide{
+  from{opacity:0; translate:140px 0; rotate:4deg;}
+  to{opacity:1; translate:0 0; rotate:0deg;}
+}
+
+/* shared with every page's hero, so they live here with the rest of the shared bits rather than in Products.css */
 @keyframes lappy-hero-rise{
   from{opacity:0; transform:translateY(70px) rotate(-3deg);}
   to{opacity:1; transform:none;}
@@ -757,7 +766,8 @@ html[data-zone] .nav-indicator{
 @media (prefers-reduced-motion: reduce){
   #splash.loaded ~ .hero-wrap .hero-title,
   #splash.loaded ~ .hero-wrap .hero-title-atom,
-  #splash.loaded ~ .hero-wrap .hero-buttons{animation:none;}
+  #splash.loaded ~ .hero-wrap .hero-buttons,
+  #splash.loaded ~ .hero-wrap .hero-laptop img{animation:none;}
 }
 
 /* arrow that slides animation on hover */
@@ -955,21 +965,25 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:1.75rem;
+  gap:1.25rem;
   padding:0 4vw;
 
   text-align:center;
   font-family:"SuperMalibu","obliqua",sans-serif;
   color:var(--line);
+
+  /* 260px wide, or narrower on short screens so the image, info card and button all fit in the 82vh track with room
+     left over for the hover lift */
+  --media-w:min(260px, (82vh - 265px) * .5625);
 }
 
-/* card order image / name / buy -> buy / name / image */
+/* card order image / info / buy -> buy / info / image */
 .product-card--alt{flex-direction:column-reverse;}
 .product-card{transition:transform .4s cubic-bezier(.22,1,.36,1);}
 .product-card:hover{transform:translateY(-12px);}
 .product-media{
   width:100%;
-  max-width:260px;
+  max-width:var(--media-w);
   aspect-ratio:9/16;
   border-radius:24px;
   overflow:hidden;
@@ -998,7 +1012,57 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 }
 
 .product-card:hover .product-media img{transform:scale(1.1);}
-.product-name{font-weight:400;font-size:clamp(1.3rem,2.2vw,1.8rem);}
+
+/* name, tagline + price sit on their own card like the shop's product cards, rather than straight on the canvas where
+   the line art runs through the letters. it's the other pages' smoked glass, just as a solid tint of the zone colour:
+   the edge fade on .product-viewport is a mask, and backdrop-filter can't see past a masked parent, so real glass here
+   lets the line art straight through */
+.product-info{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+
+  width:100%;
+  max-width:260px;
+  padding:16px 18px 18px;
+  border-radius:22px;
+
+  background:color-mix(in srgb, var(--zone-bg) 90%, #000);
+  border:1px solid color-mix(in srgb, var(--line) 16%, transparent);
+
+  transition:background .35s ease, border-color .35s ease;
+}
+
+.product-name{font-weight:400; font-size:clamp(1.2rem,1.9vw,1.6rem); line-height:1.1;}
+
+.product-text{
+  font-family:"obliqua",sans-serif;
+  font-size:.92rem;
+  line-height:1.45;
+  color:color-mix(in srgb, var(--line) 75%, transparent);
+}
+
+/* yellow like the shop's prices, white on the orange zone where yellow's too low-contrast to read */
+.product-price{
+  margin-top:4px;
+  font-size:1.3rem;
+  line-height:1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+html[data-zone="orange"] .product-price{color:var(--whiteline);}
+
+.product-price small{
+  font-family:"obliqua",sans-serif;
+  font-size:.7rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 65%, transparent);
+}
+
 .btn.product-buy{padding:12px 30px;font-size:15px;}
 
 .placeholder-section{
@@ -1026,6 +1090,22 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   gap:32px;
 
   padding:140px 48px;
+
+  /* glass for the copy cards, the same recipe as the shop, buy and about pages, flipped per scroll zone below */
+  --card-bg:rgba(0,0,0,.035);
+  --card-border:rgba(0,0,0,.08);
+  --glass:blur(25px) saturate(160%);
+}
+
+html[data-zone] .about-wrap{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
+
+/* smoked rather than white glass on orange and purple: a white tint there goes hot red-orange (or hot magenta) and
+   washes the copy out, and so does the saturate() boost */
+html[data-zone="orange"] .about-wrap,
+html[data-zone="purple"] .about-wrap{
+  --card-bg:rgba(0,0,0,.1);
+  --card-border:rgba(255,255,255,.16);
+  --glass:blur(25px);
 }
 
 .about-media{
@@ -1034,20 +1114,21 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   overflow:hidden;
   background:color-mix(in srgb, var(--line) 6%, transparent);
 
+  /* reveal on opacity + translate (with the stagger below), hover on transform (without it), so the two never fight */
   opacity:0;
-  transform:translateY(48px);
+  translate:0 48px;
   transition:
-    opacity .9s cubic-bezier(.22,1,.36,1),
-    transform .9s cubic-bezier(.22,1,.36,1),
+    opacity .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    translate .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    transform .4s cubic-bezier(.22,1,.36,1),
     box-shadow .4s ease;
 }
 
-.about-media.in-view{opacity:1;transform:translateY(0);}
+.about-media.in-view{opacity:1; translate:0 0;}
 
 .about-media.in-view:hover{
   transform:translateY(-12px);
   box-shadow:0 24px 48px rgba(0,0,0,.2);
-  transition-duration:.4s;
 }
 
 .about-media img{
@@ -1063,17 +1144,53 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
 .about-media:hover img{transform:scale(1.1);}
 
+/* the copy sits on its own frosted card like the other pages' text, so the line art blurs away behind it. it rises in
+   with the images either side of it (Script.js adds .in-view) */
 .about-copy{
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   gap:20px;
+  padding:48px 28px;
+  border-radius:28px;
 
   text-align:center;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:var(--glass);
+  -webkit-backdrop-filter:var(--glass);
+
+  opacity:0;
+  translate:0 48px;
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    translate .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease,
+    background .35s ease,
+    border-color .35s ease;
 }
 
+.about-copy.in-view{opacity:1; translate:0 0;}
+
+.about-copy.in-view:hover{
+  transform:translateY(-12px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+}
+
+/* the row arrives together, a beat apart */
+.about-wrap > :nth-child(2){--delay:.1s;}
+.about-wrap > :nth-child(3){--delay:.2s;}
+.about-wrap > :nth-child(4){--delay:.3s;}
+
 .about-heading{position:relative;display:inline-block;}
+
+/* the scribble's tilted loop dips below About Us, so that heading gets a little extra room before the copy under it.
+   it also stays on one line, since the loop is drawn round one line of text */
+.about-heading:has(.about-scribble){margin-bottom:30px;}
+.about-heading:has(.about-scribble) .about-title{white-space:nowrap;}
 
 .about-title{
   font-family:"SuperMalibu","obliqua",sans-serif;
@@ -1177,6 +1294,38 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   line-height:1.5;
   color:var(--line);
   opacity:.7;
+}
+
+/* a stat under the copy, same as the product pages' feature cards. yellow reads fine on the purple zone (it's the purple
+   marquee's own pairing) and goes white on orange like everywhere else */
+.about-stat{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(1.8rem,2.8vw,2.4rem);
+  line-height:1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+html[data-zone="orange"] .about-stat{color:var(--whiteline);}
+
+.about-stat small{
+  font-family:"obliqua",sans-serif;
+  font-size:.75rem;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 65%, transparent);
+}
+
+/* tablets: four across squeezes the copy cards down to a sliver, so the row goes two by two instead. the html order
+   (image, copy, copy, image) keeps it the same zig-zag */
+@media (max-width:1200px){
+  .about-wrap{grid-template-columns:1fr 1fr;}
 }
 
 /* banner image before fotter */
@@ -1722,6 +1871,9 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     width:100%;
     height:auto;
     padding:0;
+
+    /* no 82vh track to fit into once it's a stacked list */
+    --media-w:260px;
   }
 
   .about-wrap{
@@ -1731,6 +1883,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   }
 
   .about-media{min-height:320px;}
+  .about-copy{padding:36px 24px;}
   .about-banner{height:clamp(220px,70vw,420px); padding:0 24px;}
 
   .footer-main{
@@ -1782,6 +1935,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
 
   .about-media,
   .about-media img,
+  .about-copy,
   .about-banner,
   .about-banner img,
   .product-card,
@@ -1790,7 +1944,8 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   .btn::after{transition:none;}
 
   .about-media,
-  .about-banner{opacity:1; transform:none;}
+  .about-copy,
+  .about-banner{opacity:1; translate:none; transform:none;}
 
   .loading-bar{width:100%;}
 

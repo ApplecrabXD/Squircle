@@ -9,6 +9,7 @@
 <script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="Style.css">
+<link rel="stylesheet" href="Products.css">
 </head>
 
 <!-- 
@@ -115,14 +116,14 @@
     <div class="hero-behind" id="heroBehind">
       <div class="marquee marquee-a">
         <div class="marquee-track">
-          <span class="marquee-set">Placeholder Heading&nbsp;• Placeholder Heading&nbsp;• Placeholder Heading&nbsp;• Placeholder Heading&nbsp;• </span>
-          <span class="marquee-set" aria-hidden="true">Placeholder Heading&nbsp;• Placeholder Heading&nbsp;• Placeholder Heading&nbsp;• Placeholder Heading&nbsp;• </span>
+          <span class="marquee-set">Made to be Opened&nbsp;• One Screwdriver&nbsp;• Zero Glue&nbsp;• Built to Last&nbsp;• </span>
+          <span class="marquee-set" aria-hidden="true">Made to be Opened&nbsp;• One Screwdriver&nbsp;• Zero Glue&nbsp;• Built to Last&nbsp;• </span>
         </div>
       </div>
       <div class="marquee marquee-b">
         <div class="marquee-track">
-          <span class="marquee-set">Swap this for real copy once it's ready&nbsp;• Swap this for real copy once it's ready&nbsp;• </span>
-          <span class="marquee-set" aria-hidden="true">Swap this for real copy once it's ready&nbsp;• Swap this for real copy once it's ready&nbsp;• </span>
+          <span class="marquee-set">Six Products&nbsp;• DIY or Pre-Built&nbsp;• Five Colours&nbsp;• Let's Have Some Fun&nbsp;• </span>
+          <span class="marquee-set" aria-hidden="true">Six Products&nbsp;• DIY or Pre-Built&nbsp;• Five Colours&nbsp;• Let's Have Some Fun&nbsp;• </span>
         </div>
       </div>
     </div>
@@ -139,13 +140,18 @@
     <div class="product-viewport" id="productViewport">
       <div class="product-track" id="productTrack">
 
+        <!-- same name, tagline and price as each product's card on the shop page -->
         <article class="product-card">
           <div class="product-media">
             <a href="Lappy/">
-              <img href="Lappy/" src="Assets/Home Page/Logo in laptop.png" alt="Lappy 13 Pro">
+              <img src="Assets/Home%20Page/Logo%20in%20laptop.png" alt="Lappy 13 Pro">
             </a>
           </div>
-          <h3 class="product-name">Lappy 13 Pro</h3>
+          <div class="product-info">
+            <h3 class="product-name">Lappy 13 Pro</h3>
+            <p class="product-text">The laptop you can fix yourself.</p>
+            <p class="product-price"><small>From</small> $1,499</p>
+          </div>
           <a href="Lappy/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
@@ -155,7 +161,11 @@
               <img src="Assets/Temp/9x16.jpg" alt="Gammy Pro Max">
             </a>
           </div>
-          <h3 class="product-name">Gammy Pro Max</h3>
+          <div class="product-info">
+            <h3 class="product-name">Gammy Pro Max</h3>
+            <p class="product-text">The liquid-cooled gaming PC.</p>
+            <p class="product-price"><small>From</small> $2,999</p>
+          </div>
           <a href="Gammy%20Pro%20Max/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
@@ -165,7 +175,11 @@
               <img src="Assets/Temp/9x16.jpg" alt="Ally Maxx">
             </a>
           </div>
-          <h3 class="product-name">Ally Maxx</h3>
+          <div class="product-info">
+            <h3 class="product-name">Ally Maxx</h3>
+            <p class="product-text">The handheld that plays anywhere.</p>
+            <p class="product-price"><small>From</small> $999</p>
+          </div>
           <a href="Ally%20Maxx/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
@@ -175,7 +189,11 @@
               <img src="Assets/Temp/9x16.jpg" alt="Flippy 6 Pro">
             </a>
           </div>
-          <h3 class="product-name">Flippy 6 Pro</h3>
+          <div class="product-info">
+            <h3 class="product-name">Flippy 6 Pro</h3>
+            <p class="product-text">The phone that folds in half.</p>
+            <p class="product-price"><small>From</small> $1,699</p>
+          </div>
           <a href="Flippy%206%20Pro/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
@@ -185,7 +203,11 @@
               <img src="Assets/Temp/9x16.jpg" alt="Watchy 3">
             </a>
           </div>
-          <h3 class="product-name">Watchy 3</h3>
+          <div class="product-info">
+            <h3 class="product-name">Watchy 3</h3>
+            <p class="product-text">The watch that tracks it all.</p>
+            <p class="product-price"><small>From</small> $549</p>
+          </div>
           <a href="Watchy%203/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
@@ -195,7 +217,11 @@
               <img src="Assets/Temp/9x16.jpg" alt="Nuker">
             </a>
           </div>
-          <h3 class="product-name">Nuker</h3>
+          <div class="product-info">
+            <h3 class="product-name">Nuker</h3>
+            <p class="product-text">The microwave you'll never throw out.</p>
+            <p class="product-price"><small>From</small> $349</p>
+          </div>
           <a href="Nuker/" class="btn btn-fill product-buy">Buy Now</a>
         </article>
 
@@ -220,16 +246,18 @@
         <span class="about-scribble-text">Squircle</span>
       </span>
     </div>
-    <p class="about-text">A few lines about who we are and what Squircle is building &mdash; swap this for the real story once it's ready.</p>
+    <p class="about-text">It started with a drawer full of dead gadgets and one rule: if we make it, you can open it. No glue, no rivets, just one screwdriver.</p>
+    <span class="about-stat">0<small>grams of glue</small></span>
     <a href="about.html" class="btn btn-fill">Learn More</a>
   </div>
 
   <div class="about-copy">
     <div class="about-heading">
-      <h2 class="about-title">Placeholder Heading</h2>
+      <h2 class="about-title">Make it Yours</h2>
     </div>
-    <p class="about-text">Swap this for real copy once it's ready.</p>
-    <a href="#" class="btn btn-fill">Learn More</a>
+    <p class="about-text">Grab a DIY kit and build it yourself, or let us put it together for you. Either way, you pick every part, right down to the colour.</p>
+    <span class="about-stat">5<small>colours to pick from</small></span>
+    <a href="Buy/" class="btn btn-fill">Start Building</a>
   </div>
 
   <div class="about-media">
@@ -238,8 +266,13 @@
 
 </section>
 
-<section class="about-banner">
+<!-- closing banner, same as every other page's (.lappy-buy-banner in Products.css) -->
+<section class="about-banner lappy-buy-banner">
   <img src="Assets/Temp/16x9.png" alt="Placeholder">
+  <div class="lappy-buy-banner-copy">
+    <h2 class="lappy-buy-banner-title">Find Your Squircle</h2>
+    <a href="Shop/" class="btn btn-fill">Shop Now</a>
+  </div>
 </section>
 
 <footer class="site-footer">

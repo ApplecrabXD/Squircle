@@ -383,8 +383,9 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
       springVelocity+=accel*dt;
       springY=Math.min(40,Math.max(-40,springY+springVelocity*dt));
 
+      // same 14px, ~4.5s swing as the other pages' hero float (lappy-float in Products.css)
       idlePhase+=dt*1.4;
-      const idleY=Math.sin(idlePhase)*4;
+      const idleY=Math.sin(idlePhase)*7;
 
       heroLaptopImg.style.transform=`translateY(${(springY+idleY).toFixed(2)}px)`;
     } else {
@@ -675,8 +676,8 @@ if(aboutHeadings.length && "IntersectionObserver" in window){
   aboutHeadings.forEach(heading=>aboutObserver.observe(heading));
 }
 
-// about images fade/slide in the first time each scrolls into view
-const aboutReveals=document.querySelectorAll(".about-media, .about-banner");
+// about images + copy cards fade/slide in the first time each scrolls into view
+const aboutReveals=document.querySelectorAll(".about-media, .about-copy, .about-banner");
 if(aboutReveals.length && "IntersectionObserver" in window){
   const aboutMediaObserver=new IntersectionObserver((entries)=>{
     entries.forEach(entry=>{

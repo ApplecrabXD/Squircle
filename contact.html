@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Squircle</title>
+<link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
+<link rel="stylesheet" href="Style.css">
+<link rel="stylesheet" href="Products.css">
+<link rel="stylesheet" href="Contact.css">
+</head>
+
+<!-- say hello: a little chat in the hero, then the contact form. the form doesn't send anywhere (it's a demo), it checks
+     what's filled in, pretends to send for a beat and plays the sent screen. the hero, marquee and closing banner are
+     borrowed from the product pages (Products.css), everything else lives in Contact.css + Contact.js -->
+
+<body class="contact-page">
+
+<div id="splash">
+  <div class="splash-center">
+    <div class="building-blocks">
+      <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
+      <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
+      <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
+      <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
+    </div>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div>
+</div>
+
+<canvas id="canvas"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<nav class="navbar">
+
+  <div class="nav-orb">
+    <a href="/" class="nav-logo">
+      <img src="Assets/Logos/Logo.svg" alt="Squircle">
+
+      <div class="nav-building-blocks">
+        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+    </a>
+  </div>
+
+  <div class="nav-orb">
+    <div class="nav-links">
+      <div class="nav-indicator"></div>
+      <a href="index.html">Home</a>
+      <a href="Shop/">Shop</a>
+      <a href="about.html">About Us</a>
+    </div>
+  </div>
+
+  <div class="nav-orb">
+    <button class="nav-menu" aria-label="Menu" aria-expanded="false" aria-controls="navMenuPanel">
+      <span class="nav-menu-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+
+  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <div class="nav-menu-panel" id="navMenuPanel">
+    <span class="nav-menu-indicator" aria-hidden="true"></span>
+
+    <div class="nav-menu-group nav-menu-group--site">
+      <p class="nav-menu-heading">Site</p>
+      <a href="index.html" class="nav-menu-link">Home</a>
+      <a href="Shop/" class="nav-menu-link">Shop</a>
+      <a href="about.html" class="nav-menu-link">About Us</a>
+      <a href="Buy/" class="nav-menu-link">Build Your Own</a>
+      <a href="contact.html" class="nav-menu-link">Contact</a>
+    </div>
+
+    <div class="nav-menu-group">
+      <p class="nav-menu-heading">Products</p>
+      <a href="Lappy/" class="nav-menu-link">Lappy 13 Pro <small>Laptop</small></a>
+      <a href="Gammy%20Pro%20Max/" class="nav-menu-link">Gammy Pro Max <small>Gaming PC</small></a>
+      <a href="Ally%20Maxx/" class="nav-menu-link">Ally Maxx <small>Handheld</small></a>
+      <a href="Flippy%206%20Pro/" class="nav-menu-link">Flippy 6 Pro <small>Phone</small></a>
+      <a href="Watchy%203/" class="nav-menu-link">Watchy 3 <small>Watch</small></a>
+      <a href="Nuker/" class="nav-menu-link">Nuker <small>Microwave</small></a>
+    </div>
+  </div>
+
+</nav>
+
+<section class="lappy-hero">
+  <div class="lappy-hero-copy">
+    <h1 class="lappy-hero-title">Say<br>
+      <span class="hero-title-atom">
+        <span class="hero-title-atom-text">Hello</span>
+        <canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas>
+      </span>
+    </h1>
+    <div class="hero-buttons contact-hero-buttons">
+      <a href="#contact" class="btn btn-fill">Send a Message</a>
+      <a href="about.html" class="btn btn-outline">About Us</a>
+    </div>
+  </div>
+
+  <!-- a little chat that pops in a message at a time once the hero lands, ending on you typing. decoration only, the
+       real way to get in touch is the form below -->
+  <div class="contact-hero-visual" aria-hidden="true">
+    <div class="contact-chat">
+      <p class="contact-msg contact-msg--you"><span class="contact-bubble">Can I really open a Lappy with one screwdriver?</span></p>
+      <p class="contact-msg contact-msg--us"><img class="contact-avatar" src="Assets/Logos/Logo.svg" alt=""><span class="contact-bubble">Yep. No glue, no rivets, every part comes out.</span></p>
+      <p class="contact-msg contact-msg--you"><span class="contact-bubble">Even the microwave?</span></p>
+      <p class="contact-msg contact-msg--us"><img class="contact-avatar" src="Assets/Logos/Logo.svg" alt=""><span class="contact-bubble">Especially the microwave.</span></p>
+      <p class="contact-msg contact-msg--you"><span class="contact-bubble contact-bubble--typing"><span></span><span></span><span></span></span></p>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact" aria-labelledby="contactTitle">
+  <div class="contact-layout">
+
+    <div class="contact-info">
+      <h2 class="contact-title" id="contactTitle">Drop us a line.</h2>
+      <p class="contact-lede">A question about a build, stuck halfway through a repair, or just want to say hi? Send it over. A real person reads every message.</p>
+
+      <ul class="contact-details">
+        <li class="contact-detail">
+          <span class="contact-detail-label">Where</span>
+          <span class="contact-detail-value">Adelaide, on Kaurna Country</span>
+        </li>
+        <li class="contact-detail">
+          <span class="contact-detail-label">Replies</span>
+          <span class="contact-detail-value">Usually within a day</span>
+        </li>
+        <li class="contact-detail">
+          <span class="contact-detail-label">Repairs</span>
+          <span class="contact-detail-value">Tell us which part, we'll talk you through it</span>
+        </li>
+      </ul>
+
+      <div class="contact-socials">
+        <a href="#" class="contact-social">Instagram</a>
+        <a href="#" class="contact-social">Twitter / X</a>
+        <a href="#" class="contact-social">TikTok</a>
+      </div>
+    </div>
+
+    <!-- the form and the sent screen share the card, swapped by Contact.js -->
+    <div class="contact-card" id="contactCard">
+
+      <form class="contact-form" id="contactForm" novalidate aria-label="Send Squircle a message">
+
+        <div class="contact-row">
+          <div class="contact-field">
+            <label class="contact-label" for="contactName">Name</label>
+            <input class="contact-input" id="contactName" name="name" type="text" autocomplete="name" placeholder="What should we call you?" required aria-describedby="contactNameError">
+            <p class="contact-error" id="contactNameError"></p>
+          </div>
+
+          <div class="contact-field">
+            <label class="contact-label" for="contactEmail">Email</label>
+            <input class="contact-input" id="contactEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required aria-describedby="contactEmailError">
+            <p class="contact-error" id="contactEmailError"></p>
+          </div>
+        </div>
+
+        <fieldset class="contact-field">
+          <legend class="contact-label">What's it about?</legend>
+          <div class="contact-chips" id="contactTopics">
+            <span class="contact-chips-indicator" aria-hidden="true"></span>
+            <label class="contact-chip"><input type="radio" name="topic" value="hello" checked><span>Just saying hi</span></label>
+            <label class="contact-chip"><input type="radio" name="topic" value="product"><span>A product</span></label>
+            <label class="contact-chip"><input type="radio" name="topic" value="repair"><span>Repair help</span></label>
+            <label class="contact-chip"><input type="radio" name="topic" value="order"><span>An order</span></label>
+            <label class="contact-chip"><input type="radio" name="topic" value="other"><span>Something else</span></label>
+          </div>
+        </fieldset>
+
+        <!-- only for the topics about a particular product, Contact.js folds it open -->
+        <div class="contact-reveal" id="contactProductField">
+          <div class="contact-reveal-inner">
+            <div class="contact-field">
+              <label class="contact-label" for="contactProduct">Which Squircle? <span class="contact-optional">(optional)</span></label>
+              <div class="contact-select">
+                <select class="contact-input" id="contactProduct" name="product">
+                  <option value="">Not sure yet</option>
+                  <option value="lappy">Lappy 13 Pro</option>
+                  <option value="gammy">Gammy Pro Max</option>
+                  <option value="ally">Ally Maxx</option>
+                  <option value="flippy">Flippy 6 Pro</option>
+                  <option value="watchy">Watchy 3</option>
+                  <option value="nuker">Nuker</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-field">
+          <div class="contact-label-row">
+            <label class="contact-label" for="contactMessage">Message</label>
+            <span class="contact-count" id="contactCount" aria-hidden="true">0 / 500</span>
+          </div>
+          <textarea class="contact-input contact-textarea" id="contactMessage" name="message" rows="5" maxlength="500" placeholder="Tell us what's on your mind..." required aria-describedby="contactMessageError"></textarea>
+          <p class="contact-error" id="contactMessageError"></p>
+        </div>
+
+        <div class="contact-actions">
+          <button type="submit" class="btn btn-fill contact-send">Send Message</button>
+          <p class="contact-small">Squircle is a demo site, so messages don't actually go anywhere.</p>
+        </div>
+
+      </form>
+
+      <div class="contact-sent" id="contactSent">
+        <div class="contact-confetti" id="contactConfetti" aria-hidden="true"></div>
+        <div class="contact-sent-blocks" aria-hidden="true">
+          <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+          <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+          <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+          <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+        </div>
+        <h3 class="contact-sent-title" id="contactSentTitle" tabindex="-1">Message sent!</h3>
+        <p class="contact-sent-text">Thanks, <span class="contact-sent-strong" id="contactSentName">friend</span>. We'll write back to <span class="contact-sent-strong" id="contactSentEmail">you</span> soon.</p>
+        <p class="contact-sent-note">Squircle's a demo, so nothing actually got sent and nobody's going to email you. But if we were real, you'd hear from us within a day.</p>
+        <div class="contact-sent-buttons">
+          <button type="button" class="btn btn-fill" id="contactAgain">Send Another</button>
+          <a href="index.html" class="btn btn-outline">Back Home</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<div class="marquee marquee-b lappy-marquee">
+  <div class="marquee-track">
+    <span class="marquee-set">Say Hello&nbsp;• Ask Anything&nbsp;• Fix It Yourself&nbsp;• Let's Have Some Fun&nbsp;• </span>
+    <span class="marquee-set" aria-hidden="true">Say Hello&nbsp;• Ask Anything&nbsp;• Fix It Yourself&nbsp;• Let's Have Some Fun&nbsp;• </span>
+  </div>
+</div>
+
+<section class="about-banner lappy-buy-banner">
+  <img src="Assets/Temp/16x9.png" alt="Placeholder image">
+  <div class="lappy-buy-banner-copy">
+    <h2 class="lappy-buy-banner-title">Want the whole story?</h2>
+    <a href="about.html" class="btn btn-fill">Our Story</a>
+  </div>
+</section>
+
+<footer class="site-footer">
+
+  <div class="marquee marquee-a footer-marquee">
+    <div class="marquee-track">
+      <span class="marquee-set">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+      <span class="marquee-set" aria-hidden="true">Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• Squircle&nbsp;• </span>
+    </div>
+  </div>
+
+  <div class="footer-main">
+
+    <div class="footer-brand">
+      <div class="footer-blocks">
+        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+      </div>
+      <p class="footer-tagline">Squircle. Let's Have Some Fun.</p>
+    </div>
+
+    <nav class="footer-links">
+      <div class="footer-col">
+        <h4 class="footer-heading">Site</h4>
+        <a href="index.html">Home</a>
+        <a href="Shop/">Shop</a>
+        <a href="#">Placeholder</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Company</h4>
+        <a href="about.html">About Us</a>
+        <a href="knowlage.html">Knowlage Base</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-heading">Follow</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Twitter / X</a>
+        <a href="#">TikTok</a>
+      </div>
+    </nav>
+
+    <button class="footer-top" id="footerTop" aria-label="Back to top">↑</button>
+
+  </div>
+
+  <div class="footer-acknowledge" style="text-align: justify;">
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
+      <span>We acknowledge the Kaurna people as the traditional owners and custodians of the Adelaide region. We respect their spiritual relationship with their country, and recognise that their cultural and heritage beliefs are just as important to the living Kaurna people today. We pay our respects to Elders past, present, and emerging, and extend that respect to all First Nations peoples. Always was, always will be, Aboriginal land.</span>
+    </p>
+    <p class="footer-ack-item">
+      <img class="footer-flag" src="Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
+      <span>Squircle is a safe and welcoming space for everyone. We proudly support and celebrate the LGBTQIA+ community, whoever you are and whoever you love.</span>
+    </p>
+  </div>
+
+  <div class="footer-bottom">
+    <span>&copy; 2026 Squircle. All rights reserved.</span>
+  </div>
+
+</footer>
+
+<!-- easter egg: type "deltarune" or "undertale" to start a battle (same one as the home page, Script.js runs it) -->
+<div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
+  <div class="db-scene">
+    <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">
+  </div>
+
+  <div class="db-hp" id="dbHp" hidden>
+    <span class="db-hp-name" id="dbHpName">KRIS</span>
+    <span class="db-hp-lv">LV 1</span>
+    <div class="db-hp-bar"><div class="db-hp-fill" id="dbHpFill"></div></div>
+    <span class="db-hp-num" id="dbHpNum">20 / 20</span>
+  </div>
+
+  <div class="db-board" id="dbBoard" hidden>
+    <img class="db-heart" id="dbHeart" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Heart.webp" alt="">
+  </div>
+
+  <div class="db-textbox">
+    <p class="db-text" id="deltaruneText"></p>
+    <div class="db-menu" id="dbMenu" hidden>
+      <button type="button" data-act="fight">FIGHT</button>
+      <button type="button" data-act="act">ACT</button>
+      <button type="button" data-act="item">ITEM</button>
+      <button type="button" data-act="mercy">MERCY</button>
+    </div>
+  </div>
+
+  <button class="db-close" id="deltaruneClose" type="button">Close (Esc)</button>
+</div>
+<audio id="deltaruneAudio" preload="none"></audio>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
+<script src="Script.js"></script>
+<script src="Contact.js"></script>
+
+</body>
+</html>

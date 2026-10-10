@@ -60,7 +60,32 @@
   </div>
 
   <div class="nav-orb">
-    <button class="nav-menu" aria-label="Open menu"><span>☰</span></button>
+    <button class="nav-menu" aria-label="Menu" aria-expanded="false" aria-controls="navMenuPanel">
+      <span class="nav-menu-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+
+  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <div class="nav-menu-panel" id="navMenuPanel">
+    <span class="nav-menu-indicator" aria-hidden="true"></span>
+
+    <div class="nav-menu-group nav-menu-group--site">
+      <p class="nav-menu-heading">Site</p>
+      <a href="../index.html" class="nav-menu-link">Home</a>
+      <a href="../Shop/" class="nav-menu-link">Shop</a>
+      <a href="../about.html" class="nav-menu-link">About Us</a>
+      <a href="../Buy/" class="nav-menu-link">Build Your Own</a>
+    </div>
+
+    <div class="nav-menu-group">
+      <p class="nav-menu-heading">Products</p>
+      <a href="../Lappy/" class="nav-menu-link">Lappy 13 Pro <small>Laptop</small></a>
+      <a href="../Gammy%20Pro%20Max/" class="nav-menu-link">Gammy Pro Max <small>Gaming PC</small></a>
+      <a href="../Ally%20Maxx/" class="nav-menu-link">Ally Maxx <small>Handheld</small></a>
+      <a href="../Flippy%206%20Pro/" class="nav-menu-link">Flippy 6 Pro <small>Phone</small></a>
+      <a href="../Watchy%203/" class="nav-menu-link">Watchy 3 <small>Watch</small></a>
+      <a href="../Nuker/" class="nav-menu-link">Nuker <small>Microwave</small></a>
+    </div>
   </div>
 
 </nav>

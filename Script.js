@@ -300,6 +300,87 @@ if(navbar && navBuy && navBuyHero && "IntersectionObserver" in window){
   },{rootMargin:"-30% 0px 0px 0px"}).observe(navBuyHero);
 }
 
+// hamburger menu: every page on the site in a glass panel that drops out from under the menu button. the button again,
+// a click anywhere else, tabbing out of it or escape all close it
+const navMenuBtn=document.querySelector(".nav-menu");
+const navMenuPanel=document.getElementById("navMenuPanel");
+
+if(navbar && navMenuBtn && navMenuPanel){
+  const menuIndicator=navMenuPanel.querySelector(".nav-menu-indicator");
+  const menuLinks=Array.from(navMenuPanel.querySelectorAll(".nav-menu-link"));
+  let menuIndicatorLink=null;
+
+  // the page you're on gets marked and the hover pill rests on it. index.html, about.html and plain /about all count as
+  // the same page, since that's how the server treats them
+  const pagePath=path=>decodeURI(path).replace(/(index)?\.html$/,"");
+  const currentMenuLink=menuLinks.find(link=>pagePath(link.pathname)===pagePath(location.pathname)) || null;
+  if(currentMenuLink)currentMenuLink.setAttribute("aria-current","page");
+
+  // numbers the rows top to bottom so Style.css can drop them in one after another
+  navMenuPanel.querySelectorAll(".nav-menu-heading, .nav-menu-link").forEach((row,i)=>row.style.setProperty("--i",i));
+
+  // slides the pill onto a link (or fades it out for none). it jumps instead when it's appearing from nowhere, otherwise
+  // it would glide in from wherever it was last
+  function placeMenuIndicator(link,instant){
+    menuIndicatorLink=link;
+    if(!menuIndicator)return;
+    if(!link){menuIndicator.classList.remove("is-on"); return;}
+
+    const jump=instant || !menuIndicator.classList.contains("is-on");
+    if(jump)menuIndicator.style.transition="none";
+
+    menuIndicator.style.left=link.offsetLeft+"px";
+    menuIndicator.style.top=link.offsetTop+"px";
+    menuIndicator.style.width=link.offsetWidth+"px";
+    menuIndicator.style.height=link.offsetHeight+"px";
+
+    if(jump){
+      menuIndicator.offsetWidth; // flush the jump before the transition comes back
+      menuIndicator.style.transition="";
+    }
+    menuIndicator.classList.add("is-on");
+  }
+
+  function isMenuOpen(){return navbar.classList.contains("nav-menu-open");}
+
+  function setMenuOpen(open){
+    navbar.classList.toggle("nav-menu-open",open);
+    navMenuBtn.setAttribute("aria-expanded",String(open));
+    if(open)placeMenuIndicator(currentMenuLink,true);
+  }
+
+  navMenuBtn.addEventListener("click",()=>setMenuOpen(!isMenuOpen()));
+
+  menuLinks.forEach(link=>{
+    link.addEventListener("mouseenter",()=>placeMenuIndicator(link));
+    link.addEventListener("focus",()=>placeMenuIndicator(link));
+  });
+  navMenuPanel.addEventListener("mouseleave",()=>placeMenuIndicator(currentMenuLink));
+
+  // a click anywhere outside the panel closes it (the button's own click toggles it, so that one's left alone)
+  document.addEventListener("click",e=>{
+    if(isMenuOpen() && !navMenuPanel.contains(e.target) && !navMenuBtn.contains(e.target))setMenuOpen(false);
+  });
+
+  // so does tabbing out of it. no relatedTarget means focus went nowhere (a click on the panel's own background), so
+  // that one keeps it open
+  navbar.addEventListener("focusout",e=>{
+    const to=e.relatedTarget;
+    if(isMenuOpen() && to && !navMenuPanel.contains(to) && to!==navMenuBtn)setMenuOpen(false);
+  });
+
+  addEventListener("keydown",e=>{
+    if(e.key!=="Escape" || !isMenuOpen())return;
+    setMenuOpen(false);
+    navMenuBtn.focus();
+  });
+
+  addEventListener("resize",()=>{if(isMenuOpen())placeMenuIndicator(menuIndicatorLink,true);});
+
+  // the back button can bring a page back exactly as it was left, menu still open, so it tucks away again
+  addEventListener("pageshow",e=>{if(e.persisted)setMenuOpen(false);});
+}
+
 // gsap setup (holy cow gasp is so cool why havent i used it before)
 if(window.gsap && window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);}
 const hasGsap=!!(window.gsap && window.ScrollTrigger);

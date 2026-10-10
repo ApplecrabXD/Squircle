@@ -529,11 +529,32 @@ html.intro-seen #splash{display:none;}
   cursor:pointer;
 }
 
-.nav-menu span{
-  display:inline-block;
-  line-height:1;
-  transform:translateY(-1px);
+/* the three bars, which fold into an x while the menu's open (Script.js toggles .nav-menu-open on the navbar) */
+.nav-menu-bars{
+  position:relative;
+  display:block;
+  width:18px;
+  height:14px;
 }
+
+.nav-menu-bars span{
+  position:absolute;
+  left:0;
+  width:100%;
+  height:2px;
+  border-radius:2px;
+  background:currentColor;
+
+  transition:top .35s cubic-bezier(.22,1,.36,1), rotate .35s cubic-bezier(.22,1,.36,1), opacity .2s ease;
+}
+
+.nav-menu-bars span:nth-child(1){top:0;}
+.nav-menu-bars span:nth-child(2){top:6px;}
+.nav-menu-bars span:nth-child(3){top:12px;}
+
+.navbar.nav-menu-open .nav-menu-bars span:nth-child(1){top:6px; rotate:45deg;}
+.navbar.nav-menu-open .nav-menu-bars span:nth-child(2){opacity:0;}
+.navbar.nav-menu-open .nav-menu-bars span:nth-child(3){top:6px; rotate:-45deg;}
 
 /* product-page buy pill: tucked behind the middle orb (z-index -1 inside the navbar's own stacking context)
    and drops out from under the glass once the hero is scrolled past. Script.js toggles .nav-buy-shown */
@@ -616,6 +637,199 @@ html.intro-seen #splash{display:none;}
   .nav-buy,
   .navbar.nav-buy-shown .nav-buy{transition:opacity .2s ease, visibility 0s;}
   .nav-buy{transform:none;}
+}
+
+/* hamburger menu: every page on the site in a glass panel that drops out from under the menu button, with the same
+   springy drop as the buy pill above. Script.js toggles .nav-menu-open on the navbar */
+.nav-menu-panel{
+  position:absolute;
+  top:calc(100% + 12px);
+  right:0;
+
+  /* one tall column: the main pages, then the products under them */
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  width:300px;
+  padding:16px;
+  border-radius:28px;
+
+  /* scrolls inside itself if the screen's too short to fit it all */
+  max-height:calc(100vh - 122px);
+  max-height:calc(100dvh - 122px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+
+  /* frosted glass, so the page shows through blurred. it's whole lists of text over anything (photos, the marquees, the
+     line art), so it gets a smoked tint of the zone colour, and what shows through is dimmed too so white text still
+     reads even with a white photo right behind it */
+  background:color-mix(in srgb, color-mix(in srgb, var(--zone-bg) 85%, #000) 45%, transparent);
+  border:1px solid color-mix(in srgb, var(--line) 16%, transparent);
+  backdrop-filter:blur(40px) saturate(150%) brightness(.6);
+  -webkit-backdrop-filter:blur(40px) saturate(150%) brightness(.6);
+  box-shadow:0 24px 60px rgba(0,0,0,.3);
+
+  /* its own stack, so the hover pill can sit behind the links at z-index -1 */
+  isolation:isolate;
+  pointer-events:auto;
+  transform-origin:top right;
+
+  /* hiding: quick tuck back up, visibility only flips once that's done (same as the buy pill) */
+  visibility:hidden;
+  opacity:0;
+  transform:translateY(-14px) scale(.94);
+  transition:
+    transform .45s cubic-bezier(.22,1,.36,1),
+    opacity .3s ease,
+    visibility 0s linear .45s,
+    background .35s ease,
+    border-color .35s ease;
+}
+
+/* showing: springy drop that overshoots a touch then settles */
+.navbar.nav-menu-open .nav-menu-panel{
+  visibility:visible;
+  opacity:1;
+  transform:none;
+
+  transition:
+    transform .6s cubic-bezier(.34,1.56,.64,1),
+    opacity .3s ease,
+    visibility 0s,
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.nav-menu-group{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+
+/* a hairline between the main pages and the products, same as the shop's filter groups */
+.nav-menu-group + .nav-menu-group{
+  padding-top:12px;
+  border-top:1px solid color-mix(in srgb, var(--line) 14%, transparent);
+}
+
+/* same small caps as the footer's column headings */
+.nav-menu-heading{
+  padding:6px 16px 8px;
+
+  font-family:"obliqua",sans-serif;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 55%, transparent);
+}
+
+.nav-menu-link{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:20px;
+  padding:9px 16px;
+  border-radius:100px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.1rem;
+  line-height:1.15;
+  color:var(--line);
+  text-decoration:none;
+  white-space:nowrap;
+}
+
+/* the main pages read bigger than the products beside them */
+.nav-menu-group--site .nav-menu-link{padding:10px 16px; font-size:1.45rem;}
+
+/* what each product actually is, since the names don't say */
+.nav-menu-link small{
+  font-family:"obliqua",sans-serif;
+  font-size:.7rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:color-mix(in srgb, var(--line) 60%, transparent);
+}
+
+.nav-menu-link:focus-visible{outline:2px solid var(--line); outline-offset:-2px;}
+
+/* the hover pill, the same trick as .nav-indicator, just sliding up and down the list instead of across. it rests on
+   the page you're on when nothing's hovered (Script.js) */
+.nav-menu-indicator{
+  position:absolute;
+  z-index:-1;
+  left:0;
+  top:0;
+  width:0;
+  height:0;
+  border-radius:100px;
+
+  background:color-mix(in srgb, var(--line) 14%, transparent);
+  opacity:0;
+
+  pointer-events:none;
+  transition:
+    left .35s cubic-bezier(.22,1,.36,1),
+    top .35s cubic-bezier(.22,1,.36,1),
+    width .35s cubic-bezier(.22,1,.36,1),
+    height .35s cubic-bezier(.22,1,.36,1),
+    opacity .25s ease;
+}
+
+.nav-menu-indicator.is-on{opacity:1;}
+
+/* the rows drop in one after another, top to bottom, as it opens (Script.js numbers them as --i) */
+.nav-menu-heading,
+.nav-menu-link{
+  opacity:0;
+  translate:0 -8px;
+  transition:opacity .2s ease, translate .2s ease;
+}
+
+.navbar.nav-menu-open .nav-menu-heading,
+.navbar.nav-menu-open .nav-menu-link{
+  opacity:1;
+  translate:0 0;
+  transition:
+    opacity .35s ease calc(.06s + var(--i,0) * 28ms),
+    translate .5s cubic-bezier(.22,1,.36,1) calc(.06s + var(--i,0) * 28ms);
+}
+
+/* the buy pill tucks back under the nav while the menu's open, so the two never pile up on each other */
+.navbar.nav-menu-open .nav-buy{
+  visibility:hidden;
+  opacity:0;
+  transform:translateY(-58px) scale(.9);
+
+  transition:
+    transform .45s cubic-bezier(.22,1,.36,1),
+    opacity .3s ease,
+    scale .35s cubic-bezier(.22,1,.36,1),
+    visibility 0s linear .45s,
+    background .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+@media (prefers-reduced-motion:reduce){
+  .nav-menu-panel,
+  .navbar.nav-menu-open .nav-menu-panel{transform:none;}
+
+  .nav-menu-panel{transition:opacity .2s ease, visibility 0s linear .2s;}
+  .navbar.nav-menu-open .nav-menu-panel{transition:opacity .2s ease, visibility 0s;}
+
+  .nav-menu-heading,
+  .nav-menu-link,
+  .navbar.nav-menu-open .nav-menu-heading,
+  .navbar.nav-menu-open .nav-menu-link{translate:none; transition:none;}
+
+  .navbar.nav-menu-open .nav-buy{transform:none; transition:opacity .2s ease, visibility 0s linear .2s;}
+
+  .nav-menu-bars span,
+  .nav-menu-indicator{transition:none;}
 }
 
 /* dark mode */
@@ -1795,6 +2009,14 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   .nav-buy{top:calc(100% + 8px);}
   .nav-buy-name{display:none;}
 
+  /* the menu goes the full width of the nav on phones */
+  .nav-menu-panel{
+    left:0;
+    width:auto;
+    max-height:calc(100vh - 110px);
+    max-height:calc(100dvh - 110px);
+  }
+
   /* scroll animation is desktop-only mobile gets stacked hero */
   .hero-wrap{height:auto;}
 
@@ -1802,6 +2024,9 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     position:static;
     height:auto;
     overflow:visible;
+    /* the laptop's slide-in starts off to the right. clip (not hidden) so it can't widen the page and make it scroll
+       sideways, same as .lappy-hero */
+    overflow-x:clip;
 
     display:flex;
     flex-direction:column;

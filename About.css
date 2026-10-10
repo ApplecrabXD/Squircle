@@ -1,0 +1,942 @@
+/* about page (about.html): who squircle is. the hero, marquee and closing banner are the product pages' lappy-* pieces
+   from Products.css, so everything here is the hero's extras plus the page's own four sections. About.js drives them.
+   classes are aboutus-* because the home page's about section already owns about-* in Style.css */
+
+/* page-wide tones + glass, flipped per scroll zone below (same recipe as the shop and buy pages) */
+.aboutus-page{
+  /* softer text tones mixed into the zone colour rather than faded with transparency, so they stay solid and the line
+     art passes behind the letters instead of showing through them */
+  --aboutus-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
+  --aboutus-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
+
+  --card-bg:rgba(0,0,0,.035);
+  --card-border:rgba(0,0,0,.08);
+  --glass:blur(25px) saturate(160%);
+
+  /* the name chips. the accent pill normally, white with orange text on the orange zone, the same swap
+     .btn-fill makes there */
+  --pick-bg:var(--accent);
+  --pick-ink:#fff;
+}
+
+html[data-zone] .aboutus-page{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
+
+/* smoked rather than white glass on orange and purple: a white tint there goes hot red-orange (or hot magenta) and
+   washes the copy out, and so does the saturate() boost */
+html[data-zone="orange"] .aboutus-page,
+html[data-zone="purple"] .aboutus-page{
+  --card-bg:rgba(0,0,0,.1);
+  --card-border:rgba(255,255,255,.16);
+  --glass:blur(25px);
+}
+
+/* the accent pill would vanish on orange, so it goes white with orange text there */
+html[data-zone="orange"] .aboutus-page{
+  --pick-bg:var(--whiteline);
+  --pick-ink:var(--accent);
+}
+
+/* glass cards, all the same recipe as the product pages' feature cards */
+.aboutus-name-copy,
+.aboutus-chapter-card,
+.aboutus-stat,
+.aboutus-rule-card,
+.aboutus-maker-card{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:var(--glass);
+  -webkit-backdrop-filter:var(--glass);
+}
+
+/* shared type */
+.aboutus-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2.2rem,4.4vw,4rem);
+  line-height:1.05;
+  color:var(--line);
+  text-wrap:balance;
+}
+
+.aboutus-text{
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.6;
+  color:var(--aboutus-soft-75);
+}
+
+/* centred title (+ lede) opening each section */
+.aboutus-head{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+
+  max-width:820px;
+  margin:0 auto clamp(56px,8vw,96px);
+  text-align:center;
+}
+
+.aboutus-lede{
+  max-width:52ch;
+  text-wrap:balance;
+
+  font-family:"obliqua",sans-serif;
+  font-size:1.1rem;
+  line-height:1.6;
+  color:var(--aboutus-soft-75);
+}
+
+
+/* hero extras: the shared lappy-hero brings the title, these add the buttons and the logo in place of a
+   product shot */
+.aboutus-hero-buttons{justify-content:center;}
+
+/* the extras join the hero entrance, the buttons with the same rise as the title a beat behind it, and the logo
+   slides in like the product pages' hero shot */
+#splash:not(.loaded) ~ .lappy-hero .aboutus-hero-buttons,
+#splash:not(.loaded) ~ .lappy-hero .aboutus-hero-visual{opacity:0;}
+
+#splash.loaded ~ .lappy-hero .aboutus-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
+#splash.loaded ~ .lappy-hero .aboutus-hero-visual{animation:lappy-hero-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
+
+.aboutus-hero-visual{
+  flex:0 0 auto;
+  width:min(42vw,540px);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+/* the logo: a button so it's reachable by keyboard too. four layers so nothing fights over `transform`: the button
+   floats, tilt leans toward the cursor (About.js), stack does the teardown angle, each block lifts on its own */
+.aboutus-logo{
+  position:relative;
+  display:block;
+  width:100%;
+  aspect-ratio:1280/1024; /* the block svgs' own box, so the layers line up exactly */
+  padding:0;
+  border:0;
+  border-radius:28px;
+  background:none;
+
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+
+  perspective:1600px;
+  animation:lappy-float 4.5s ease-in-out infinite;
+
+  /* how far each block lifts off the one under it when it's taken apart. translateZ won't take a percentage, so
+     smaller screens get a smaller lift below */
+  --lift:80px;
+}
+
+.aboutus-logo:focus-visible{outline:2px solid var(--line); outline-offset:8px;}
+
+.aboutus-logo-tilt,
+.aboutus-logo-stack{
+  position:absolute;
+  inset:0;
+  display:block;
+  transform-style:preserve-3d;
+}
+
+.aboutus-logo-stack{transition:transform 1s cubic-bezier(.22,1,.36,1);}
+
+/* taken apart: tipped back so the orange diamond lies flat like a base plate, with every block lifted off the one under
+   it, like a teardown. nudged down a touch since the lifted blocks climb up the screen */
+.aboutus-logo.is-open .aboutus-logo-stack{transform:translateY(8%) rotateX(58deg) scale(.8);}
+
+.aboutus-logo-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+
+  user-select:none;
+  pointer-events:none;
+
+  transition:transform 1s cubic-bezier(.22,1,.36,1);
+}
+
+/* lifts a beat apart from the bottom block up, then they all drop back together */
+.aboutus-logo.is-open .aboutus-logo-layer:nth-child(2){transform:translateZ(var(--lift)); transition-delay:.05s;}
+.aboutus-logo.is-open .aboutus-logo-layer:nth-child(3){transform:translateZ(calc(var(--lift) * 2)); transition-delay:.1s;}
+.aboutus-logo.is-open .aboutus-logo-layer:nth-child(4){transform:translateZ(calc(var(--lift) * 3)); transition-delay:.15s;}
+
+.aboutus-logo-hint{
+  font-family:"obliqua",sans-serif;
+  font-size:.8rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--aboutus-soft-60);
+
+  transition:opacity .4s ease;
+}
+
+.aboutus-logo.is-open + .aboutus-logo-hint{opacity:0;}
+
+/* "hover" for mice, "tap" for fingers */
+.aboutus-hint-tap{display:none;}
+
+@media (hover:none){
+  .aboutus-hint-hover{display:none;}
+  .aboutus-hint-tap{display:inline;}
+}
+
+
+/* what's a squircle: pinned on desktop, About.js morphs the shape and steps the beats as you scroll */
+.aboutus-name{
+  position:relative;
+  z-index:1;
+  height:320vh;
+}
+
+.aboutus-name-sticky{
+  position:relative;
+  height:100vh;
+  overflow:hidden;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(32px,6vw,96px);
+
+  /* the top padding keeps everything clear of the nav */
+  padding:96px 8% 40px;
+}
+
+.aboutus-name-stage{
+  flex:0 0 auto;
+  width:min(38vw,56vh,500px);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+
+.aboutus-name-svg{
+  display:block;
+  width:100%;
+  height:auto;
+  overflow:visible;
+
+  filter:drop-shadow(0 30px 40px rgba(0,0,0,.22));
+}
+
+/* the square and circle it's morphing between, dashed in behind so you can see the squircle sit right between them */
+.aboutus-name-guide{
+  fill:none;
+  stroke:var(--line);
+  stroke-width:1;
+  stroke-dasharray:3 5;
+  opacity:.45;
+}
+
+/* the accent normally, white on the orange zone where an orange shape would vanish */
+.aboutus-name-shape{
+  fill:var(--accent);
+  transition:fill .35s ease;
+}
+
+html[data-zone="orange"] .aboutus-name-shape{fill:var(--whiteline);}
+
+.aboutus-name-formula{
+  display:flex;
+  align-items:baseline;
+  gap:16px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:.95rem;
+  letter-spacing:.04em;
+  color:var(--aboutus-soft-75);
+}
+
+.aboutus-name-formula sup{font-size:.7em; line-height:0; vertical-align:.6em;}
+
+.aboutus-name-n{
+  min-width:4.5em;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.35rem;
+  letter-spacing:0;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+/* yellow on the orange zone is too low-contrast to read, so it goes white there (same as the product page stats) */
+html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
+
+.aboutus-name-copy{
+  flex:0 1 540px;
+  min-width:0;
+
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:22px;
+
+  padding:clamp(30px,4vw,52px);
+  border-radius:28px;
+}
+
+.aboutus-name-copy .aboutus-title{font-size:clamp(2rem,3.4vw,3.2rem);}
+
+/* square / circle / squircle, with the sliding pill (the same trick as .nav-indicator) on whichever beat is showing */
+.aboutus-name-chips{
+  position:relative;
+  display:inline-flex;
+  gap:4px;
+  padding:5px;
+  border-radius:100px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+
+  transition:background .35s ease, border-color .35s ease;
+}
+
+.aboutus-name-chip-indicator{
+  position:absolute;
+  z-index:0;
+  top:5px;
+  bottom:5px;
+  left:0;
+  width:0;
+  border-radius:100px;
+
+  background:var(--pick-bg);
+  opacity:0;
+
+  transition:
+    left .45s cubic-bezier(.22,1,.36,1),
+    width .45s cubic-bezier(.22,1,.36,1),
+    opacity .25s ease,
+    background .35s ease;
+}
+
+.aboutus-name-chips.is-ready .aboutus-name-chip-indicator{opacity:1;}
+
+.aboutus-name-chip{
+  position:relative;
+  z-index:1;
+  padding:8px 16px;
+  border-radius:100px;
+
+  font-family:"obliqua",sans-serif;
+  font-size:.88rem;
+  color:var(--line);
+
+  transition:color .35s ease;
+}
+
+.aboutus-name-chip.is-on{color:var(--pick-ink);}
+
+/* the beats are a plain list by default (phones, reduced motion, no gsap). while it's pinned About.js adds
+   .is-scrubbed and they stack in one cell instead, crossfading as the shape changes. the cell is as tall as the
+   longest beat, so nothing jumps */
+.aboutus-name-beats{
+  display:grid;
+  gap:22px;
+}
+
+.aboutus-name-beat-title{
+  margin-bottom:10px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.4rem,2.2vw,2rem);
+  line-height:1.15;
+  color:var(--line);
+}
+
+.aboutus-name.is-scrubbed .aboutus-name-beat{
+  grid-area:1/1;
+
+  opacity:0;
+  translate:0 24px;
+
+  transition:opacity .45s ease, translate .6s cubic-bezier(.22,1,.36,1);
+}
+
+.aboutus-name.is-scrubbed .aboutus-name-beat.is-on{opacity:1; translate:0 0;}
+
+
+/* our story: a line down the middle with the chapters swinging in from alternate sides */
+.aboutus-story{
+  position:relative;
+  z-index:1;
+  padding:140px 8% 100px;
+
+  /* the chapters swing in from the sides; clip (not hidden) so that can't cause a sideways scroll */
+  overflow-x:clip;
+}
+
+.aboutus-timeline{
+  position:relative;
+  max-width:1100px;
+  margin:0 auto;
+}
+
+.aboutus-timeline-line{
+  position:absolute;
+  top:0;
+  bottom:0;
+  left:50%;
+  width:2px;
+  translate:-50% 0;
+  border-radius:2px;
+  overflow:hidden;
+
+  background:color-mix(in srgb, var(--line) 22%, transparent);
+}
+
+/* About.js scrubs this down with the scroll. full by default, so it's all there without the script */
+.aboutus-timeline-fill{
+  position:absolute;
+  inset:0;
+  background:var(--line);
+  transform-origin:top;
+}
+
+.aboutus-chapters{
+  list-style:none;
+  margin:0;
+  padding:0;
+
+  display:flex;
+  flex-direction:column;
+  gap:clamp(48px,9vh,110px);
+}
+
+/* card | dot | big index number, flipped every other chapter */
+.aboutus-chapter{
+  position:relative;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 72px minmax(0,1fr);
+  align-items:center;
+}
+
+.aboutus-chapter-dot{
+  grid-column:2;
+  grid-row:1;
+  justify-self:center;
+
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  border:2px solid var(--line);
+
+  /* solid so the line doesn't run through it, then filled in once the line reaches it (About.js adds .is-reached) */
+  background:var(--zone-bg);
+
+  transition:background .4s ease, scale .5s cubic-bezier(.34,1.56,.64,1);
+}
+
+.aboutus-chapter.is-reached .aboutus-chapter-dot{background:var(--line); scale:1.2;}
+
+.aboutus-chapter-index{
+  grid-column:3;
+  grid-row:1;
+  justify-self:start;
+  padding-left:clamp(8px,3vw,40px);
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(5rem,11vw,9rem);
+  line-height:1;
+  color:var(--line);
+  opacity:.2;
+
+  pointer-events:none;
+  user-select:none;
+
+  transition:opacity .9s ease .2s;
+}
+
+.aboutus-chapter-card{
+  grid-column:1;
+  grid-row:1;
+
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:clamp(26px,3vw,40px);
+  border-radius:28px;
+
+  /* reveal on opacity/translate/rotate, hover on transform, so the two never fight */
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    translate .9s cubic-bezier(.22,1,.36,1),
+    rotate .9s cubic-bezier(.22,1,.36,1),
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease,
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.aboutus-chapter:nth-child(even) .aboutus-chapter-card{grid-column:3;}
+
+.aboutus-chapter:nth-child(even) .aboutus-chapter-index{
+  grid-column:1;
+  justify-self:end;
+  padding-left:0;
+  padding-right:clamp(8px,3vw,40px);
+}
+
+.aboutus-chapter-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+}
+
+.aboutus-chapter-year{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:1.5rem;
+  line-height:1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+html[data-zone="orange"] .aboutus-chapter-year{color:var(--whiteline);}
+
+.aboutus-chapter-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.5rem,2.4vw,2.2rem);
+  line-height:1.15;
+  color:var(--line);
+}
+
+/* the numbers */
+.aboutus-stats{
+  list-style:none;
+  max-width:1100px;
+  margin:clamp(80px,12vh,140px) auto 0;
+  padding:0;
+
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(14px,2vw,24px);
+}
+
+.aboutus-stat{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:32px 16px;
+  border-radius:28px;
+
+  text-align:center;
+
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    translate .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease,
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.aboutus-stat:hover{
+  transform:translateY(-10px);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+}
+
+/* arriving together, a beat apart */
+.aboutus-stat:nth-child(2){--delay:.1s;}
+.aboutus-stat:nth-child(3){--delay:.2s;}
+.aboutus-stat:nth-child(4){--delay:.3s;}
+
+.aboutus-stat-num{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-size:clamp(2.6rem,5vw,4.4rem);
+  line-height:1;
+  color:var(--accent-3);
+
+  transition:color .35s ease;
+}
+
+/* yellow on the orange zone is too low-contrast to read, so the numbers go white there */
+html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
+
+.aboutus-stat-label{
+  font-family:"obliqua",sans-serif;
+  font-size:.78rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:var(--aboutus-soft-75);
+}
+
+
+/* four blocks, four rules: the logo sticks beside the rules while they scroll past. About.js sets data-active on it
+   to whichever block the rule in the middle of the screen is about */
+.aboutus-blocks{
+  position:relative;
+  z-index:1;
+  padding:120px 8% 40px;
+}
+
+.aboutus-blocks-layout{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  column-gap:clamp(32px,6vw,96px);
+
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.aboutus-blocks-stage{
+  --tile:min(34vw,60vh,440px);
+
+  position:sticky;
+  top:calc(50vh - var(--tile) / 2);
+  align-self:start;
+
+  display:grid;
+  place-items:center;
+}
+
+/* light tile so all four colours read (the purple block would vanish straight onto the purple zone). corner-shape
+   makes the corners actual squircles where the browser supports it, everywhere else it's a normal rounded tile */
+.aboutus-blocks-tile,
+.aboutus-mini{
+  position:relative;
+  aspect-ratio:1;
+  border-radius:24%;
+  corner-shape:squircle;
+  background:var(--whiteline);
+}
+
+.aboutus-blocks-tile{
+  width:var(--tile);
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+}
+
+.aboutus-set img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+
+  user-select:none;
+  pointer-events:none;
+
+  transition:opacity .5s ease, filter .5s ease;
+}
+
+/* one block picked: the rest go grey and see-through, so the picked one stands out wherever it sits in the stack */
+.aboutus-set:is([data-active="orange"],[data-active="gray"],[data-active="purple"],[data-active="white"]) img{
+  opacity:.28;
+  filter:grayscale(1);
+}
+
+.aboutus-set[data-active="orange"] [data-block="orange"],
+.aboutus-set[data-active="gray"] [data-block="gray"],
+.aboutus-set[data-active="purple"] [data-block="purple"],
+.aboutus-set[data-active="white"] [data-block="white"]{opacity:1; filter:none;}
+
+/* the picked block on the big tile does its bit of the splash screen's dance: squares turn, circles pulse. the last
+   rule ("all") sets the whole logo going at once, just like the loader */
+.aboutus-blocks-tile [data-block="orange"]{--turn:-45deg;}
+.aboutus-blocks-tile [data-block="purple"]{--turn:90deg;}
+
+.aboutus-blocks-tile:is([data-active="orange"],[data-active="all"]) [data-block="orange"],
+.aboutus-blocks-tile:is([data-active="purple"],[data-active="all"]) [data-block="purple"]{animation:aboutus-turn 2.4s ease-in-out infinite;}
+
+.aboutus-blocks-tile:is([data-active="gray"],[data-active="all"]) [data-block="gray"],
+.aboutus-blocks-tile:is([data-active="white"],[data-active="all"]) [data-block="white"]{animation:blockPulse 2.4s ease-in-out infinite;}
+
+/* blockPulse lives in Style.css, shared with every other animated logo. the turn is this page's own since these blocks
+   sit at the svg's own angle rather than the splash's */
+@keyframes aboutus-turn{
+  0%,20%{rotate:0deg;}
+  50%,70%{rotate:var(--turn);}
+  100%{rotate:0deg;}
+}
+
+.aboutus-rules{
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+/* tall rows so it's one rule at a time in the middle of the screen */
+.aboutus-rule{
+  min-height:min(70vh,640px);
+  display:flex;
+  align-items:center;
+}
+
+.aboutus-rule-card{
+  display:flex;
+  align-items:flex-start;
+  gap:24px;
+
+  width:100%;
+  padding:clamp(26px,3vw,40px);
+  border-radius:28px;
+
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    translate .9s cubic-bezier(.22,1,.36,1),
+    rotate .9s cubic-bezier(.22,1,.36,1),
+    transform .4s cubic-bezier(.22,1,.36,1),
+    box-shadow .4s ease,
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.aboutus-rule.is-active .aboutus-rule-card{
+  border-color:color-mix(in srgb, var(--line) 55%, transparent);
+  transform:scale(1.02);
+  box-shadow:0 24px 48px rgba(0,0,0,.2);
+}
+
+.aboutus-mini{
+  flex:0 0 auto;
+  width:clamp(56px,6vw,72px);
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+}
+
+.aboutus-rule-index{
+  margin-bottom:8px;
+
+  font-family:"obliqua",sans-serif;
+  font-weight:700;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--aboutus-soft-60);
+}
+
+.aboutus-rule-title{
+  margin-bottom:12px;
+
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(1.7rem,2.8vw,2.6rem);
+  line-height:1.1;
+  color:var(--line);
+}
+
+/* the closer: no card, just big type beside the whole logo going at once */
+.aboutus-rule--all{
+  min-height:min(60vh,520px);
+
+  flex-direction:column;
+  justify-content:center;
+  gap:6px;
+
+  text-align:center;
+
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    translate .9s cubic-bezier(.22,1,.36,1);
+}
+
+.aboutus-rule--all .aboutus-rule-title{font-size:clamp(2.4rem,5vw,4.4rem);}
+.aboutus-rule--all .aboutus-text{font-size:1.15rem;}
+
+
+/* behind the scenes */
+.aboutus-maker{
+  position:relative;
+  z-index:1;
+  padding:80px 8% 120px;
+}
+
+.aboutus-maker-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+
+  max-width:880px;
+  margin:0 auto;
+  padding:clamp(36px,5vw,64px);
+  border-radius:28px;
+
+  text-align:center;
+
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    translate .9s cubic-bezier(.22,1,.36,1),
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.aboutus-maker-card .aboutus-text{max-width:60ch;}
+.aboutus-maker-card strong{font-weight:700; color:var(--line);}
+
+.aboutus-maker-tools{
+  list-style:none;
+  margin:0;
+  padding:0;
+
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+}
+
+.aboutus-maker-tools li{
+  padding:7px 16px;
+  border-radius:100px;
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+
+  font-family:"obliqua",sans-serif;
+  font-size:.85rem;
+  color:var(--line);
+}
+
+/* two classes so it outranks .hero-buttons' own top margin in Style.css */
+.hero-buttons.aboutus-maker-buttons{
+  justify-content:center;
+  margin-top:8px;
+}
+
+
+/* scroll reveals (About.js adds .in-view the first time each one scrolls in): the same rises as the rest of the site,
+   the chapters swinging in from their own side. only while the body has .has-reveal (About.js again), so without the
+   script they're all simply there. no transition into the hidden state, so hiding them at start-up can't play as a
+   fade out */
+.aboutus-head,
+.aboutus-name-stage,
+.aboutus-name-copy{
+  transition:
+    opacity .9s cubic-bezier(.22,1,.36,1),
+    translate .9s cubic-bezier(.22,1,.36,1),
+    rotate .9s cubic-bezier(.22,1,.36,1),
+    background .35s ease,
+    border-color .35s ease;
+}
+
+.has-reveal .aboutus-head:not(.in-view),
+.has-reveal .aboutus-stats:not(.in-view) .aboutus-stat,
+.has-reveal .aboutus-rule:not(.in-view) .aboutus-rule-card,
+.has-reveal .aboutus-rule--all:not(.in-view),
+.has-reveal .aboutus-maker-card:not(.in-view){
+  opacity:0;
+  translate:0 48px;
+  transition:none;
+}
+
+.has-reveal .aboutus-name-stage:not(.in-view){opacity:0; translate:-120px 0; rotate:-4deg; transition:none;}
+.has-reveal .aboutus-name-copy:not(.in-view){opacity:0; translate:120px 0; rotate:4deg; transition:none;}
+
+.has-reveal .aboutus-chapter:not(.in-view) .aboutus-chapter-card{opacity:0; translate:-100px 0; rotate:-3deg; transition:none;}
+.has-reveal .aboutus-chapter:nth-child(even):not(.in-view) .aboutus-chapter-card{translate:100px 0; rotate:3deg;}
+.has-reveal .aboutus-chapter:not(.in-view) .aboutus-chapter-index{opacity:0; transition:none;}
+
+
+/* upright tablets: the name section stacks inside its pin (sideways ones have the width to keep it side by side) */
+@media (max-width:900px) and (orientation:portrait){
+  .aboutus-name-sticky{
+    flex-direction:column;
+    gap:24px;
+    padding:100px 6% 32px;
+  }
+
+  .aboutus-name-stage{width:min(56vw,34vh,360px); gap:8px;}
+  .aboutus-name-copy{flex:0 0 auto; width:min(100%,560px); gap:16px;}
+}
+
+/* short screens (sideways phones mostly): squeeze the pinned card so it still fits in one screen */
+@media (max-height:560px) and (min-width:651px){
+  .aboutus-name-sticky{padding:84px 6% 16px;}
+  .aboutus-name-copy{padding:22px 26px; gap:12px;}
+  .aboutus-name-copy .aboutus-title{font-size:1.8rem;}
+}
+
+/* tablets: the rules lose the side-by-side */
+@media (max-width:900px){
+  /* the stage drops below the rules, where the "all" closer sets the whole logo going */
+  .aboutus-blocks-layout{display:flex; flex-direction:column;}
+
+  .aboutus-blocks-stage{
+    --tile:min(60vw,300px);
+    order:2;
+    position:static;
+  }
+
+  .aboutus-rule{min-height:0; margin-bottom:20px;}
+  .aboutus-rule--all{min-height:0; padding:48px 0 40px;}
+
+  .aboutus-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+
+/* phones: no pin, everything stacks, the timeline runs down the left */
+@media (max-width:650px){
+  .aboutus-hero-visual{width:min(80vw,380px);}
+  .aboutus-logo{--lift:44px;}
+
+  .aboutus-name{height:auto;}
+
+  /* unpinned, so it lets the page scroll past it, but it still clips sideways: the stage and card swing in from the
+     sides */
+  .aboutus-name-sticky{
+    position:static;
+    height:auto;
+    overflow-x:clip;
+    overflow-y:visible;
+    flex-direction:column;
+    gap:32px;
+    padding:80px 24px 40px;
+  }
+
+  .aboutus-name-stage{width:min(70vw,300px);}
+  .aboutus-name-copy{flex:0 0 auto; width:100%; padding:28px 24px;}
+
+  .aboutus-story{padding:90px 24px 80px;}
+  .aboutus-blocks{padding:90px 24px 20px;}
+  .aboutus-maker{padding:60px 24px 90px;}
+
+  .aboutus-timeline-line{left:9px; translate:none;}
+
+  .aboutus-chapter{
+    grid-template-columns:20px minmax(0,1fr);
+    column-gap:20px;
+  }
+
+  .aboutus-chapter-dot{grid-column:1;}
+
+  .aboutus-chapter-card,
+  .aboutus-chapter:nth-child(even) .aboutus-chapter-card{grid-column:2;}
+
+  .aboutus-chapter-index{display:none;}
+
+  /* every card's on the right now, so they all swing in from that side */
+  .has-reveal .aboutus-chapter:not(.in-view) .aboutus-chapter-card{translate:60px 0; rotate:3deg;}
+
+  .aboutus-rule-card{flex-direction:column; gap:18px; padding:26px 24px;}
+
+  .aboutus-stat{padding:24px 12px;}
+}
+
+/* reduced motion: no float, no teardown glide, no dancing blocks, everything simply there */
+@media (prefers-reduced-motion:reduce){
+  #splash.loaded ~ .lappy-hero .aboutus-hero-buttons,
+  #splash.loaded ~ .lappy-hero .aboutus-hero-visual,
+  .aboutus-logo,
+  .aboutus-blocks-tile img{animation:none;}
+
+  .aboutus-logo-stack,
+  .aboutus-logo-layer,
+  .aboutus-logo-hint,
+  .aboutus-name-chip-indicator,
+  .aboutus-name-beat,
+  .aboutus-chapter-dot,
+  .aboutus-chapter-card,
+  .aboutus-stat,
+  .aboutus-rule-card,
+  .aboutus-set img{transition:none;}
+}

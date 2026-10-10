@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flippy 6 Pro</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../Style.css">
 <link rel="stylesheet" href="../Products.css">
@@ -66,7 +68,6 @@
       <div class="nav-indicator"></div>
       <a href="../index.html">Home</a>
       <a href="../Shop/">Shop</a>
-      <a href="../support.html">Support</a>
       <a href="../about.html">About Us</a>
     </div>
   </div>
@@ -120,7 +121,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">01</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Fully Repairable</p>
           <h2 class="lappy-panel-title" data-fx="up">The foldable you can actually fix.</h2>
           <p class="lappy-panel-text" data-fx="right">The hinge, inner screen and battery all come out with a single screwdriver, so a worn fold never means a whole new phone.</p>
           <span class="lappy-panel-stat" data-fx="scale">100%<small>swappable parts</small></span>
@@ -133,7 +133,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">02</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Folds in Half</p>
           <h2 class="lappy-panel-title" data-fx="up">Big screen when you want it, pocket-sized when you don't.</h2>
           <p class="lappy-panel-text" data-fx="right">Flip it open for a full-size display, then snap it shut into a little square that fits any pocket.</p>
           <span class="lappy-panel-stat" data-fx="scale">6.7-inch<small>folding display</small></span>
@@ -146,7 +145,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">03</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Cover Screen</p>
           <h2 class="lappy-panel-title" data-fx="up">Check, reply and snap without opening it.</h2>
           <p class="lappy-panel-text" data-fx="right">A big outer screen handles notifications, music, maps and quick replies while the phone stays shut.</p>
           <span class="lappy-panel-stat" data-fx="scale">3.4-inch<small>cover screen</small></span>
@@ -159,7 +157,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">04</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Flex Mode Camera</p>
           <h2 class="lappy-panel-title" data-fx="up">Your camera and your tripod, in one phone.</h2>
           <p class="lappy-panel-text" data-fx="right">Half-fold it on a table and it holds itself up for hands-free selfies, video calls and group shots.</p>
           <span class="lappy-panel-stat" data-fx="scale">50MP<small>main camera</small></span>
@@ -277,7 +274,7 @@
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
         <a href="../Shop/">Shop</a>
-        <a href="../support.html">Support</a>
+        <a href="#">Placeholder</a>
       </div>
 
       <div class="footer-col">

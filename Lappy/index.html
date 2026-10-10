@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lappy 13 Pro</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../Style.css">
 <link rel="stylesheet" href="../Products.css">
@@ -66,7 +68,6 @@
       <div class="nav-indicator"></div>
       <a href="../index.html">Home</a>
       <a href="../Shop/">Shop</a>
-      <a href="../support.html">Support</a>
       <a href="../about.html">About Us</a>
     </div>
   </div>
@@ -120,7 +121,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">01</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Fully Repairable</p>
           <h2 class="lappy-panel-title" data-fx="up">Everything opens, nothing's glued in.</h2>
           <p class="lappy-panel-text" data-fx="right">No glue. No rivets. Every panel lifts off with a single screwdriver, so nothing about this laptop is a mystery.</p>
           <span class="lappy-panel-stat" data-fx="scale">100%<small>swappable parts</small></span>
@@ -133,7 +133,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">02</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Intel-Powered</p>
           <h2 class="lappy-panel-title" data-fx="up">Power that doesn't quit, even under real load.</h2>
           <p class="lappy-panel-text" data-fx="right">A full desktop-class Intel chip tuned to stay cool, quiet, and fast no matter what you throw at it.</p>
           <span class="lappy-panel-stat" data-fx="scale">14-core<small>Intel processor</small></span>
@@ -146,7 +145,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">03</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Upgradeable RAM &amp; Storage</p>
           <h2 class="lappy-panel-title" data-fx="up">More RAM, more storage, whenever you actually need it.</h2>
           <p class="lappy-panel-text" data-fx="right">Pop the back panel and drop in a bigger drive or more memory yourself. No manufacturer gatekeeping required.</p>
           <span class="lappy-panel-stat" data-fx="scale">64GB<small>max RAM &amp; storage</small></span>
@@ -159,7 +157,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">04</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Swappable Ports</p>
           <h2 class="lappy-panel-title" data-fx="up">Ports that adapt to whatever your day needs.</h2>
           <p class="lappy-panel-text" data-fx="right">Slide a module out, slide a different one in. Carry whatever today needs: USB-C, HDMI, SD.</p>
           <span class="lappy-panel-stat" data-fx="scale">4<small>swappable bays</small></span>
@@ -277,7 +274,7 @@
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
         <a href="../Shop/">Shop</a>
-        <a href="../support.html">Support</a>
+        <a href="#">Placeholder</a>
       </div>
 
       <div class="footer-col">

@@ -74,16 +74,7 @@
 #splash.loaded ~ .lappy-hero .hero-title-atom{animation:lappy-hero-pop .9s cubic-bezier(.22,1,.36,1) .25s both;}
 #splash.loaded ~ .lappy-hero .lappy-hero-laptop{animation:lappy-hero-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
 
-@keyframes lappy-hero-rise{
-  from{opacity:0; transform:translateY(70px) rotate(-3deg);}
-  to{opacity:1; transform:none;}
-}
-
-@keyframes lappy-hero-pop{
-  from{opacity:0; transform:scale(.6) rotate(6deg);}
-  to{opacity:1; transform:none;}
-}
-
+/* lappy-hero-rise + lappy-hero-pop live in Style.css, the home hero uses them too */
 @keyframes lappy-hero-slide{
   from{opacity:0; transform:translateX(140px) rotate(4deg);}
   to{opacity:1; transform:none;}
@@ -159,9 +150,8 @@
 .lappy-panel:nth-of-type(even){--panel-accent:var(--accent-2);}
 
 /* the showcase lives in the orange scroll zone, where an orange accent would vanish into the background. the orange
-   panels flip theirs to white (with orange tag text), the same swap .btn-fill makes there; purple panels read fine */
+   panels flip theirs to white, the same swap .btn-fill makes there; purple panels read fine */
 html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whiteline);}
-html[data-zone="orange"] .lappy-panel:nth-of-type(odd) .lappy-panel-tag{color:var(--accent);}
 
 .lappy-panel-media{
   position:relative;
@@ -241,21 +231,6 @@ html[data-zone="orange"] .lappy-panel:not(.lappy-panel--cta) .lappy-panel-body{
 }
 
 .lappy-panel-body{transition:background .35s ease, backdrop-filter .35s ease, -webkit-backdrop-filter .35s ease;}
-
-.lappy-panel-tag{
-  display:inline-flex;
-  padding:8px 20px;
-  border-radius:100px;
-  background:var(--panel-accent);
-
-  font-family:"obliqua",sans-serif;
-  font-size:.8rem;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:#fff;
-
-  transition:background .35s ease, color .35s ease;
-}
 
 .lappy-panel-title{
   font-family:"SuperMalibu","obliqua",sans-serif;

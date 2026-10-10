@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ally Maxx</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../Style.css">
 <link rel="stylesheet" href="../Products.css">
@@ -66,7 +68,6 @@
       <div class="nav-indicator"></div>
       <a href="../index.html">Home</a>
       <a href="../Shop/">Shop</a>
-      <a href="../support.html">Support</a>
       <a href="../about.html">About Us</a>
     </div>
   </div>
@@ -120,7 +121,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">01</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Fully Repairable</p>
           <h2 class="lappy-panel-title" data-fx="up">Stick drift? Swap them in minutes.</h2>
           <p class="lappy-panel-text" data-fx="right">No glue, no ribbon-cable nightmares. Thumbsticks, triggers and the screen all come out with a single screwdriver.</p>
           <span class="lappy-panel-stat" data-fx="scale">100%<small>swappable parts</small></span>
@@ -133,7 +133,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">02</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Play Anywhere</p>
           <h2 class="lappy-panel-title" data-fx="up">Your whole game library, right in your hands.</h2>
           <p class="lappy-panel-text" data-fx="right">A full gaming PC shrunk into a handheld, running the games you already own on the couch, on the train, or anywhere in between.</p>
           <span class="lappy-panel-stat" data-fx="scale">120Hz<small>7-inch display</small></span>
@@ -146,7 +145,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">03</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Swappable Battery</p>
           <h2 class="lappy-panel-title" data-fx="up">Low on charge? Swap in a fresh battery.</h2>
           <p class="lappy-panel-text" data-fx="right">Pop the back cover, slide the battery out, drop a charged one in and keep playing. No cable, no waiting around.</p>
           <span class="lappy-panel-stat" data-fx="scale">60s<small>battery swap</small></span>
@@ -159,7 +157,6 @@
         </div>
         <span class="lappy-panel-index" aria-hidden="true">04</span>
         <div class="lappy-panel-body">
-          <p class="lappy-panel-tag" data-fx="down">Upgradeable Storage</p>
           <h2 class="lappy-panel-title" data-fx="up">Room for every game you own, and then some.</h2>
           <p class="lappy-panel-text" data-fx="right">A standard M.2 drive sits right behind the back panel, so going bigger is a five-minute job you can do yourself.</p>
           <span class="lappy-panel-stat" data-fx="scale">2TB<small>max storage</small></span>
@@ -277,7 +274,7 @@
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
         <a href="../Shop/">Shop</a>
-        <a href="../support.html">Support</a>
+        <a href="#">Placeholder</a>
       </div>
 
       <div class="footer-col">

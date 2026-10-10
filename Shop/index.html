@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop Squircle</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../Style.css">
 <link rel="stylesheet" href="../Products.css">
@@ -53,7 +55,6 @@
       <div class="nav-indicator"></div>
       <a href="../index.html">Home</a>
       <a href="../Shop/">Shop</a>
-      <a href="../support.html">Support</a>
       <a href="../about.html">About Us</a>
     </div>
   </div>
@@ -66,14 +67,12 @@
 
 <section class="lappy-hero">
   <div class="lappy-hero-copy">
-    <p class="shop-hero-tag">Shop Squircle</p>
     <h1 class="lappy-hero-title">Find Your<br>
       <span class="hero-title-atom">
         <span class="hero-title-atom-text">Squircle</span>
         <canvas class="hero-title-atom-canvas" aria-hidden="true"></canvas>
       </span>
     </h1>
-    <p class="shop-hero-text">Six products. Every one fully repairable.</p>
     <div class="hero-buttons shop-hero-buttons">
       <a href="#shop" class="btn btn-fill">Shop All</a>
       <a href="../Buy/" class="btn btn-outline">Build Your Own</a>
@@ -293,7 +292,7 @@
   <img src="../Assets/Temp/16x9.png" alt="Placeholder image">
   <div class="lappy-buy-banner-copy">
     <h2 class="lappy-buy-banner-title">Can't decide?</h2>
-    <a href="../support.html" class="btn btn-fill">Get Support</a>
+    <a href="#" class="btn btn-fill">Placeholder</a>
   </div>
 </section>
 
@@ -323,7 +322,7 @@
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
         <a href="../Shop/">Shop</a>
-        <a href="../support.html">Support</a>
+        <a href="#">Placeholder</a>
       </div>
 
       <div class="footer-col">

@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
+<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="Style.css">
 </head>
@@ -81,7 +83,6 @@
       <div class="nav-indicator"></div> <!--why dose this work why did i do it like this-->
       <a href="index.html">Home</a>
       <a href="Shop/">Shop</a>
-      <a href="support.html">Support</a>
       <a href="about.html">About Us</a>
     </div>
   </div>
@@ -267,7 +268,7 @@
         <h4 class="footer-heading">Site</h4>
         <a href="index.html">Home</a>
         <a href="Shop/">Shop</a>
-        <a href="support.html">Support</a>
+        <a href="#">Placeholder</a>
       </div>
 
       <div class="footer-col">

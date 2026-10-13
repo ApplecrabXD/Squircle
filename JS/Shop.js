@@ -84,22 +84,35 @@ function apply(instant){
 function rearrange(ordered,shown,instant){
   const animate=hasGsap && !reducedMotion && !instant;
   const before=new Map();
+  const ghosts=[];
 
   if(animate){
     // measured mid-slide on purpose
-    items.forEach(item=>{if(!item.hidden)before.set(item,item.getBoundingClientRect());});
-    gsap.killTweensOf(items);
+    items.forEach(item=>{
+      if(item.hidden)return;
+      before.set(item,item.getBoundingClientRect());
+      if(!shown.includes(item))ghosts.push(ghostOf(item));
+    });
+    // one by one, killing them all at once misses pop-ins still waiting to start
+    items.forEach(item=>gsap.killTweensOf(item));
     gsap.set(items,{clearProps:"transform,opacity"});
   }
 
   items.forEach(item=>{item.hidden=!shown.includes(item);});
 
-  // only reorder the dom when needed
-  if(ordered.some((item,i)=>grid.children[i]!==item))ordered.forEach(item=>grid.appendChild(item));
+  // only reorder the dom when needed, ghosts don't count
+  const current=grid.querySelectorAll(".shop-item");
+  if(ordered.some((item,i)=>current[i]!==item))ordered.forEach(item=>grid.appendChild(item));
 
   empty.hidden=shown.length>0;
 
   if(!animate)return;
+
+  // removed cards fade out in place, even when nothing else moves
+  ghosts.forEach(ghost=>{
+    grid.appendChild(ghost);
+    gsap.to(ghost,{opacity:0,scale:.9,duration:.4,ease:"power2.out",onComplete:()=>ghost.remove()});
+  });
 
   shown.forEach((item,i)=>{
     const was=before.get(item);
@@ -114,6 +127,17 @@ function rearrange(ordered,shown,instant){
     const dy=was.top-now.top;
     if(dx || dy)gsap.fromTo(item,{x:dx,y:dy},{x:0,y:0,duration:.7,ease:"power3.out",clearProps:"transform"});
   });
+}
+
+// copy of a removed card pinned in its spot, so it can fade out after the real one hides
+function ghostOf(item){
+  const ghost=item.cloneNode(true); // keeps any mid-slide transform
+  const size=getComputedStyle(item); // unrounded, so the text wraps the same
+  ghost.className="shop-ghost";
+  ghost.inert=true;
+  ghost.setAttribute("aria-hidden","true");
+  Object.assign(ghost.style,{left:item.offsetLeft+"px",top:item.offsetTop+"px",width:size.width,height:size.height});
+  return ghost;
 }
 
 // update counts, readouts and reset

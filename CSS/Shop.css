@@ -488,6 +488,8 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
 }
 
 .shop-grid{
+  /* ghosts pin to the grid */
+  position:relative;
   list-style:none;
   margin:0;
   padding:0;
@@ -502,6 +504,9 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
 
 /* li moves, card reveals */
 .shop-item[hidden]{display:none;}
+
+/* removed card fading out, under the rest */
+.shop-ghost{position:absolute; z-index:-1; pointer-events:none;}
 
 .shop-card{
   position:relative;

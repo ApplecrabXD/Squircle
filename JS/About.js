@@ -1,6 +1,4 @@
-// about page (about.html): the hero logo that comes apart, the name morphing from a square into a circle and back,
-// the story line drawing itself in with the numbers counting up, and the logo lighting up one block per rule.
-// Script.js still does everything shared (splash, nav, canvas, scroll zones, the atom title), this is just the page's own bits
+// about page bits, shared stuff lives in Script.js
 
 (() => {
 
@@ -9,7 +7,7 @@ const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const canHover=matchMedia("(hover:hover) and (pointer:fine)").matches;
 const hasObserver="IntersectionObserver" in window;
 
-// adds `className` to each element the first time it scrolls into view, then stops watching it
+// add className on first scroll into view
 function onceInView(elements,rootMargin,className,onSeen){
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
@@ -23,13 +21,13 @@ function onceInView(elements,rootMargin,className,onSeen){
 }
 
 
-// hero logo: hover (or tap, or enter/space) to take it apart
+// hero logo: hover/tap to take it apart
 
 const logo=document.getElementById("aboutusLogo");
 const logoTilt=document.getElementById("aboutusLogoTilt");
 
 if(logo && logoTilt){
-  let touched=false; // once they've had a go themselves, the intro peek keeps out of the way
+  let touched=false; // they tried it, skip the peek
 
   function setOpen(open){
     logo.classList.toggle("is-open",open);
@@ -41,8 +39,7 @@ if(logo && logoTilt){
     setOpen(!logo.classList.contains("is-open"));
   });
 
-  // mouse only: a tap on a touchscreen laptop fires pointerenter as well as the click, which would open it then
-  // straight away toggle it shut again
+  // mouse only, touch fires both events
   if(canHover){
     logo.addEventListener("pointerenter",e=>{
       if(e.pointerType==="touch")return;
@@ -52,7 +49,7 @@ if(logo && logoTilt){
     logo.addEventListener("pointerleave",e=>{if(e.pointerType!=="touch")setOpen(false);});
   }
 
-  // leans toward the cursor a touch, same as the buy page's stage
+  // lean toward the cursor
   if(hasGsap && !reducedMotion && canHover){
     const tiltY=gsap.quickTo(logoTilt,"rotationY",{duration:.7,ease:"power3.out"});
     const tiltX=gsap.quickTo(logoTilt,"rotationX",{duration:.7,ease:"power3.out"});
@@ -66,8 +63,7 @@ if(logo && logoTilt){
     logo.addEventListener("pointerleave",()=>{tiltY(0); tiltX(0);});
   }
 
-  // one peek once the hero has landed, so it's obvious the logo does something. on a first visit that means waiting
-  // for the splash to hand off (Script.js adds .loaded), on repeat visits it's already gone
+  // one peek once the hero lands
   if(!reducedMotion){
     const splash=document.getElementById("splash");
 
@@ -89,8 +85,7 @@ if(logo && logoTilt){
 }
 
 
-// what's a squircle: the shape is a superellipse, |x|^n + |y|^n = 1. n=2 is a circle, the bigger n gets the squarer it
-// goes, and n=4 is the squircle. scrolling walks n from a square to a circle and back out to the squircle
+// squircle morph: |x|^n + |y|^n = 1, n=2 circle, n=4 squircle
 
 const nameWrap=document.getElementById("aboutusName");
 const nameSticky=document.getElementById("aboutusNameSticky");
@@ -104,11 +99,11 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
   const chips=Array.from(nameChips.querySelectorAll(".aboutus-name-chip"));
   const chipIndicator=nameChips.querySelector(".aboutus-name-chip-indicator");
 
-  const SQUARE=60; // not quite infinity, but square enough that you can't tell
+  const SQUARE=60; // square enough
   const CIRCLE=2;
   const SQUIRCLE=4;
 
-  // the same 120 points round the outline whatever n is, so the morph never pops
+  // fixed point count so the morph never pops
   function shapePath(n){
     let d="";
     for(let i=0;i<120;i++){
@@ -125,11 +120,10 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
   function easeInOut(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
   function stretch(p,from,to){return Math.min(1,Math.max(0,(p-from)/(to-from)));}
 
-  // walks through log(n) rather than n, so each bit of scroll changes the shape by about the same amount
-  // (60 -> 30 barely moves the corners, 4 -> 2 changes everything)
+  // step through log(n) so the morph feels even
   function between(a,b,t){return Math.exp(Math.log(a)+(Math.log(b)-Math.log(a))*t);}
 
-  // scroll progress (0-1) -> n: hold the square, ease into a circle, hold, then ease back out to sit on the squircle
+  // scroll progress -> n
   function nAt(p){
     if(p<.56)return between(SQUARE,CIRCLE,easeInOut(stretch(p,.1,.46)));
     return between(CIRCLE,SQUIRCLE,easeInOut(stretch(p,.6,.9)));
@@ -141,7 +135,7 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
   function render(p){
     const n=nAt(p);
 
-    // the holds don't change anything, so they don't rebuild the path either
+    // skip rebuilds during holds
     if(Math.abs(n-lastN)>.001){
       lastN=n;
       nameShape.setAttribute("d",shapePath(n));
@@ -160,8 +154,7 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
     placeChip();
   }
 
-  // slides the pill under the lit chip. the very first placement jumps straight there rather than gliding in from
-  // the left edge
+  // slide the pill under the lit chip
   function placeChip(){
     const chip=chips[lastBeat];
     if(!chip)return;
@@ -179,7 +172,7 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
     }
   }
 
-  // starts (and with reduced motion or no gsap, stays) on the squircle with every beat showing as a list
+  // default to the squircle with every beat listed
   render(1);
 
   if(hasGsap && !reducedMotion){
@@ -187,7 +180,7 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
 
     ScrollTrigger.matchMedia({
 
-      // desktop: pinned for the length of the wrap while the scroll does the morphing, the beats stacked to crossfade
+      // desktop: pinned morph with crossfading beats
       "(min-width:651px)":()=>{
         nameWrap.classList.add("is-scrubbed");
         morph.p=0;
@@ -215,8 +208,7 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
         };
       },
 
-      // phones: no pin (same as every other scroll-jacked bit of the site), the shape just morphs as it passes
-      // through the screen and the beats stay a list
+      // phones: no pin, just morph on scroll
       "(max-width:650px)":()=>{
         morph.p=0;
         render(0);
@@ -238,13 +230,13 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
     });
   }
 
-  // the chips change size as fonts land and the window resizes, so the pill re-measures along with them
+  // remeasure the pill on resize
   if("ResizeObserver" in window)new ResizeObserver(placeChip).observe(nameChips);
   if(document.fonts && document.fonts.ready)document.fonts.ready.then(placeChip);
 }
 
 
-// our story: the line draws itself down the middle as you scroll, and each chapter's dot fills in as it gets there
+// our story: line draws in, dots fill
 
 const timeline=document.getElementById("aboutusTimeline");
 const timelineFill=document.getElementById("aboutusTimelineFill");
@@ -257,8 +249,7 @@ if(hasGsap && !reducedMotion && hasObserver && timeline && timelineFill){
     scrollTrigger:{trigger:timeline,start:"top 60%",end:"bottom 60%",scrub:true}
   });
 
-  // the line's leading edge always sits 60% of the way down the screen (that's what the start/end above work out
-  // to), so a dot counts as reached once it's above that. toggled both ways so scrolling back up empties them again
+  // a dot is reached once above 60% of the screen
   const dotObserver=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
       const line=entry.rootBounds ? entry.rootBounds.bottom : innerHeight*.6;
@@ -268,12 +259,11 @@ if(hasGsap && !reducedMotion && hasObserver && timeline && timelineFill){
 
   chapterDots.forEach(dot=>dotObserver.observe(dot));
 }
-// no scroll drawing, so the line's already full and every dot with it
+// no scroll drawing, show it all
 else chapterDots.forEach(dot=>dot.closest(".aboutus-chapter").classList.add("is-reached"));
 
 
-// the numbers count up (the glue counts down) the first time they scroll in. the html holds the real values, so
-// without the reveal they're simply right
+// count the numbers up on first view
 
 const stats=document.getElementById("aboutusStats");
 const statNums=stats ? Array.from(stats.querySelectorAll(".aboutus-stat-num")) : [];
@@ -293,7 +283,7 @@ function countStat(el){
 }
 
 
-// four blocks: whichever rule is crossing the middle of the screen lights its block up on the big logo
+// light the block for the rule in the middle
 
 const blocksLogo=document.getElementById("aboutusBlocksLogo");
 const rules=Array.from(document.querySelectorAll(".aboutus-rule"));
@@ -307,8 +297,7 @@ if(blocksLogo && rules.length && hasObserver){
       else crossing.delete(entry.target);
     });
 
-    // the band's a thin strip across the middle, so normally it's just the one rule. in the gap between two the last
-    // one stays lit, unless you've scrolled back up above the first, which puts the logo back to normal
+    // keep the last rule lit between rules
     const active=rules.filter(rule=>crossing.has(rule)).pop();
     if(!active && rules[0].getBoundingClientRect().top<innerHeight/2)return;
 
@@ -320,8 +309,7 @@ if(blocksLogo && rules.length && hasObserver){
 }
 
 
-// scroll reveals: About.css only hides these while the body has .has-reveal, so without this (or with reduced
-// motion) they're all simply there
+// scroll reveals
 
 if(!reducedMotion && hasObserver){
   document.body.classList.add("has-reveal");

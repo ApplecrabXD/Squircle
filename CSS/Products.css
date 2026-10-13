@@ -1,7 +1,4 @@
-/* product page styles, shared by every product page (Lappy/, Gammy Pro Max/, Ally Maxx/, Nuker/, Flippy 6 Pro/,
-   Watchy 3/). they all reuse the same lappy-* markup, since Lappy was the first, so Script.js drives them all the same way.
-   the buy page (Buy/) borrows the hero, marquee and closing banner from here too, its configurator lives in Buy.css.
-   so does the shop (Shop/), its filters + product grid live in Shop.css */
+/* product page styles, shared by every product page */
 
 .lappy-hero{
   position:relative;
@@ -15,7 +12,7 @@
 
   padding:160px 8% 80px;
 
-  /* the laptop's slide-in starts off to the right; clip (not hidden) so it can't cause a sideways scroll */
+  /* clip so the slide-in can't scroll sideways */
   overflow-x:clip;
 }
 
@@ -63,10 +60,7 @@
   .lappy-hero-laptop img{animation:none;}
 }
 
-/* hero entrance: waits for the splash to hand off to the nav (same #splash.loaded sibling hook the nav logo
-   uses), or plays straight away on repeat visits where the splash is skipped. keyframes rather than transitions
-   so it always plays, even when .loaded lands before the first paint. the from-states mirror the showcase's
-   data-fx moves (up / scale / right) so the whole page speaks the same motion language */
+/* hero entrance, plays after the splash */
 #splash:not(.loaded) ~ .lappy-hero .lappy-hero-title,
 #splash:not(.loaded) ~ .lappy-hero .lappy-hero-laptop{opacity:0;}
 
@@ -74,7 +68,7 @@
 #splash.loaded ~ .lappy-hero .hero-title-atom{animation:lappy-hero-pop .9s cubic-bezier(.22,1,.36,1) .25s both;}
 #splash.loaded ~ .lappy-hero .lappy-hero-laptop{animation:lappy-hero-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
 
-/* lappy-hero-rise + lappy-hero-pop live in Style.css, the home hero uses them too */
+/* rise + pop keyframes live in Style.css */
 @keyframes lappy-hero-slide{
   from{opacity:0; transform:translateX(140px) rotate(4deg);}
   to{opacity:1; transform:none;}
@@ -109,7 +103,7 @@
   }
 }
 
-/* lappy feature showcase: horizontal scroll-jacked panels, gsap.com-style text reveals */
+/* lappy feature showcase */
 .lappy-showcase{
   position:relative;
   z-index:1;
@@ -146,11 +140,10 @@
   overflow:hidden;
 }
 
-/* alternate the two "loudest" brand accents panel to panel so each feature reads distinctly */
+/* alternate accents per panel */
 .lappy-panel:nth-of-type(even){--panel-accent:var(--accent-2);}
 
-/* the showcase lives in the orange scroll zone, where an orange accent would vanish into the background. the orange
-   panels flip theirs to white, the same swap .btn-fill makes there; purple panels read fine */
+/* orange accents go white on orange */
 html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whiteline);}
 
 .lappy-panel-media{
@@ -192,9 +185,7 @@ html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whit
   transition:color .35s ease;
 }
 
-/* text sits on its own frosted card instead of directly on the canvas art behind it.
-   same glass recipe as .nav-orb / .site-footer, since plain text was blending into the
-   line-art squiggles (both painted in --line) */
+/* frosted text card */
 .lappy-panel-body{
   position:relative;
   z-index:1;
@@ -219,11 +210,10 @@ html[data-zone="orange"] .lappy-panel:nth-of-type(odd){--panel-accent:var(--whit
   .lappy-panel-body{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
 }
 
-/* lappy always sits in one scroll zone or another, so this is what actually applies */
+/* the rule that actually applies */
 html[data-zone] .lappy-panel-body{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
 
-/* on orange, the saturate() boost turns the card a hot red-orange that washes out the white copy, so there it
-   goes smoked instead: a touch darker, no boost. (:not(--cta) keeps the cta's no-box body from gaining a blur) */
+/* smoked glass on orange */
 html[data-zone="orange"] .lappy-panel:not(.lappy-panel--cta) .lappy-panel-body{
   background:rgba(0,0,0,.14);
   backdrop-filter:blur(25px);
@@ -263,7 +253,7 @@ html[data-zone="orange"] .lappy-panel:not(.lappy-panel--cta) .lappy-panel-body{
   transition:color .35s ease;
 }
 
-/* yellow on the orange zone is too low-contrast to read, so the stat goes white there */
+/* white stat on orange */
 html[data-zone="orange"] .lappy-panel-stat{color:var(--whiteline);}
 
 .lappy-panel-stat small{
@@ -292,20 +282,18 @@ html[data-zone="orange"] .lappy-panel-stat{color:var(--whiteline);}
   -webkit-backdrop-filter:none;
 }
 
-/* the plain html[data-zone] glass rule above outranks the pair-of-classes selector on
-   specificity alone (that leading html tips it), so it re-fills the "no box" cta body
-   unless it's beaten at its own level here */
+/* beat the zone rule's specificity */
 html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-color:transparent;}
 
 .lappy-panel--cta .lappy-panel-title{font-size:clamp(2.6rem,6.5vw,5.6rem);}
 
-/* DIY vs. pre-built comparison: two image+copy cards side by side */
+/* DIY vs pre-built cards */
 .lappy-options{
   position:relative;
   z-index:1;
   padding:120px 8%;
 
-  /* buy now links land here; drop a bit lower so the card images clear the nav's buy pill */
+  /* land below the buy pill */
   scroll-margin-top:40px;
 }
 
@@ -370,7 +358,7 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 .lappy-option.in-view .lappy-option-title{opacity:1;transform:translateY(0);transition-delay:.15s;}
 .lappy-option.in-view .lappy-option-text{opacity:.8;transform:translateY(0);transition-delay:.28s;}
 
-/* fade only (no slide) so this doesn't fight .btn's own hover-scale transform transition */
+/* fade only, so .btn hover still works */
 .lappy-option-btn{
   align-self:center;
   opacity:0;
@@ -395,7 +383,7 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
   color:var(--line);
 }
 
-/* second card lags a touch behind the first so the pair doesn't reveal as one flat block */
+/* stagger the second card */
 .lappy-option:nth-child(2) .lappy-option-media{transition-delay:.12s;}
 .lappy-option:nth-child(2).in-view .lappy-option-title{transition-delay:.27s;}
 .lappy-option:nth-child(2).in-view .lappy-option-text{transition-delay:.4s;}
@@ -420,9 +408,7 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
   .lappy-options-grid{grid-template-columns:1fr; gap:48px;}
 }
 
-/* spec configurator: laptop on the left, a click-to-expand spec list on the right.
-   the sliding accent pill behind the active row reuses the .nav-indicator idea,
-   just measured vertically instead of horizontally */
+/* spec configurator */
 .lappy-configurator{
   position:relative;
   z-index:1;
@@ -434,7 +420,7 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 
   padding:100px 8%;
 
-  /* the reveal slides rows in from the right; clip so that can't cause a sideways scroll */
+  /* clip the reveal */
   overflow-x:clip;
 }
 
@@ -510,8 +496,7 @@ html[data-zone] .lappy-spec-btn{background:rgba(255,255,255,.05); border-color:r
   transform:scale(1.03);
 }
 
-/* the zone rule above outranks .lappy-spec-btn.is-active on specificity alone (same
-   leading-html quirk noted earlier by .lappy-panel--cta), so it's beaten at its own level here */
+/* beat the zone rule's specificity */
 html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:transparent;}
 
 .lappy-spec-label{
@@ -565,11 +550,7 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   .lappy-spec-desc{transition:none;}
 }
 
-/* configurator reveal (Script.js adds .in-view): the laptop swings in from the left, then the spec rows slide in
-   from the right one after another. keyframes, not transitions, so this never fights the rows' own hover/active
-   transitions. rows move with the separate `translate` property (not `transform`, which their scale hover owns)
-   and only sideways, so the accent pill's vertical measuring in Script.js stays right mid-reveal. the pill
-   rides in with the first row, which is the active one on load */
+/* configurator reveal */
 .lappy-configurator-media,
 .lappy-spec-btn,
 .lappy-spec-indicator{opacity:0;}
@@ -651,7 +632,7 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   .lappy-panel--cta .lappy-panel-body{padding:0;}
 }
 
-/* closing "buy now" banner: same image card as .about-banner, with a title + button laid over it */
+/* closing buy now banner */
 .lappy-buy-banner{margin-top:40px;}
 
 .lappy-buy-banner-copy{
@@ -668,8 +649,7 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   text-align:center;
 }
 
-/* the dark fade lives on its own layer so it can zoom in step with the image on hover
-   (.about-banner:hover img scales 1.1), while the title + button stay put */
+/* dark fade layer, zooms with the image */
 .lappy-buy-banner-copy::before{
   content:"";
   position:absolute;

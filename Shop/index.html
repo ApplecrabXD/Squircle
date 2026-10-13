@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shop Squircle</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
-<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<!-- skip the splash if the intro already played -->
 <script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../CSS/Style.css">
@@ -13,8 +13,7 @@
 <link rel="stylesheet" href="../CSS/Shop.css">
 </head>
 
-<!-- every product in one place: filters down the left, the products on the right. the cards are plain html below,
-     each one carrying its category + price in data attributes, and Shop.js filters and sorts them -->
+<!-- shop page -->
 
 <body class="shop-page">
 
@@ -65,7 +64,7 @@
     </button>
   </div>
 
-  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <!-- hamburger menu -->
   <div class="nav-menu-panel" id="navMenuPanel">
     <span class="nav-menu-indicator" aria-hidden="true"></span>
 
@@ -113,7 +112,7 @@
 <section class="shop" id="shop" aria-labelledby="shopTitle">
   <div class="shop-layout">
 
-    <!-- sticks beside the grid on desktop, folds away above it on smaller screens -->
+    <!-- filters -->
     <aside class="shop-filters" id="shopFilters" aria-label="Product filters">
       <div class="shop-filters-frame">
 
@@ -129,7 +128,7 @@
         <div class="shop-filters-body" id="shopFiltersBody">
           <form class="shop-filters-inner" id="shopForm" autocomplete="off" aria-label="Filter and sort products">
 
-            <!-- a product can be in more than one category (gammy's a computer and it's for gaming) -->
+            <!-- multiple categories allowed -->
             <fieldset class="shop-group">
               <legend class="shop-group-title">Category</legend>
               <div class="shop-chips">
@@ -171,7 +170,7 @@
         <p class="shop-results-count" id="shopCount" aria-live="polite">6 products</p>
       </div>
 
-      <!-- written in "featured" order. data-category can hold more than one, space separated -->
+      <!-- featured order, space separated categories -->
       <ul class="shop-grid" id="shopGrid">
 
         <li class="shop-item" data-product="lappy" data-name="Lappy 13 Pro" data-category="computers" data-price="1499">
@@ -382,7 +381,7 @@
   </div>
 
   <div class="footer-bottom">
-    <span>&copy; 2026 Squircle. All rights reserved.</span>
+    <span>2026 Squircle. Released into the public domain under <a href="https://unlicense.org/" target="_blank" rel="noopener">The Unlicense</a>.</span>
   </div>
 
 </footer>

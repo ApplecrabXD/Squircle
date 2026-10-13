@@ -1,7 +1,4 @@
-// shop page (Shop/index.html): every product in one place, filters on the left narrowing down the grid on the right.
-// the cards are plain html (so they're all still there without js), each carrying its category + price in data
-// attributes. the filters ride along in the query string like the buy page's picks, so a filtered view survives a
-// reload and can be shared as a link
+// shop page, filters live in the url
 
 (() => {
 
@@ -13,7 +10,7 @@ const hasGsap=!!window.gsap;
 const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const items=Array.from(grid.querySelectorAll(".shop-item"));
-const featured=items.slice(); // the order they're written in is the featured order
+const featured=items.slice(); // html order = featured
 const chips=Array.from(form.querySelectorAll(".shop-chip"));
 
 const filters=document.getElementById("shopFilters");
@@ -50,7 +47,7 @@ function readState(){
 
 function fitsPrice(item,state){return Number(item.dataset.price)<=state.max;}
 
-// a card shows if it's in any of the ticked categories (or none are ticked) and doesn't cost more than the max price
+// card filter test
 function matches(item,state){
   const inCategory=!state.categories.length || categoriesOf(item).some(category=>state.categories.includes(category));
   return inCategory && fitsPrice(item,state);
@@ -74,7 +71,7 @@ function apply(instant){
   const shown=ordered.filter(item=>matches(item,state));
   const layout=shown.map(item=>item.dataset.product).join();
 
-  // the price slider fires on every step and most of them change nothing, so the cards only move when the result does
+  // only move cards when the result changes
   if(layout!==lastLayout){
     lastLayout=layout;
     rearrange(ordered,shown,instant);
@@ -83,14 +80,13 @@ function apply(instant){
   paint(state,shown.length);
 }
 
-// FLIP: note where every showing card is, make the change, then slide each one from where it was to where it's
-// landed. cards that weren't showing before pop in instead, ones that drop out just go
+// FLIP animate the cards
 function rearrange(ordered,shown,instant){
   const animate=hasGsap && !reducedMotion && !instant;
   const before=new Map();
 
   if(animate){
-    // measured mid-slide on purpose, so a quick second change carries on from wherever the cards actually are
+    // measured mid-slide on purpose
     items.forEach(item=>{if(!item.hidden)before.set(item,item.getBoundingClientRect());});
     gsap.killTweensOf(items);
     gsap.set(items,{clearProps:"transform,opacity"});
@@ -98,7 +94,7 @@ function rearrange(ordered,shown,instant){
 
   items.forEach(item=>{item.hidden=!shown.includes(item);});
 
-  // only shuffle the html when the order really changed, moving a node is what puts it in its new reading/tab order
+  // only reorder the dom when needed
   if(ordered.some((item,i)=>grid.children[i]!==item))ordered.forEach(item=>grid.appendChild(item));
 
   empty.hidden=shown.length>0;
@@ -120,9 +116,9 @@ function rearrange(ordered,shown,instant){
   });
 }
 
-// everything that reads the filters back: chip counts, the price readout, the heading, the result count, reset
+// update counts, readouts and reset
 function paint(state,shownCount){
-  // category counts follow the price, so each one says how many you'd actually get by ticking it
+  // category counts respect the price
   chips.forEach(chip=>{
     const value=chip.querySelector("input").value;
     const n=items.filter(item=>categoriesOf(item).includes(value) && fitsPrice(item,state)).length;
@@ -148,7 +144,7 @@ function paint(state,shownCount){
   placeIndicator();
 }
 
-// slides the sort pill onto the picked row. `instant` jumps straight there (first paint, resizes) rather than gliding
+// slide the sort pill
 function placeIndicator(instant){
   const checked=sortGroup.querySelector("input:checked");
   if(!checked){sortIndicator.classList.remove("is-on"); return;}
@@ -169,8 +165,7 @@ function placeIndicator(instant){
   sortIndicator.classList.add("is-on");
 }
 
-// only the filters that aren't at their defaults go in the url. runs on change rather than on every slider step,
-// since browsers cap how often a page can rewrite its url
+// write non-default filters to the url
 function syncUrl(){
   const state=readState();
   const query=new URLSearchParams();
@@ -192,7 +187,7 @@ resetBtns.forEach(btn=>btn.addEventListener("click",()=>{
   syncUrl();
 }));
 
-// smaller screens: the filters fold away above the grid, this opens and closes them
+// mobile filter toggle
 toggle.addEventListener("click",()=>{
   const open=!filters.classList.contains("is-open");
   filters.classList.toggle("is-open",open);
@@ -201,8 +196,7 @@ toggle.addEventListener("click",()=>{
 });
 
 
-// card reveal: each card rises in the first time it scrolls into view, cards arriving together a beat apart.
-// .has-reveal is what hides them till then (Shop.css), so without this (or with reduced motion) they're simply there
+// card reveal
 if(!reducedMotion && "IntersectionObserver" in window){
   const revealObserver=new IntersectionObserver(entries=>{
     entries.filter(entry=>entry.isIntersecting).forEach((entry,i)=>{
@@ -217,13 +211,13 @@ if(!reducedMotion && "IntersectionObserver" in window){
 }
 
 
-// start-up: any filters already in the url (a reload or a shared link), checked against what's actually on the page
+// start-up: read filters from the url
 
 const query=new URLSearchParams(location.search);
 const startCategories=query.getAll("category");
 form.querySelectorAll('input[name="category"]').forEach(input=>{input.checked=startCategories.includes(input.value);});
 
-// the slider clamps and snaps whatever it's given onto its own range and steps
+// clamp and snap the slider
 const startMax=Number(query.get("max"));
 if(startMax)priceInput.value=startMax;
 
@@ -232,7 +226,7 @@ if(startSort)startSort.checked=true;
 
 apply(true);
 
-// the sort rows change size as fonts land and the window resizes, so the pill re-measures along with them
+// remeasure the pill on resize
 if("ResizeObserver" in window)new ResizeObserver(()=>placeIndicator(true)).observe(sortGroup);
 if(document.fonts && document.fonts.ready)document.fonts.ready.then(()=>placeIndicator(true));
 

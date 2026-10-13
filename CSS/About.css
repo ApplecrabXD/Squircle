@@ -1,11 +1,8 @@
-/* about page (about.html): who squircle is. the hero, marquee and closing banner are the product pages' lappy-* pieces
-   from Products.css, so everything here is the hero's extras plus the page's own four sections. About.js drives them.
-   classes are aboutus-* because the home page's about section already owns about-* in Style.css */
+/* about page, hero/marquee/banner come from Products.css */
 
-/* page-wide tones + glass, flipped per scroll zone below (same recipe as the shop and buy pages) */
+/* tones + glass per scroll zone */
 .aboutus-page{
-  /* softer text tones mixed into the zone colour rather than faded with transparency, so they stay solid and the line
-     art passes behind the letters instead of showing through them */
+  /* solid softer text tones */
   --aboutus-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
   --aboutus-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
 
@@ -13,16 +10,14 @@
   --card-border:rgba(0,0,0,.08);
   --glass:blur(25px) saturate(160%);
 
-  /* the name chips. the accent pill normally, white with orange text on the orange zone, the same swap
-     .btn-fill makes there */
+  /* name chips, white on orange */
   --pick-bg:var(--accent);
   --pick-ink:#fff;
 }
 
 html[data-zone] .aboutus-page{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
 
-/* smoked rather than white glass on orange and purple: a white tint there goes hot red-orange (or hot magenta) and
-   washes the copy out, and so does the saturate() boost */
+/* smoked glass on orange + purple */
 html[data-zone="orange"] .aboutus-page,
 html[data-zone="purple"] .aboutus-page{
   --card-bg:rgba(0,0,0,.1);
@@ -30,13 +25,13 @@ html[data-zone="purple"] .aboutus-page{
   --glass:blur(25px);
 }
 
-/* the accent pill would vanish on orange, so it goes white with orange text there */
+/* white pill on orange */
 html[data-zone="orange"] .aboutus-page{
   --pick-bg:var(--whiteline);
   --pick-ink:var(--accent);
 }
 
-/* glass cards, all the same recipe as the product pages' feature cards */
+/* glass cards */
 .aboutus-name-copy,
 .aboutus-chapter-card,
 .aboutus-stat,
@@ -65,7 +60,7 @@ html[data-zone="orange"] .aboutus-page{
   color:var(--aboutus-soft-75);
 }
 
-/* centred title (+ lede) opening each section */
+/* section title + lede */
 .aboutus-head{
   display:flex;
   flex-direction:column;
@@ -88,12 +83,10 @@ html[data-zone="orange"] .aboutus-page{
 }
 
 
-/* hero extras: the shared lappy-hero brings the title, these add the buttons and the logo in place of a
-   product shot */
+/* hero extras: buttons + logo */
 .aboutus-hero-buttons{justify-content:center;}
 
-/* the extras join the hero entrance, the buttons with the same rise as the title a beat behind it, and the logo
-   slides in like the product pages' hero shot */
+/* extras join the hero entrance */
 #splash:not(.loaded) ~ .lappy-hero .aboutus-hero-buttons,
 #splash:not(.loaded) ~ .lappy-hero .aboutus-hero-visual{opacity:0;}
 
@@ -110,13 +103,12 @@ html[data-zone="orange"] .aboutus-page{
   gap:18px;
 }
 
-/* the logo: a button so it's reachable by keyboard too. four layers so nothing fights over `transform`: the button
-   floats, tilt leans toward the cursor (About.js), stack does the teardown angle, each block lifts on its own */
+/* hero logo, four layers so transforms don't clash */
 .aboutus-logo{
   position:relative;
   display:block;
   width:100%;
-  aspect-ratio:1280/1024; /* the block svgs' own box, so the layers line up exactly */
+  aspect-ratio:1280/1024; /* match the svg box */
   padding:0;
   border:0;
   border-radius:28px;
@@ -128,8 +120,7 @@ html[data-zone="orange"] .aboutus-page{
   perspective:1600px;
   animation:lappy-float 4.5s ease-in-out infinite;
 
-  /* how far each block lifts off the one under it when it's taken apart. translateZ won't take a percentage, so
-     smaller screens get a smaller lift below */
+  /* block lift distance */
   --lift:80px;
 }
 
@@ -145,8 +136,7 @@ html[data-zone="orange"] .aboutus-page{
 
 .aboutus-logo-stack{transition:transform 1s cubic-bezier(.22,1,.36,1);}
 
-/* taken apart: tipped back so the orange diamond lies flat like a base plate, with every block lifted off the one under
-   it, like a teardown. nudged down a touch since the lifted blocks climb up the screen */
+/* taken apart, teardown view */
 .aboutus-logo.is-open .aboutus-logo-stack{transform:translateY(8%) rotateX(58deg) scale(.8);}
 
 .aboutus-logo-layer{
@@ -162,7 +152,7 @@ html[data-zone="orange"] .aboutus-page{
   transition:transform 1s cubic-bezier(.22,1,.36,1);
 }
 
-/* lifts a beat apart from the bottom block up, then they all drop back together */
+/* lift one by one, drop together */
 .aboutus-logo.is-open .aboutus-logo-layer:nth-child(2){transform:translateZ(var(--lift)); transition-delay:.05s;}
 .aboutus-logo.is-open .aboutus-logo-layer:nth-child(3){transform:translateZ(calc(var(--lift) * 2)); transition-delay:.1s;}
 .aboutus-logo.is-open .aboutus-logo-layer:nth-child(4){transform:translateZ(calc(var(--lift) * 3)); transition-delay:.15s;}
@@ -188,7 +178,7 @@ html[data-zone="orange"] .aboutus-page{
 }
 
 
-/* what's a squircle: pinned on desktop, About.js morphs the shape and steps the beats as you scroll */
+/* what's a squircle, pinned on desktop */
 .aboutus-name{
   position:relative;
   z-index:1;
@@ -205,7 +195,7 @@ html[data-zone="orange"] .aboutus-page{
   justify-content:center;
   gap:clamp(32px,6vw,96px);
 
-  /* the top padding keeps everything clear of the nav */
+  /* clear the nav */
   padding:96px 8% 40px;
 }
 
@@ -228,7 +218,7 @@ html[data-zone="orange"] .aboutus-page{
   filter:drop-shadow(0 30px 40px rgba(0,0,0,.22));
 }
 
-/* the square and circle it's morphing between, dashed in behind so you can see the squircle sit right between them */
+/* dashed square + circle behind */
 .aboutus-name-guide{
   fill:none;
   stroke:var(--line);
@@ -237,7 +227,7 @@ html[data-zone="orange"] .aboutus-page{
   opacity:.45;
 }
 
-/* the accent normally, white on the orange zone where an orange shape would vanish */
+/* accent, white on orange */
 .aboutus-name-shape{
   fill:var(--accent);
   transition:fill .35s ease;
@@ -269,7 +259,7 @@ html[data-zone="orange"] .aboutus-name-shape{fill:var(--whiteline);}
   transition:color .35s ease;
 }
 
-/* yellow on the orange zone is too low-contrast to read, so it goes white there (same as the product page stats) */
+/* yellow, white on orange */
 html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
 
 .aboutus-name-copy{
@@ -287,7 +277,7 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
 
 .aboutus-name-copy .aboutus-title{font-size:clamp(2rem,3.4vw,3.2rem);}
 
-/* square / circle / squircle, with the sliding pill (the same trick as .nav-indicator) on whichever beat is showing */
+/* square / circle / squircle chips */
 .aboutus-name-chips{
   position:relative;
   display:inline-flex;
@@ -337,9 +327,7 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
 
 .aboutus-name-chip.is-on{color:var(--pick-ink);}
 
-/* the beats are a plain list by default (phones, reduced motion, no gsap). while it's pinned About.js adds
-   .is-scrubbed and they stack in one cell instead, crossfading as the shape changes. the cell is as tall as the
-   longest beat, so nothing jumps */
+/* beats: a list, or crossfading while pinned */
 .aboutus-name-beats{
   display:grid;
   gap:22px;
@@ -367,13 +355,13 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
 .aboutus-name.is-scrubbed .aboutus-name-beat.is-on{opacity:1; translate:0 0;}
 
 
-/* our story: a line down the middle with the chapters swinging in from alternate sides */
+/* our story timeline */
 .aboutus-story{
   position:relative;
   z-index:1;
   padding:140px 8% 100px;
 
-  /* the chapters swing in from the sides; clip (not hidden) so that can't cause a sideways scroll */
+  /* clip the side swing-ins */
   overflow-x:clip;
 }
 
@@ -396,7 +384,7 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
   background:color-mix(in srgb, var(--line) 22%, transparent);
 }
 
-/* About.js scrubs this down with the scroll. full by default, so it's all there without the script */
+/* scrubbed by About.js */
 .aboutus-timeline-fill{
   position:absolute;
   inset:0;
@@ -414,7 +402,7 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
   gap:clamp(48px,9vh,110px);
 }
 
-/* card | dot | big index number, flipped every other chapter */
+/* card | dot | number, alternating */
 .aboutus-chapter{
   position:relative;
   display:grid;
@@ -432,7 +420,7 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
   border-radius:50%;
   border:2px solid var(--line);
 
-  /* solid so the line doesn't run through it, then filled in once the line reaches it (About.js adds .is-reached) */
+  /* fills once the line reaches it */
   background:var(--zone-bg);
 
   transition:background .4s ease, scale .5s cubic-bezier(.34,1.56,.64,1);
@@ -468,7 +456,7 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
   padding:clamp(26px,3vw,40px);
   border-radius:28px;
 
-  /* reveal on opacity/translate/rotate, hover on transform, so the two never fight */
+  /* reveal and hover on separate properties */
   transition:
     opacity .9s cubic-bezier(.22,1,.36,1),
     translate .9s cubic-bezier(.22,1,.36,1),
@@ -562,7 +550,7 @@ html[data-zone="orange"] .aboutus-chapter-year{color:var(--whiteline);}
   transition:color .35s ease;
 }
 
-/* yellow on the orange zone is too low-contrast to read, so the numbers go white there */
+/* white numbers on orange */
 html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 
 .aboutus-stat-label{
@@ -574,8 +562,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 }
 
 
-/* four blocks, four rules: the logo sticks beside the rules while they scroll past. About.js sets data-active on it
-   to whichever block the rule in the middle of the screen is about */
+/* four blocks, four rules */
 .aboutus-blocks{
   position:relative;
   z-index:1;
@@ -602,8 +589,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   place-items:center;
 }
 
-/* light tile so all four colours read (the purple block would vanish straight onto the purple zone). corner-shape
-   makes the corners actual squircles where the browser supports it, everywhere else it's a normal rounded tile */
+/* light tile, squircle corners where supported */
 .aboutus-blocks-tile,
 .aboutus-mini{
   position:relative;
@@ -631,7 +617,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   transition:opacity .5s ease, filter .5s ease;
 }
 
-/* one block picked: the rest go grey and see-through, so the picked one stands out wherever it sits in the stack */
+/* grey out the unpicked blocks */
 .aboutus-set:is([data-active="orange"],[data-active="gray"],[data-active="purple"],[data-active="white"]) img{
   opacity:.28;
   filter:grayscale(1);
@@ -642,8 +628,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 .aboutus-set[data-active="purple"] [data-block="purple"],
 .aboutus-set[data-active="white"] [data-block="white"]{opacity:1; filter:none;}
 
-/* the picked block on the big tile does its bit of the splash screen's dance: squares turn, circles pulse. the last
-   rule ("all") sets the whole logo going at once, just like the loader */
+/* picked block dances */
 .aboutus-blocks-tile [data-block="orange"]{--turn:-45deg;}
 .aboutus-blocks-tile [data-block="purple"]{--turn:90deg;}
 
@@ -653,8 +638,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 .aboutus-blocks-tile:is([data-active="gray"],[data-active="all"]) [data-block="gray"],
 .aboutus-blocks-tile:is([data-active="white"],[data-active="all"]) [data-block="white"]{animation:blockPulse 2.4s ease-in-out infinite;}
 
-/* blockPulse lives in Style.css, shared with every other animated logo. the turn is this page's own since these blocks
-   sit at the svg's own angle rather than the splash's */
+/* this page's own turn */
 @keyframes aboutus-turn{
   0%,20%{rotate:0deg;}
   50%,70%{rotate:var(--turn);}
@@ -667,7 +651,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   padding:0;
 }
 
-/* tall rows so it's one rule at a time in the middle of the screen */
+/* one rule at a time */
 .aboutus-rule{
   min-height:min(70vh,640px);
   display:flex;
@@ -726,7 +710,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   color:var(--line);
 }
 
-/* the closer: no card, just big type beside the whole logo going at once */
+/* the closer */
 .aboutus-rule--all{
   min-height:min(60vh,520px);
 
@@ -798,17 +782,14 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   color:var(--line);
 }
 
-/* two classes so it outranks .hero-buttons' own top margin in Style.css */
+/* beat .hero-buttons' margin */
 .hero-buttons.aboutus-maker-buttons{
   justify-content:center;
   margin-top:8px;
 }
 
 
-/* scroll reveals (About.js adds .in-view the first time each one scrolls in): the same rises as the rest of the site,
-   the chapters swinging in from their own side. only while the body has .has-reveal (About.js again), so without the
-   script they're all simply there. no transition into the hidden state, so hiding them at start-up can't play as a
-   fade out */
+/* scroll reveals */
 .aboutus-head,
 .aboutus-name-stage,
 .aboutus-name-copy{
@@ -838,7 +819,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 .has-reveal .aboutus-chapter:not(.in-view) .aboutus-chapter-index{opacity:0; transition:none;}
 
 
-/* upright tablets: the name section stacks inside its pin (sideways ones have the width to keep it side by side) */
+/* upright tablets: stack the name section */
 @media (max-width:900px) and (orientation:portrait){
   .aboutus-name-sticky{
     flex-direction:column;
@@ -850,16 +831,16 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   .aboutus-name-copy{flex:0 0 auto; width:min(100%,560px); gap:16px;}
 }
 
-/* short screens (sideways phones mostly): squeeze the pinned card so it still fits in one screen */
+/* short screens: squeeze the card */
 @media (max-height:560px) and (min-width:651px){
   .aboutus-name-sticky{padding:84px 6% 16px;}
   .aboutus-name-copy{padding:22px 26px; gap:12px;}
   .aboutus-name-copy .aboutus-title{font-size:1.8rem;}
 }
 
-/* tablets: the rules lose the side-by-side */
+/* tablets */
 @media (max-width:900px){
-  /* the stage drops below the rules, where the "all" closer sets the whole logo going */
+  /* stage below the rules */
   .aboutus-blocks-layout{display:flex; flex-direction:column;}
 
   .aboutus-blocks-stage{
@@ -874,15 +855,14 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   .aboutus-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 
-/* phones: no pin, everything stacks, the timeline runs down the left */
+/* phones: no pin, stacked */
 @media (max-width:650px){
   .aboutus-hero-visual{width:min(80vw,380px);}
   .aboutus-logo{--lift:44px;}
 
   .aboutus-name{height:auto;}
 
-  /* unpinned, so it lets the page scroll past it, but it still clips sideways: the stage and card swing in from the
-     sides */
+  /* unpinned, still clips sideways */
   .aboutus-name-sticky{
     position:static;
     height:auto;
@@ -914,7 +894,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
 
   .aboutus-chapter-index{display:none;}
 
-  /* every card's on the right now, so they all swing in from that side */
+  /* all swing in from the right */
   .has-reveal .aboutus-chapter:not(.in-view) .aboutus-chapter-card{translate:60px 0; rotate:3deg;}
 
   .aboutus-rule-card{flex-direction:column; gap:18px; padding:26px 24px;}
@@ -922,7 +902,7 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   .aboutus-stat{padding:24px 12px;}
 }
 
-/* reduced motion: no float, no teardown glide, no dancing blocks, everything simply there */
+/* reduced motion */
 @media (prefers-reduced-motion:reduce){
   #splash.loaded ~ .lappy-hero .aboutus-hero-buttons,
   #splash.loaded ~ .lappy-hero .aboutus-hero-visual,

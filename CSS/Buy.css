@@ -1,8 +1,6 @@
-/* buy / configure page (Buy/index.html), one page for every product. Buy.js builds the steps from its catalogue.
-   the hero, marquee and closing banner are the product pages' lappy-* pieces from Products.css, so everything here is
-   the configurator itself: a sticky stage on the left that shows the build, one full-screen "page" per step on the right */
+/* buy page, steps built by Buy.js */
 
-/* hero extras: the shared lappy-hero brings the title + floating product, these add the tag, price and buttons */
+/* hero extras: tag, price, buttons */
 .buy-hero-tag{
   display:inline-block;
   margin-bottom:28px;
@@ -27,17 +25,16 @@
 
 .buy-hero-buttons{justify-content:center;}
 
-/* <button>s wearing the .btn look (start building, add to bag, the nav pill) */
+/* buttons styled as .btn */
 button.btn{cursor:pointer;}
 
-/* softer text tones for copy that sits straight on the canvas. mixed into the zone colour rather than faded with
-   transparency, so they stay solid and the line art passes behind the letters instead of showing through them */
+/* solid softer text tones */
 .buy-page{
   --buy-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
   --buy-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
 }
 
-/* the extras join the hero entrance with the same rise as the title, each a beat behind it */
+/* extras join the hero entrance */
 #splash:not(.loaded) ~ .lappy-hero .buy-hero-tag,
 #splash:not(.loaded) ~ .lappy-hero .buy-hero-price,
 #splash:not(.loaded) ~ .lappy-hero .buy-hero-buttons{opacity:0;}
@@ -51,26 +48,23 @@ button.btn{cursor:pointer;}
   position:relative;
   z-index:1;
 
-  /* step reveals slide in from the right; clip (not hidden, which would stop the stage sticking) so they can't
-     cause a sideways scroll */
+  /* clip the step reveals */
   overflow-x:clip;
 
-  /* glass + selection colours, flipped per scroll zone below. a pick is the accent pill normally and goes white with
-     orange text on the orange zone, the same swap .btn-fill makes there */
+  /* glass + pick colours per zone */
   --card-bg:rgba(0,0,0,.035);
   --card-border:rgba(0,0,0,.08);
   --pick-bg:var(--accent);
   --pick-ink:#fff;
 
-  /* stacked-layout stage: how far down it sticks (clear of the nav) and how tall it is */
+  /* stacked stage position */
   --stage-top:94px;
   --stage-h:clamp(210px,36vh,360px);
 }
 
 html[data-zone] .buy-config{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
 
-/* smoked rather than white glass on orange, same as the lappy panel cards: a white tint there goes hot red-orange and
-   washes the copy out */
+/* smoked glass on orange */
 html[data-zone="orange"] .buy-config{
   --card-bg:rgba(0,0,0,.1);
   --card-border:rgba(255,255,255,.16);
@@ -88,7 +82,7 @@ html[data-zone="orange"] .buy-config{
   padding:0 48px;
 }
 
-/* stage: sticks for the whole run of steps. the top padding clears the nav and the buy pill that drops out under it */
+/* sticky stage */
 .buy-stage{
   position:sticky;
   top:0;
@@ -151,10 +145,10 @@ html[data-zone="orange"] .buy-stage-frame{backdrop-filter:blur(25px); -webkit-ba
   transition:color .35s ease;
 }
 
-/* yellow on the orange zone is too low-contrast to read, so it goes white there (same as .lappy-panel-stat) */
+/* white on orange */
 html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
 
-/* the "+ $300" that pops out beside the total when a pick changes it (Buy.js) */
+/* "+ $300" pop */
 .buy-delta{
   position:absolute;
   top:50%;
@@ -177,7 +171,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   100%{opacity:0; transform:translate(0,-130%);}
 }
 
-/* a size container, so the image inside can be capped by the space it actually has (cqw/cqh) */
+/* size container */
 .buy-stage-view{
   position:relative;
   flex:1 1 0;
@@ -189,7 +183,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   place-items:center;
 }
 
-/* soft colour wash behind the product, picks up the chosen colour */
+/* colour glow */
 .buy-stage-glow{
   position:absolute;
   left:50%;
@@ -207,7 +201,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   transition:background-color .6s ease;
 }
 
-/* three layers so nothing fights over `transform`: tilt follows the cursor, float bobs, media takes the swap */
+/* tilt / float / media layers */
 .buy-stage-tilt{
   position:relative;
   z-index:1;
@@ -238,9 +232,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   pointer-events:none;
 }
 
-/* recolours the product for the colour step without needing a photo per colour: the chosen colour multiplied over the
-   image, masked to the image's own shape so the transparent bits around it stay clear. Buy.js points the mask at
-   whatever image is showing. once real per-colour photos exist, drop `tint` from the colours in Buy.js */
+/* colour tint masked to the image */
 .buy-stage-tint{
   position:absolute;
   inset:0;
@@ -260,8 +252,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
 
 .buy-stage-tint.is-on{opacity:.9;}
 
-/* progress dots: one per step, the current one stretches into a pill. each is a 20px button around a smaller dot so
-   they're easy to hit */
+/* progress dots */
 .buy-dots{
   flex:0 0 auto;
   display:flex;
@@ -316,8 +307,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   color:color-mix(in srgb, var(--line) 70%, transparent);
 }
 
-/* steps: each one a full-screen page with its content centred, so finishing one and gliding to the next feels like
-   turning a page. Buy.js reads scroll-margin-top to know where a step should land */
+/* full-screen steps */
 .buy-steps{
   position:relative;
   min-width:0;
@@ -335,7 +325,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   scroll-margin-top:0;
 }
 
-/* big faded step number in the background, same idea as .lappy-panel-index */
+/* big faded step number */
 .buy-step-index{
   position:absolute;
   z-index:0;
@@ -363,7 +353,7 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
   border:0;
 }
 
-/* floating the legend takes it out of the fieldset's border-gap rendering so it lays out like any other heading */
+/* float the legend */
 legend.buy-step-head{float:left; width:100%; padding:0;}
 legend.buy-step-head + *{clear:both;}
 
@@ -376,7 +366,7 @@ legend.buy-step-head + *{clear:both;}
   line-height:1.12;
 }
 
-/* apple's "Model. Which is best for you?" pattern: the title solid, the question softer after it */
+/* title solid, question softer */
 .buy-step-title{color:var(--line);}
 .buy-step-question{color:var(--buy-soft-60);}
 
@@ -390,8 +380,7 @@ legend.buy-step-head + *{clear:both;}
   color:var(--buy-soft-75);
 }
 
-/* options. the sliding pill behind the picked one is the same trick as .nav-indicator / .lappy-spec-indicator, but
-   measured in both directions so it works for rows, cards and swatches alike */
+/* options + sliding pill */
 .buy-options{
   position:relative;
   display:flex;
@@ -437,7 +426,7 @@ legend.buy-step-head + *{clear:both;}
 
 .buy-options-indicator.is-on{opacity:1;}
 
-/* on the swatches it's a ring rather than a fill, so the colour inside still shows */
+/* ring on swatches */
 .buy-options--swatches .buy-options-indicator{
   border-radius:50%;
   background:transparent;
@@ -457,7 +446,7 @@ legend.buy-step-head + *{clear:both;}
   background:var(--card-bg);
   border:1px solid var(--card-border);
 
-  /* frosted like the lappy panel cards, so the canvas line art blurs away behind the copy */
+  /* frosted cards */
   backdrop-filter:blur(25px) saturate(160%);
   -webkit-backdrop-filter:blur(25px) saturate(160%);
 
@@ -470,8 +459,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
 .buy-option:hover{transform:scale(1.02);}
 .buy-option:active{transform:scale(.98);}
 
-/* picked: the card goes clear so the indicator pill behind it shows through (Buy.js sets .is-picked). no blur either,
-   blurring the pill would just smudge its edges. three classes so it outranks the orange-zone rule above */
+/* picked: clear so the pill shows */
 .buy-options .buy-option.is-picked{
   background:transparent;
   border-color:transparent;
@@ -479,7 +467,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
   -webkit-backdrop-filter:none;
 }
 
-/* the real radio stays in the label for keyboard + screen readers, it just isn't drawn */
+/* hidden radio, still accessible */
 .buy-option input,
 .buy-swatch input{
   position:absolute;
@@ -553,7 +541,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
 .buy-option.is-picked .buy-option-price{color:var(--pick-ink);}
 .buy-option.is-picked .buy-option-detail{color:color-mix(in srgb, var(--pick-ink) 85%, transparent);}
 
-/* cards (the DIY / pre-built choice): image on top, copy under it, like the cards on the product pages */
+/* DIY / pre-built cards */
 .buy-options--cards .buy-option{
   flex-direction:column;
   align-items:stretch;
@@ -608,8 +596,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
   color:var(--line);
 }
 
-/* locked steps (an earlier step still needs a pick) stay readable but clearly out of reach. the fieldset is disabled
-   too, so their radios can't be clicked or tabbed into */
+/* locked steps */
 .buy-step.is-locked .buy-options,
 .buy-step.is-locked .buy-swatch-name{opacity:.3;}
 
@@ -645,7 +632,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
 .buy-step-lock:hover{transform:scale(1.04);}
 .buy-step.is-locked .buy-step-lock{display:inline-flex;}
 
-/* "add to bag" with picks missing: the step it glides back to gives its options a shake */
+/* shake missing picks */
 .buy-step.is-nudged .buy-options{animation:buy-nudge .5s ease;}
 
 @keyframes buy-nudge{
@@ -656,8 +643,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
   80%{translate:4px 0;}
 }
 
-/* review: the summary sits on its own frosted card, same glass as the stage. everything's a little tighter here than
-   on the other steps so add to bag still lands above the fold on a laptop screen */
+/* review card */
 .buy-step--review{padding:136px 0 48px;}
 .buy-step--review .buy-step-help{margin-bottom:22px;}
 
@@ -720,7 +706,7 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
   cursor:pointer;
 }
 
-/* same draw-in underline as the footer links */
+/* draw-in underline */
 .buy-review-change::after{
   content:"";
   position:absolute;
@@ -781,9 +767,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   color:var(--buy-soft-60);
 }
 
-/* step reveal (Buy.js adds .in-view the first time a step scrolls in). the heading rises and the options slide in from
-   the right one after another, the same moves as the product page configurator. options travel on `translate` so it
-   never fights their own hover scale on `transform` */
+/* step reveal */
 .buy-step-index,
 .buy-step-head,
 .buy-step-help,
@@ -794,7 +778,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
 .buy-review-buttons,
 .buy-review-small{opacity:0;}
 
-/* the picked pill only shows once its step has arrived, otherwise it'd float there before the options it sits behind */
+/* pill waits for its step */
 .buy-step:not(.in-view) .buy-options-indicator{visibility:hidden;}
 
 .buy-step.in-view .buy-step-index{animation:buy-index-pop .9s cubic-bezier(.22,1,.36,1) both;}
@@ -811,20 +795,19 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
 .buy-step.in-view .buy-review-buttons{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .3s both;}
 .buy-step.in-view .buy-review-small{animation:lappy-hero-rise .9s cubic-bezier(.22,1,.36,1) .45s both;}
 
-/* ends on the number's resting .12 opacity rather than lappy-hero-pop's full 1 */
+/* end at .12 opacity */
 @keyframes buy-index-pop{
   from{opacity:0; transform:scale(.6) rotate(6deg);}
   to{opacity:.12; transform:none;}
 }
 
-/* movement only, the indicator's own opacity says whether anything is picked */
+/* movement only */
 @keyframes buy-slide-in{
   from{translate:80px 0;}
   to{translate:0 0;}
 }
 
-/* "add to bag" dialog. the dialog itself fills the screen (so the confetti has room to fly) with the card centred in it.
-   [open] only, otherwise this display would beat the browser's own display:none for a closed dialog */
+/* add to bag dialog */
 .buy-dialog{
   position:fixed;
   inset:0;
@@ -872,7 +855,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
 
 .buy-dialog[open] .buy-dialog-card{animation:lappy-hero-pop .7s cubic-bezier(.22,1,.36,1) both;}
 
-/* the splash screen's building blocks, doing their little dance as a celebration */
+/* celebrating blocks */
 .buy-dialog-blocks{
   position:relative;
   width:84px;
@@ -964,7 +947,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   white-space:nowrap;
 }
 
-/* short laptop screens (1366x768 and the like): the review squeezes up a little so add to bag stays above the fold */
+/* short laptop screens */
 @media (min-width:901px) and (max-height:820px){
   .buy-step--review .buy-step-head{font-size:clamp(1.7rem,2.6vw,2.3rem);}
   .buy-step--review .buy-step-help{margin-bottom:16px;}
@@ -972,7 +955,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-review-buttons{margin-top:18px;}
 }
 
-/* stacked layout: the stage turns into a compact strip stuck under the nav and the steps scroll up beneath it */
+/* stacked layout */
 @media (max-width:900px){
   .buy-layout{display:block; padding:0 24px;}
 
@@ -982,7 +965,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
     padding:var(--stage-top) 0 10px;
   }
 
-  /* frosted fade across the top, so steps scrolling up under the nav blur out instead of clashing with it */
+  /* frosted fade under the nav */
   .buy-stage::before{
     content:"";
     position:absolute;
@@ -1010,7 +993,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
     min-height:calc(100svh - var(--stage-top) - var(--stage-h) - 10px);
     padding:36px 0 64px;
 
-    /* auto-scroll lands each step just under the stuck stage rather than behind it */
+    /* land below the stage */
     scroll-margin-top:calc(var(--stage-top) + var(--stage-h) + 10px);
   }
 
@@ -1025,7 +1008,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-option{gap:12px; padding:14px 16px; border-radius:18px;}
   .buy-options-indicator{border-radius:18px;}
 
-  /* no room for side-by-side image cards under the stage, so the build choice becomes rows like every other step */
+  /* build choice as rows */
   .buy-options--cards{display:flex; flex-direction:column; gap:10px;}
   .buy-options--cards .buy-option{flex-direction:row; align-items:center; gap:12px; padding:14px 16px;}
   .buy-options--cards .buy-option-thumb{width:46px; height:46px; aspect-ratio:auto;}
@@ -1034,7 +1017,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
 
   .buy-swatch{width:52px; height:52px;}
 
-  /* nine dots plus the step label have to share a phone-width strip */
+  /* tight dots on phones */
   .buy-dot{width:16px;}
   .buy-dot.is-current{width:28px;}
   .buy-dot::before{width:6px; height:6px;}
@@ -1056,7 +1039,7 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-dialog-card{padding:36px 22px 28px;}
 }
 
-/* reduced motion: no bobbing, no reveals, no sliding, everything simply there */
+/* reduced motion */
 @media (prefers-reduced-motion:reduce){
   #splash.loaded ~ .lappy-hero .buy-hero-tag,
   #splash.loaded ~ .lappy-hero .buy-hero-price,

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
-<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<!-- skip the splash if the intro already played -->
 <script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="CSS/Style.css">
@@ -13,9 +13,7 @@
 <link rel="stylesheet" href="CSS/About.css">
 </head>
 
-<!-- who squircle is, in four parts: the hero logo comes apart, the name morphs from a square to a circle and back,
-     the story draws itself in, then the logo's four blocks each get their rule. the hero, marquee and closing banner
-     are borrowed from the product pages (Products.css), everything else lives in About.css + About.js -->
+<!-- about page -->
 
 <body class="aboutus-page">
 
@@ -66,7 +64,7 @@
     </button>
   </div>
 
-  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <!-- hamburger menu -->
   <div class="nav-menu-panel" id="navMenuPanel">
     <span class="nav-menu-indicator" aria-hidden="true"></span>
 
@@ -106,7 +104,7 @@
     </div>
   </div>
 
-  <!-- the logo's four blocks stacked back up. hover (or tap) and it comes apart like a teardown, About.js -->
+  <!-- logo, hover/tap to take apart -->
   <div class="aboutus-hero-visual">
     <button type="button" class="aboutus-logo" id="aboutusLogo" aria-pressed="false" aria-label="Take the Squircle logo apart">
       <span class="aboutus-logo-tilt" id="aboutusLogoTilt">
@@ -129,8 +127,7 @@
   </div>
 </div>
 
-<!-- what's a squircle: pinned on desktop while scrolling morphs the shape square > circle > squircle and the copy
-     steps through one beat at a time. on phones (or with reduced motion) the beats are just a list -->
+<!-- what's a squircle, morphs on scroll -->
 <section class="aboutus-name" id="aboutusName" aria-labelledby="aboutusNameTitle">
   <div class="aboutus-name-sticky" id="aboutusNameSticky">
 
@@ -177,7 +174,7 @@
     <h2 class="aboutus-title" id="aboutusStoryTitle">It started with a drawer.</h2>
   </header>
 
-  <!-- the line draws itself down as you scroll and each chapter swings in from its own side -->
+  <!-- timeline line + chapters -->
   <div class="aboutus-timeline" id="aboutusTimeline">
     <span class="aboutus-timeline-line" aria-hidden="true"><span class="aboutus-timeline-fill" id="aboutusTimelineFill"></span></span>
 
@@ -224,7 +221,7 @@
     </ol>
   </div>
 
-  <!-- the numbers count up (the glue counts down) the first time they scroll in. the html holds the real values -->
+  <!-- count-up numbers -->
   <ul class="aboutus-stats" id="aboutusStats">
     <li class="aboutus-stat"><span class="aboutus-stat-num" data-from="250" data-to="0">0</span><span class="aboutus-stat-label">Grams of glue</span></li>
     <li class="aboutus-stat"><span class="aboutus-stat-num" data-to="1">1</span><span class="aboutus-stat-label">Screwdriver needed</span></li>
@@ -233,8 +230,7 @@
   </ul>
 </section>
 
-<!-- the logo sticks beside the rules and lights up whichever block the rule in the middle of the screen is about.
-     each card carries its own little copy of the logo too, which is all phones get -->
+<!-- four blocks, four rules -->
 <section class="aboutus-blocks" id="aboutusBlocks" aria-labelledby="aboutusBlocksTitle">
   <header class="aboutus-head">
     <h2 class="aboutus-title" id="aboutusBlocksTitle">Four blocks, four rules.</h2>
@@ -326,7 +322,7 @@
   </div>
 </section>
 
-<!-- owning up, same as the buy page does: it's a school project, not a shop -->
+<!-- school project, not a shop -->
 <section class="aboutus-maker" aria-labelledby="aboutusMakerTitle">
   <div class="aboutus-maker-card">
     <h2 class="aboutus-title" id="aboutusMakerTitle">Squircle isn't a real company. Yet.</h2>
@@ -413,12 +409,12 @@
   </div>
 
   <div class="footer-bottom">
-    <span>&copy; 2026 Squircle. All rights reserved.</span>
+    <span>2026 Squircle. Released into the public domain under <a href="https://unlicense.org/" target="_blank" rel="noopener">The Unlicense</a>.</span>
   </div>
 
 </footer>
 
-<!-- easter egg: type "deltarune" or "undertale" to start a battle (same one as the home page, Script.js runs it) -->
+<!-- easter egg: deltarune / undertale -->
 <div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
   <div class="db-scene">
     <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
-<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<!-- skip the splash if the intro already played -->
 <script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="CSS/Style.css">
@@ -13,9 +13,7 @@
 <link rel="stylesheet" href="CSS/Contact.css">
 </head>
 
-<!-- say hello: a little chat in the hero, then the contact form. the form doesn't send anywhere (it's a demo), it checks
-     what's filled in, pretends to send for a beat and plays the sent screen. the hero, marquee and closing banner are
-     borrowed from the product pages (Products.css), everything else lives in Contact.css + Contact.js -->
+<!-- contact page (demo form) -->
 
 <body class="contact-page">
 
@@ -66,7 +64,7 @@
     </button>
   </div>
 
-  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <!-- hamburger menu -->
   <div class="nav-menu-panel" id="navMenuPanel">
     <span class="nav-menu-indicator" aria-hidden="true"></span>
 
@@ -106,8 +104,7 @@
     </div>
   </div>
 
-  <!-- a little chat that pops in a message at a time once the hero lands, ending on you typing. decoration only, the
-       real way to get in touch is the form below -->
+  <!-- decorative hero chat -->
   <div class="contact-hero-visual" aria-hidden="true">
     <div class="contact-chat">
       <p class="contact-msg contact-msg--you"><span class="contact-bubble">Can I really open a Lappy with one screwdriver?</span></p>
@@ -148,7 +145,7 @@
       </div>
     </div>
 
-    <!-- the form and the sent screen share the card, swapped by Contact.js -->
+    <!-- form + sent screen -->
     <div class="contact-card" id="contactCard">
 
       <form class="contact-form" id="contactForm" novalidate aria-label="Send Squircle a message">
@@ -179,7 +176,7 @@
           </div>
         </fieldset>
 
-        <!-- only for the topics about a particular product, Contact.js folds it open -->
+        <!-- product topics only -->
         <div class="contact-reveal" id="contactProductField">
           <div class="contact-reveal-inner">
             <div class="contact-field">
@@ -312,12 +309,12 @@
   </div>
 
   <div class="footer-bottom">
-    <span>&copy; 2026 Squircle. All rights reserved.</span>
+    <span>2026 Squircle. Released into the public domain under <a href="https://unlicense.org/" target="_blank" rel="noopener">The Unlicense</a>.</span>
   </div>
 
 </footer>
 
-<!-- easter egg: type "deltarune" or "undertale" to start a battle (same one as the home page, Script.js runs it) -->
+<!-- easter egg: deltarune / undertale -->
 <div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
   <div class="db-scene">
     <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">

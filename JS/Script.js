@@ -10,9 +10,7 @@ const navBlocks=document.querySelector(".nav-building-blocks");
 
 // splash screen
 
-// once the intro has played once anywhere on the site this tab session, skip it afterwords. the inline script in every
-// page's <head> already checked before anything painted (html.intro-seen hides the splash in Style.css) so moving between
-// pages never even flashes the loading bar, checking sessionStorage here as well covers a page that's missing it
+// skip the intro if it already played this tab
 const introKey="squircleIntroSeen";
 let introSeen=document.documentElement.classList.contains("intro-seen");
 try{introSeen=introSeen || sessionStorage.getItem(introKey)==="1";}catch(e){}
@@ -30,7 +28,7 @@ if(splash && loadingBar && introSeen){
   let pageLoaded=false;
   let loadingFinished=false;
 
-  // the intro's fonts aren't on screen till its first word, so the browser wouldn't fetch them till then either. start now
+  // preload the intro fonts now
   const introFonts=document.fonts ? Promise.all([document.fonts.load('300 1em "azo-sans-web"'),document.fonts.load('1em "SuperMalibu"')]).catch(()=>{}) : Promise.resolve();
 
 
@@ -54,7 +52,7 @@ if(splash && loadingBar && introSeen){
 function moveAnimationToNavbar(){
   if(!splashBlocks || !navBlocks){ splash.classList.add("loaded"); splash.style.display="none"; return; }
 
-  // the intro drove the logo with gsap, hand it back to the css transition this flight uses
+  // hand the logo back to css for the flight
   if(window.gsap) gsap.set(splashBlocks,{clearProps:"transform"});
   splash.classList.remove("intro");
 
@@ -73,7 +71,7 @@ function moveAnimationToNavbar(){
   const deltaY=navY-splashY;
   const scale=navRect.width/splashRect.width;
 
-  // every block stops dancing for the flight up to the nav
+  // blocks stop dancing for the flight
   splashBlocks.querySelectorAll("img").forEach(block=>{block.style.animation="none";});
 
   // move to the nav icon position
@@ -90,16 +88,13 @@ function moveAnimationToNavbar(){
   setTimeout(()=>{splash.style.display="none";},1600);
 }
 
-  // osu!lazer style intro, plays once everything's loaded. the loader gets sucked into a point, "welcome to squircle"
-  // builds up a chunk a beat, squares and circles glitch in behind it, the four logo blocks line up like osu!'s ruleset
-  // icons and slam together into the logo, then a white flash swaps the splash for the page and the logo flies up to
-  // the nav same as before. clicking or pressing any key skips straight to the flash
+  // osu!lazer style intro, any click or key skips it
   function playIntro(){
     const center=document.querySelector(".splash-center");
     const loadContainer=document.querySelector(".loading-container");
     const blocks=splashBlocks ? [".block-orange",".block-gray",".block-purple",".block-white"].map(c=>splashBlocks.querySelector(c)) : [];
 
-    // no gsap (cdn down) or reduced motion, straight up to the nav like it used to
+    // no gsap or reduced motion, straight to the nav
     if(!window.gsap || matchMedia("(prefers-reduced-motion: reduce)").matches || !navBlocks || !center || !loadContainer || blocks.length!==4 || blocks.includes(null)){
       moveAnimationToNavbar();
       return;
@@ -107,11 +102,10 @@ function moveAnimationToNavbar(){
 
     splash.classList.add("intro");
 
-    // the beat, in seconds from here. the gaps between the words, glitch, blocks and logo are lifted from osu!lazer's
-    // triangles intro, which is what makes it feel like it's hitting to music that isn't there
+    // beat timings in seconds, borrowed from osu!lazer
     const at={wel:.85,welcome:1.05,welcomeTo:1.35,squircle:1.55,glitch:1.71,row1:2.1,row2:2.3,row3:2.5,impact:2.73,reveal:3.45};
 
-    // one size unit so it all scales with the screen, the row of blocks on the last beat is the widest thing that has to fit
+    // size unit so everything scales with the screen
     const u=Math.min(innerWidth/950,innerHeight/380,1.5);
     const rootStyle=getComputedStyle(document.documentElement);
     const palette=["--accent","--accent-2","--accent-3","--whiteline"].map(v=>rootStyle.getPropertyValue(v).trim());
@@ -122,7 +116,7 @@ function moveAnimationToNavbar(){
     welcome.innerHTML='<span class="splash-welcome-text"></span>';
     const welcomeText=welcome.firstChild;
 
-    // squares and circles in the brand colours for the glitch to flicker on and off
+    // shapes for the glitch
     const glitch=document.createElement("div");
     glitch.className="splash-glitch";
     glitch.setAttribute("aria-hidden","true");
@@ -147,7 +141,7 @@ function moveAnimationToNavbar(){
     splash.prepend(glitch);
     splash.append(welcome,flash);
 
-    // a rounded square just outside the orange block, turned into the same diamond. one draws itself in, the other is the ripple
+    // diamond outline, one draws in, one ripples
     const ringSvg='<svg class="splash-ring" viewBox="0 0 1280 1024" aria-hidden="true"><path pathLength="100" transform="rotate(45 640 512)" d="M360 112H920A120 120 0 0 1 1040 232V792A120 120 0 0 1 920 912H360A120 120 0 0 1 240 792V232A120 120 0 0 1 360 112Z"/></svg>';
     splashBlocks.insertAdjacentHTML("beforeend",ringSvg+ringSvg);
     const [ring,ripple]=splashBlocks.querySelectorAll(".splash-ring");
@@ -159,14 +153,12 @@ function moveAnimationToNavbar(){
     splash.addEventListener("pointerdown",skipIntro);
     addEventListener("keydown",skipIntro);
 
-    // the bar finishes and everything gets sucked into a point. the dance only stops once it's too small to see the snap
+    // loader gets sucked into a point
     tl.to(loadContainer,{width:0,duration:.3,ease:"power3.in"},.3)
       .to(splashBlocks,{scale:0,duration:.42,ease:"back.in(2.2)"},.25)
       .set(blocks,{animation:"none"},.7);
 
-    // welcome to squircle, a chunk a beat, slowly spreading out like osu!'s does. the spacing is worked out in px from
-    // the font size, gsap measures the (still empty) text to convert em and gets 0. autoRound off or it widens in
-    // whole px steps and the text visibly jumps
+    // welcome to squircle, a chunk a beat
     const welcomeSize=parseFloat(getComputedStyle(welcomeText).fontSize);
 
     tl.set(welcome,{autoAlpha:1},at.wel)
@@ -177,7 +169,7 @@ function moveAnimationToNavbar(){
         .fromTo(welcomeText,{scale:1.08},{scale:1,duration:.18,ease:"power2.out",immediateRender:false},t);
     });
 
-    // glitch, random shapes flicker in for a frame or three while the text splits into orange and purple
+    // glitch shapes + split colour text
     const shapes=[...glitch.children];
     let nextShape=0;
 
@@ -195,15 +187,14 @@ function moveAnimationToNavbar(){
     tl.set(welcome,{autoAlpha:0},at.row1)
       .set(welcomeText,{x:0,textShadow:"none"},at.row1);
 
-    // the four blocks line up like osu!'s ruleset icons, bigger and closer together every beat. the shapes are all
-    // different sizes inside their svgs (these fractions of the box), so each one gets scaled to read the same size
+    // blocks line up like osu! ruleset icons
     const box=splashBlocks.offsetWidth;
     const shapeSize=[.5224,.4315,.2521,.1398]; // orange square, gray circle, purple square, white circle
     const glowColor=["rgba(204,51,15,.8)","rgba(237,237,237,.35)","rgba(142,13,171,.85)","rgba(237,237,237,.6)"];
 
     tl.set(splashBlocks,{scale:1},at.row1);
 
-    // [beat, icon size, gap, punch] sizes in u. the last row skips the punch since the slam takes straight over
+    // [beat, icon size, gap, punch] in u
     [[at.row1,52,130,1.1],[at.row2,104,40,1.1],[at.row3,190,16,1]].forEach(([t,size,gap,punch])=>{
       const s=size*u;
       const scaleOf=i=>s/(shapeSize[i]*box);
@@ -212,14 +203,14 @@ function moveAnimationToNavbar(){
         x:i=>(i-1.5)*(s+gap*u),
         scale:i=>scaleOf(i)*punch,
         rotation:i=>i===0?-45:0,
-        // drop-shadow gets scaled along with the block, so divide that back out to keep every glow the same on screen
+        // undo the drop-shadow scaling
         filter:i=>`drop-shadow(0 0 ${(s*.22/scaleOf(i)).toFixed(1)}px ${glowColor[i]})`
       },t);
 
       if(punch!==1) tl.to(blocks,{scale:scaleOf,duration:.16,ease:"power2.out"},t);
     });
 
-    // slam! they fly into the middle and stack back up into the logo, orange turning into its diamond on the way
+    // slam into the logo
     tl.to(blocks,{x:0,scale:1,rotation:i=>i===2?90:0,duration:at.impact-at.row3-.04,ease:"power3.in"},at.row3+.04)
       .set(blocks,{filter:"none"},at.impact)
       .set(splashBlocks,{scale:1.12},at.impact)
@@ -229,12 +220,12 @@ function moveAnimationToNavbar(){
       .set(center,{x:3*u,y:-2*u},at.impact+.08)
       .set(center,{x:0,y:0},at.impact+.12);
 
-    // the lazer logo bit, an outline draws itself round the logo while it winds up
+    // outline draws round the logo
     tl.set(ring,{autoAlpha:1},at.impact)
       .fromTo(ringPath,{strokeDashoffset:100},{strokeDashoffset:0,duration:at.reveal-at.impact-.05,ease:"power2.inOut",immediateRender:false},at.impact)
       .to(splashBlocks,{scale:.9,duration:at.reveal-at.impact-.3,ease:"power2.in"},at.impact+.3);
 
-    // flash! the splash goes see-through under it so the page is there when it fades, and the logo pops and ripples out
+    // flash, then show the page
     tl.addLabel("reveal",at.reveal)
       .set(flash,{autoAlpha:1},"reveal")
       .to(flash,{autoAlpha:0,duration:1,ease:"power2.out"},"reveal")
@@ -257,7 +248,7 @@ function moveAnimationToNavbar(){
 
     loadingBar.style.width="100%";
 
-    // the intro's fonts get a couple of seconds at most, one slow font shouldn't hold the whole site up
+    // don't let a slow font hold up the site
     Promise.race([introFonts,new Promise(done=>setTimeout(done,2000))]).then(()=>{
       setTimeout(playIntro,Math.max(0,minimumTime-(performance.now()-startTime)));
     });
@@ -289,8 +280,7 @@ if (navLinksContainer && navIndicator && navItems.length > 0) {
   navLinksContainer.addEventListener("mouseleave", () => {navIndicator.style.opacity = "0";});
 }
 
-// product page buy pill drops out from under the nav once the hero is mostly scrolled away, tucks back at the top.
-// the -30% top margin means "hero's bottom edge has risen above 30% of the screen" rather than waiting for all of it to leave
+// buy pill drops in once the hero scrolls away
 const navbar=document.querySelector(".navbar");
 const navBuy=document.getElementById("navBuy");
 const navBuyHero=document.querySelector(".lappy-hero");
@@ -300,8 +290,7 @@ if(navbar && navBuy && navBuyHero && "IntersectionObserver" in window){
   },{rootMargin:"-30% 0px 0px 0px"}).observe(navBuyHero);
 }
 
-// hamburger menu: every page on the site in a glass panel that drops out from under the menu button. the button again,
-// a click anywhere else, tabbing out of it or escape all close it
+// hamburger menu
 const navMenuBtn=document.querySelector(".nav-menu");
 const navMenuPanel=document.getElementById("navMenuPanel");
 
@@ -310,17 +299,15 @@ if(navbar && navMenuBtn && navMenuPanel){
   const menuLinks=Array.from(navMenuPanel.querySelectorAll(".nav-menu-link"));
   let menuIndicatorLink=null;
 
-  // the page you're on gets marked and the hover pill rests on it. index.html, about.html and plain /about all count as
-  // the same page, since that's how the server treats them
+  // page marker
   const pagePath=path=>decodeURI(path).replace(/(index)?\.html$/,"");
   const currentMenuLink=menuLinks.find(link=>pagePath(link.pathname)===pagePath(location.pathname)) || null;
   if(currentMenuLink)currentMenuLink.setAttribute("aria-current","page");
 
-  // numbers the rows top to bottom so Style.css can drop them in one after another
+  // number rows so css can stagger them
   navMenuPanel.querySelectorAll(".nav-menu-heading, .nav-menu-link").forEach((row,i)=>row.style.setProperty("--i",i));
 
-  // slides the pill onto a link (or fades it out for none). it jumps instead when it's appearing from nowhere, otherwise
-  // it would glide in from wherever it was last
+  // slide the pill to a link
   function placeMenuIndicator(link,instant){
     menuIndicatorLink=link;
     if(!menuIndicator)return;
@@ -357,13 +344,11 @@ if(navbar && navMenuBtn && navMenuPanel){
   });
   navMenuPanel.addEventListener("mouseleave",()=>placeMenuIndicator(currentMenuLink));
 
-  // a click anywhere outside the panel closes it (the button's own click toggles it, so that one's left alone)
+  // a click outside the panel closes it
   document.addEventListener("click",e=>{
     if(isMenuOpen() && !navMenuPanel.contains(e.target) && !navMenuBtn.contains(e.target))setMenuOpen(false);
   });
 
-  // so does tabbing out of it. no relatedTarget means focus went nowhere (a click on the panel's own background), so
-  // that one keeps it open
   navbar.addEventListener("focusout",e=>{
     const to=e.relatedTarget;
     if(isMenuOpen() && to && !navMenuPanel.contains(to) && to!==navMenuBtn)setMenuOpen(false);
@@ -377,7 +362,7 @@ if(navbar && navMenuBtn && navMenuPanel){
 
   addEventListener("resize",()=>{if(isMenuOpen())placeMenuIndicator(menuIndicatorLink,true);});
 
-  // the back button can bring a page back exactly as it was left, menu still open, so it tucks away again
+  // close the menu if back restored it open
   addEventListener("pageshow",e=>{if(e.persisted)setMenuOpen(false);});
 }
 
@@ -396,7 +381,7 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
 
   ScrollTrigger.matchMedia({
 
-    // desktop laptop flies in, holds centered through the marquee, then the section unpints and noraml scrolling reterns
+    // laptop flies in, holds, then unpins
     "(min-width:651px)":()=>{
       gsap.set(heroLaptop,{xPercent:-50,yPercent:-50});
       gsap.set(heroBehind,{xPercent:-50,yPercent:-50});
@@ -412,17 +397,17 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
         }
       });
 
-      // phase 1 - laptop slides in diagonally from the upper right
+      // phase 1 - laptop slides in
       tl.fromTo(heroLaptop,{x:"29vw"},{x:"-3vw",ease:"none",duration:1},0);
       tl.fromTo(heroCopy,{opacity:1},{opacity:0,ease:"none",duration:1},0);
       tl.set(heroCopy,{pointerEvents:"none"},0.6);
 
-      // phase 2 - laptop holds still and scrolls up behind it fading out last 15% as passes through center
+      // phase 2 - laptop holds and fades out
 tl.set(heroBehind,{y:"12.6vh",opacity:1},1);
 tl.to(heroBehind,{y:"-12.6vh",ease:"none",duration:0.85},1);
 tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
-      // laptop fades out alongside the marquee's in final 15% so the handoff into the next section is a fade
+      // fade out with the marquee
       tl.to(heroLaptop,{opacity:0,ease:"none",duration:0.15},1.85);
 
       return ()=>{
@@ -438,7 +423,7 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
 
   });
 
-  // weighted bounce so it settles like something with weight + idle animation only on laptop ontop of gsap 
+  // weighted bounce + idle float
   let lastScrollY=scrollY;
   let lastFrameTime=performance.now();
   let springY=0;
@@ -450,7 +435,7 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
   const scrollKick=1; // how hard a scroll nudges the spring
 
   function tickHeroBounce(now){
-    const dt=Math.min((now-lastFrameTime)/1000,.05); // seconds, capped to avoid jolts after tab out (idk why but it works)
+    const dt=Math.min((now-lastFrameTime)/1000,.05); // capped so tabbing back in doesnt jolt
     lastFrameTime=now;
 
     const currentY=scrollY;
@@ -464,7 +449,7 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
       springVelocity+=accel*dt;
       springY=Math.min(40,Math.max(-40,springY+springVelocity*dt));
 
-      // same 14px, ~4.5s swing as the other pages' hero float (lappy-float in Products.css)
+      // same float as the other heroes
       idlePhase+=dt*1.4;
       const idleY=Math.sin(idlePhase)*7;
 
@@ -478,7 +463,7 @@ tl.to(heroBehind,{y:"-18vh",opacity:0,ease:"none",duration:0.15},">");
   requestAnimationFrame(tickHeroBounce);
 }
 
-// Squircle atom effect the word is sampled into a field of small particles that scatter away from the cursor
+// Squircle atom effect, particles flee the cursor
 const atomWrap=document.querySelector(".hero-title-atom");
 const atomText=document.querySelector(".hero-title-atom-text");
 const atomCanvas=document.querySelector(".hero-title-atom-canvas");
@@ -503,9 +488,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     atomCanvas.style.width=w+"px";
     atomCanvas.style.height=h+"px";
 
-    // sample onto an offscreen canvas rendered well above the on-screen resolution, then
-    // scale particle positions back down by the same factor. at the real display size,
-    // Gecko anti-aliases this font's small glyph edges patchily enough that
+    // sample at high res so the glyph edges stay clean
     const sampleScale=atomDpr*4;
 
     const sample=document.createElement("canvas");
@@ -520,9 +503,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     sctx.fillStyle=style.color;
     sctx.fillText(atomText.textContent,0,h/2);
 
-    // stride by the canvas's real (whole-number) size, not w*sampleScale: devicePixelRatio is often fractional
-    // (browser zoom 110% = 1.1, some scaling setups = 1.0000000298...), which made every pixel index fractional,
-    // read back undefined, and left zero particles so the word vanished
+    // use the canvas's real size, fractional dpr breaks it
     const sampleW=sample.width;
     const sampleH=sample.height;
     const data=sctx.getImageData(0,0,sampleW,sampleH).data;
@@ -544,7 +525,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
       }
     }
 
-    // never swap the real text out for an empty canvas
+    // keep the real text if sampling fails
     if(!particles.length)return;
 
     atomParticles=particles;
@@ -604,8 +585,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
     requestAnimationFrame(tickAtoms);
   }
 
-  // force-load SuperMalibu specifically before the first sample
-  // , matching the single-family font string buildAtomParticles now uses to paint.
+  // load SuperMalibu before sampling
   const atomStyle=getComputedStyle(atomText);
   const atomFontSpec=`${atomStyle.fontWeight} ${atomStyle.fontSize} "SuperMalibu"`;
 
@@ -619,7 +599,7 @@ if(atomWrap && atomText && atomCtx && !("ontouchstart" in window) && !atomReduce
   requestAnimationFrame(tickAtoms);
 }
 
-// product scroll-jacked carousel gasp scrolltrigger
+// product carousel
 const productWrap=document.getElementById("productWrap");
 const productSticky=document.getElementById("productSticky");
 const productViewport=document.getElementById("productViewport");
@@ -639,7 +619,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
         }
       });
 
-      // row is already in place and fully visible the moment the pin engages
+      // row is visible as soon as it pins
       tl.to(productTrack,{
         x:()=>-(Math.max(0,productTrack.scrollWidth-productViewport.clientWidth)),
         ease:"none",
@@ -658,7 +638,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
   });
 }
 
-// lappy feature showcase horizontal scroll-jacked panels text flies in from all directions as each panel pans into view
+// lappy feature showcase
 const lappyShowcaseWrap=document.getElementById("lappyShowcase");
 const lappyShowcaseSticky=document.getElementById("lappyShowcaseSticky");
 const lappyShowcaseTrack=document.getElementById("lappyShowcaseTrack");
@@ -678,7 +658,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
   ScrollTrigger.matchMedia({
 
     "(min-width:651px)":()=>{
-      // the horizontal pan itself, pinned for the length of the wrap
+      // horizontal pan, pinned
       const panTween=gsap.to(lappyShowcaseTrack,{
         x:()=>-(lappyShowcaseTrack.scrollWidth-lappyShowcaseSticky.clientWidth),
         ease:"none",
@@ -692,7 +672,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
         }
       });
 
-      // each panel's text pieces get their own scrubbed reveal, mapped onto the horizontal pan via containerAnimation 
+      // text reveals synced to the pan
       const fxTweens=[];
 
       lappyPanels.forEach(panel=>{
@@ -729,7 +709,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
   });
 }
 
-// the scribble's word gets a span per letter so Style.css can pop them in (and back out on hover) one after another
+// one span per scribble letter
 document.querySelectorAll(".about-scribble-text").forEach(word=>{
   const letters=[...word.textContent.trim()];
   word.textContent="";
@@ -743,7 +723,7 @@ document.querySelectorAll(".about-scribble-text").forEach(word=>{
   });
 });
 
-// about/more info section reveal scribble accent draws in only first scroll into view
+// scribble draws in on first view
 const aboutHeadings=document.querySelectorAll(".about-heading");
 if(aboutHeadings.length && "IntersectionObserver" in window){
   const aboutObserver=new IntersectionObserver((entries)=>{
@@ -757,7 +737,7 @@ if(aboutHeadings.length && "IntersectionObserver" in window){
   aboutHeadings.forEach(heading=>aboutObserver.observe(heading));
 }
 
-// about images + copy cards fade/slide in the first time each scrolls into view
+// about cards fade in
 const aboutReveals=document.querySelectorAll(".about-media, .about-copy, .about-banner");
 if(aboutReveals.length && "IntersectionObserver" in window){
   const aboutMediaObserver=new IntersectionObserver((entries)=>{
@@ -771,7 +751,7 @@ if(aboutReveals.length && "IntersectionObserver" in window){
   aboutReveals.forEach(el=>aboutMediaObserver.observe(el));
 }
 
-// lappy DIY/pre-built cards and the spec configurator fade/slide in the first time they scroll into view
+// lappy cards fade in
 const lappyReveals=document.querySelectorAll(".lappy-option, .lappy-configurator");
 if(lappyReveals.length && "IntersectionObserver" in window){
   const lappyRevealObserver=new IntersectionObserver((entries)=>{
@@ -785,7 +765,7 @@ if(lappyReveals.length && "IntersectionObserver" in window){
   lappyReveals.forEach(el=>lappyRevealObserver.observe(el));
 }
 
-// lappy spec configurator click a spec witch will swap the laptop image and expand its placeholder description
+// spec configurator
 const lappyConfiguratorImg=document.getElementById("lappyConfiguratorImg");
 const lappySpecList=document.querySelector(".lappy-spec-list");
 const lappySpecIndicator=document.querySelector(".lappy-spec-indicator");
@@ -801,7 +781,7 @@ if(lappyConfiguratorImg && lappySpecList && lappySpecIndicator && lappySpecBtns.
     lappySpecIndicator.style.height=`${btnRect.height}px`;
   }
 
-  // the row's own height animates as its description opens/closes so the pill remasured ever fram rathen than keyframing
+  // remeasure the pill every frame
   function trackSpecIndicator(btn,duration=500){
     const start=performance.now();
 
@@ -845,9 +825,7 @@ if(footerTop){
   });
 }
 
-// same-page links (the buy now buttons -> #lappyOptions) glide there instead of teleporting. done here rather than
-// with css scroll-behavior:smooth, because that also smooths the instant scroll jumps ScrollTrigger makes when it
-// re-measures its pinned sections, which throws them off. bare "#" placeholder links are left alone
+// smooth scroll for same-page links
 const smoothScrollReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 document.addEventListener("click",e=>{
   const link=e.target.closest('a[href^="#"]');
@@ -856,7 +834,7 @@ document.addEventListener("click",e=>{
   const target=document.getElementById(link.getAttribute("href").slice(1));
   if(!target)return;
 
-  // honours the target's css scroll-margin-top, so a section can ask to land a little lower (clear of the nav)
+  // respects scroll-margin-top
   const margin=parseFloat(getComputedStyle(target).scrollMarginTop)||0;
 
   e.preventDefault();
@@ -1013,11 +991,7 @@ function drawLine(line,time){
 }
 
 
-// scroll driven background zones, the same black > orange > purple > black run on every page:
-//   home:  hero = black till its scroll-hijack engages, products = orange, about = purple, banner centre on = black
-//   lappy: hero + first banner = black, feature showcase = orange, DIY/pre-built + specs = purple, closing banner centre on = black
-//   buy:   hero = black, configurator steps = orange, review = purple, closing banner centre on = black
-// html[data-zone] (Style.css) drives --line/buttons/nav/footer; the canvas fill itself is interpolated here so the color wash is smooth
+// scroll driven background zones (black > orange > purple > black)
 const zoneSections={
   productWrap:document.getElementById("productWrap"),
   aboutWrap:document.querySelector(".about-wrap"),
@@ -1042,8 +1016,7 @@ const zoneColors={
   black:hexToRgb(zoneRootStyle.getPropertyValue("--zone-dark"))
 };
 
-// transition midpoints to Y coordinates remeasured whenever layout can shift. zoneT0 holds black untill igniting to orange
-// after the hero's scroll-hijack engaging, rather than being orange instantly
+// zone midpoints, remeasured when layout shifts
 let zoneT0=0,zoneT1=0,zoneT2=0,docMaxScroll=0;
 function measureZones(){
   const{productWrap,aboutWrap,aboutBanner,footer,lappyShowcase,lappyOptions,lappyBuyBanner,buyConfig,buyReview}=zoneSections;
@@ -1056,16 +1029,13 @@ function measureZones(){
     zoneT1=(productBottom+aboutWrap.offsetTop)/2;
     zoneT2=bannerCenter;
   }
-  // lappy: orange ignites as the feature showcase arrives (so it's full orange before the pin starts), purple as
-  // the DIY/pre-built cards take over, black from the closing banner's centre, same hand-off as the home banner
+  // lappy zones
   else if(lappyShowcase&&lappyOptions&&lappyBuyBanner){
     zoneT0=lappyShowcase.offsetTop;
     zoneT1=lappyOptions.offsetTop;
     zoneT2=lappyBuyBanner.offsetTop+lappyBuyBanner.offsetHeight/2;
   }
-  // buy: orange as the configurator arrives, purple once the review step takes over, black from the closing banner's
-  // centre. the review sits inside the configurator's grid rather than straight in <body>, so its offsetTop would be
-  // relative to that; measuring it off the viewport gives the page position instead
+  // buy zones
   else if(buyConfig&&buyReview&&lappyBuyBanner){
     zoneT0=buyConfig.offsetTop;
     zoneT1=buyReview.getBoundingClientRect().top+scrollY;
@@ -1079,10 +1049,10 @@ measureZones();
 addEventListener("resize",measureZones);
 addEventListener("load",measureZones);
 
-// the page also changes height without a resize (web fonts landing late, spec rows expanding), so re-measure then too
+// remeasure when the page height changes
 if("ResizeObserver" in window)new ResizeObserver(measureZones).observe(document.body);
 
-// footer's own content is often too short for the look ahead. sample below to ever reach zoneT2 before scrolling bottoms out
+// look below the footer so the last zone is reached
 function isAtBottom(scrollTop){
   return scrollTop>=docMaxScroll-1;
 }
@@ -1158,7 +1128,7 @@ function animate(time){
 
 requestAnimationFrame(animate);
 
-// easter egg typing "deltarune" or "undertale" 
+// easter egg: type deltarune or undertale
 const dbOverlay=document.getElementById("deltaruneBattle");
 const dbText=document.getElementById("deltaruneText");
 const dbAudio=document.getElementById("deltaruneAudio");
@@ -1478,7 +1448,7 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
   dbOverlay.addEventListener("click",e=>{if(e.target===dbOverlay)dbCloseBattle();});
 }
 
-// easter egg laptop hero to play Flappy bird but as squircle
+// easter egg: flappy squircle
 const flappyTrigger=document.getElementById("heroLaptop");
 const flappyGame=document.getElementById("flappyGame");
 const flappyCanvas=document.getElementById("flappyCanvas");

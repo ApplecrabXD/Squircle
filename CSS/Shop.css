@@ -1,22 +1,18 @@
-/* shop page (Shop/index.html): every product in one place, filters down the left and the product grid on the right.
-   the hero, marquee and closing banner are the product pages' lappy-* pieces from Products.css, so everything here is
-   the hero's extras plus the shop itself. Shop.js does the filtering */
+/* shop page, filters + grid */
 
-/* hero extras: the shared lappy-hero brings the title + floating product, these add the buttons
-   (same as the buy page) */
+/* hero extras: buttons */
 .shop-hero-buttons{justify-content:center;}
 
-/* <button>s wearing the .btn look (the empty state's reset) */
+/* buttons styled as .btn */
 button.btn{cursor:pointer;}
 
-/* softer text tones for copy that sits straight on the canvas. mixed into the zone colour rather than faded with
-   transparency, so they stay solid and the line art passes behind the letters instead of showing through them */
+/* solid softer text tones */
 .shop-page{
   --shop-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
   --shop-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
 }
 
-/* the buttons join the hero entrance with the same rise as the title, a beat behind it */
+/* buttons join the hero entrance */
 #splash:not(.loaded) ~ .lappy-hero .shop-hero-buttons{opacity:0;}
 
 #splash.loaded ~ .lappy-hero .shop-hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
@@ -27,22 +23,20 @@ button.btn{cursor:pointer;}
   z-index:1;
   padding:120px 0 140px;
 
-  /* glass + selection colours, flipped per scroll zone below. a pick is the accent pill normally and goes white with
-     orange text on the orange zone, the same swap .btn-fill makes there */
+  /* glass + pick colours per zone */
   --card-bg:rgba(0,0,0,.035);
   --card-border:rgba(0,0,0,.08);
   --pick-bg:var(--accent);
   --pick-ink:#fff;
   --glass:blur(25px) saturate(160%);
 
-  /* how far down the filters stick, clear of the nav */
+  /* sticky offset */
   --filters-top:112px;
 }
 
 html[data-zone] .shop{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
 
-/* smoked rather than white glass on orange, same as the buy page cards: a white tint there goes hot red-orange and
-   washes the copy out, and so does the saturate() boost */
+/* smoked glass on orange */
 html[data-zone="orange"] .shop{
   --card-bg:rgba(0,0,0,.1);
   --card-border:rgba(255,255,255,.16);
@@ -51,7 +45,7 @@ html[data-zone="orange"] .shop{
   --glass:blur(25px);
 }
 
-/* full width (no centred max-width) so the filters sit out at the side and big screens fit more cards per row */
+/* full width */
 .shop-layout{
   display:grid;
   grid-template-columns:minmax(250px,300px) minmax(0,1fr);
@@ -61,8 +55,7 @@ html[data-zone="orange"] .shop{
   padding:0 48px;
 }
 
-/* filters: stick beside the grid for the whole run of products. if a short screen can't fit them all they scroll
-   inside their own glass */
+/* sticky filters */
 .shop-filters{
   position:sticky;
   top:var(--filters-top);
@@ -103,7 +96,7 @@ html[data-zone="orange"] .shop{
   color:var(--line);
 }
 
-/* how many filters are on, a little pill beside the heading */
+/* active filter count */
 .shop-filters-count{
   display:inline-grid;
   place-items:center;
@@ -123,7 +116,7 @@ html[data-zone="orange"] .shop{
 
 .shop-filters-count[hidden]{display:none;}
 
-/* reset: a plain text button with the same draw-in underline as the footer links */
+/* reset link */
 .shop-reset{
   position:relative;
   padding:0;
@@ -158,7 +151,7 @@ html[data-zone="orange"] .shop{
 .shop-reset:disabled::after{transform:scaleX(0);}
 .shop-reset:focus-visible{outline:2px solid var(--line); outline-offset:4px; border-radius:4px;}
 
-/* show / hide, only on smaller screens where the filters fold away above the grid (see the 900px query) */
+/* show / hide toggle */
 .shop-filters-toggle{
   display:none;
   align-items:center;
@@ -189,8 +182,7 @@ html[data-zone="orange"] .shop{
 
 .shop-filters.is-open .shop-filters-toggle-icon{rotate:45deg;}
 
-/* always open on desktop. it's a one-row grid so smaller screens can fold it shut by animating the row (0fr <-> 1fr),
-   the same trick as the spec descriptions on the product pages */
+/* foldable on small screens */
 .shop-filters-body{
   display:grid;
   grid-template-rows:1fr;
@@ -198,7 +190,7 @@ html[data-zone="orange"] .shop{
 
 .shop-filters-inner{min-height:0;}
 
-/* one group per filter (category / price / sort), split by a hairline */
+/* filter groups */
 .shop-group{
   min-width:0;
   margin:0;
@@ -211,7 +203,7 @@ html[data-zone="orange"] .shop{
   border-top:1px solid color-mix(in srgb, var(--line) 14%, transparent);
 }
 
-/* floating the legend takes it out of the fieldset's border-gap rendering so it lays out like any other heading */
+/* float the legend */
 legend.shop-group-title{float:left; width:100%; padding:0;}
 legend.shop-group-title + *{clear:both;}
 
@@ -227,7 +219,7 @@ legend.shop-group-title + *{clear:both;}
   color:color-mix(in srgb, var(--line) 60%, transparent);
 }
 
-/* categories: full-width rows like the sort list below, but you can tick any number of them */
+/* category rows */
 .shop-chips{
   display:flex;
   flex-direction:column;
@@ -258,11 +250,10 @@ legend.shop-group-title + *{clear:both;}
 .shop-chip:hover{transform:scale(1.02);}
 .shop-chip:active{transform:scale(.98);}
 
-/* nothing in it at the current price. still tickable, just quieter */
+/* empty at this price */
 .shop-chip.is-empty:not(:has(input:checked)){opacity:.45;}
 
-/* the real checkbox / radio stays in the label for keyboard + screen readers, it just isn't drawn
-   (same as the buy page options) */
+/* hidden inputs, still accessible */
 .shop-chip input,
 .shop-sort-option input{
   position:absolute;
@@ -275,7 +266,7 @@ legend.shop-group-title + *{clear:both;}
 .shop-chip:has(input:focus-visible),
 .shop-sort-option:has(input:focus-visible){outline:2px solid var(--line); outline-offset:3px;}
 
-/* the ring that fills in and gets a tick when the chip is on */
+/* tick ring */
 .shop-chip-tick{
   position:relative;
   flex:0 0 auto;
@@ -320,7 +311,7 @@ legend.shop-group-title + *{clear:both;}
 .shop-chip:has(input:checked) .shop-chip-tick{background:var(--pick-ink); border-color:var(--pick-ink); opacity:1;}
 .shop-chip:has(input:checked) .shop-chip-tick::after{scale:1;}
 
-/* price: a max-price slider, the bit behind the thumb filled in the pick colour (Shop.js keeps --fill in step) */
+/* price slider */
 .shop-price-value{
   display:block;
   margin-bottom:12px;
@@ -333,7 +324,7 @@ legend.shop-group-title + *{clear:both;}
   transition:color .35s ease;
 }
 
-/* yellow on the orange zone is too low-contrast to read, so it goes white there (same as the buy page prices) */
+/* white on orange */
 html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
 
 .shop-range{
@@ -357,7 +348,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
 
 .shop-range:focus-visible{outline:2px solid var(--line); outline-offset:4px; border-radius:100px;}
 
-/* each browser's track + thumb gets its own rule: one unknown pseudo-element in a selector list throws the whole rule away */
+/* separate rules per browser */
 .shop-range::-webkit-slider-runnable-track{
   height:6px;
   border-radius:100px;
@@ -407,8 +398,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   color:color-mix(in srgb, var(--line) 60%, transparent);
 }
 
-/* sort: one pick only, so it gets the sliding pill (the same trick as .nav-indicator and the buy page options) rather
-   than the chips' tick */
+/* sort + sliding pill */
 .shop-sort{
   position:relative;
   display:flex;
@@ -462,7 +452,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
 .shop-sort-option:hover{transform:scale(1.02);}
 .shop-sort-option:active{transform:scale(.98);}
 
-/* picked: the row goes clear so the pill behind it shows through (Shop.js sets .is-picked) */
+/* picked: clear so the pill shows */
 .shop-sort .shop-sort-option.is-picked{
   background:transparent;
   border-color:transparent;
@@ -502,9 +492,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   margin:0;
   padding:0;
 
-  /* as many ~300px+ columns as fit, up to 4: 2 on a small laptop, 3 at 1440, then 4 that stretch to fill anything
-     wider. a column can never be narrower than a quarter of the row, which is what stops a 5th fitting. auto-fill
-     keeps the empty columns when filtering leaves only a couple of cards, so they don't stretch out huge */
+  /* up to 4 columns */
   --gap:clamp(18px,2vw,28px);
 
   display:grid;
@@ -512,8 +500,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   gap:var(--gap);
 }
 
-/* the <li> is what Shop.js slides about when the order changes, the card inside it does the reveal and hover, so the
-   two never fight over the same property */
+/* li moves, card reveals */
 .shop-item[hidden]{display:none;}
 
 .shop-card{
@@ -530,7 +517,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   backdrop-filter:var(--glass);
   -webkit-backdrop-filter:var(--glass);
 
-  /* reveal on opacity/translate/rotate (with the stagger), hover on transform (without it) */
+  /* reveal and hover on separate properties */
   transition:
     opacity .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
     translate .9s cubic-bezier(.22,1,.36,1) var(--delay,0s),
@@ -592,7 +579,7 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   color:color-mix(in srgb, var(--line) 75%, transparent);
 }
 
-/* price + buttons pinned to the bottom, so they line up across a row even when the copy above runs longer */
+/* pin price + buttons to the bottom */
 .shop-card-foot{
   margin-top:auto;
   padding-top:16px;
@@ -633,10 +620,10 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
   gap:10px;
 }
 
-/* two classes so it outranks the plain .btn sizing in Style.css */
+/* beat .btn sizing */
 .shop-card .btn{padding:11px 22px; font-size:15px;}
 
-/* nothing matches: the logo blocks do their little dance (same as the splash) next to a way back out */
+/* empty state */
 .shop-empty{
   display:flex;
   flex-direction:column;
@@ -695,9 +682,7 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
 
 .shop-empty .btn{margin-top:10px;}
 
-/* card reveal (Shop.js adds .in-view the first time each one scrolls in): the same rise as the rest of the site, cards
-   arriving together a beat apart. only while the grid has .has-reveal (Shop.js again), so without the script they're
-   all simply there. no transition into the hidden state, so hiding them at start-up can't play as a fade out */
+/* card reveal */
 .shop-grid.has-reveal .shop-card:not(.in-view){
   opacity:0;
   translate:0 60px;
@@ -705,9 +690,9 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
   transition:none;
 }
 
-/* stacked layout: the filters sit above the grid and fold shut behind the show / hide button */
+/* stacked layout */
 @media (max-width:900px){
-  /* the top padding clears the nav, so "shop all" lands with the filters bar in full view */
+  /* clear the nav */
   .shop{padding:110px 0 100px;}
   .shop-layout{display:block; padding:0 24px;}
 
@@ -729,9 +714,7 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
 
   .shop-filters.is-open .shop-filters-body{grid-template-rows:1fr;}
 
-  /* hidden (not just clipped) while shut, so nothing in there can be tabbed to. the small padding/margin pair gives
-     focus rings and hover growth room before the clip. the room underneath goes on the last group rather than here,
-     so it folds away with everything else instead of leaving a sliver when shut */
+  /* hidden while shut */
   .shop-filters-inner{
     overflow:hidden;
     margin:0 -6px;
@@ -750,7 +733,7 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
   .shop-grid{grid-template-columns:1fr;}
 }
 
-/* reduced motion: no reveals, no sliding, no dancing blocks, everything simply there */
+/* reduced motion */
 @media (prefers-reduced-motion:reduce){
   #splash.loaded ~ .lappy-hero .shop-hero-buttons,
   .shop-empty-blocks .block-orange,

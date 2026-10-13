@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
-<!-- intro already played this tab? hide the splash before anything paints so changing pages never flashes the loading bar (Script.js plays the intro otherwise) -->
+<!-- skip the splash if the intro already played -->
 <script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="CSS/Style.css">
@@ -94,7 +94,7 @@
     </button>
   </div>
 
-  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <!-- hamburger menu, drops from under the menu button (Script.js) -->
   <div class="nav-menu-panel" id="navMenuPanel">
     <span class="nav-menu-indicator" aria-hidden="true"></span>
 
@@ -164,7 +164,7 @@
     <div class="product-viewport" id="productViewport">
       <div class="product-track" id="productTrack">
 
-        <!-- same name, tagline and price as each product's card on the shop page -->
+        <!-- matches the shop cards -->
         <article class="product-card">
           <div class="product-media">
             <a href="Lappy/">
@@ -290,7 +290,7 @@
 
 </section>
 
-<!-- closing banner, same as every other page's (.lappy-buy-banner in Products.css) -->
+<!-- closing banner -->
 <section class="about-banner lappy-buy-banner">
   <img src="Assets/Temp/16x9.png" alt="Placeholder">
   <div class="lappy-buy-banner-copy">
@@ -359,7 +359,7 @@
   </div>
 
   <div class="footer-bottom">
-    <span>&copy; 2026 Squircle. All rights reserved.</span>
+    <span>2026 Squircle. Released into the public domain under <a href="https://unlicense.org/" target="_blank" rel="noopener">The Unlicense</a>.</span>
   </div>
 
 </footer>

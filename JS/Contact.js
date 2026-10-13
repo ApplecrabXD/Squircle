@@ -1,6 +1,4 @@
-// contact page (contact.html): a contact form that looks and behaves like the real thing. it checks what's been filled
-// in, pretends to send for a beat, then swaps itself for the sent screen. nothing actually goes anywhere, it's a demo.
-// Script.js still does everything shared (splash, nav, menu, canvas, the atom title), this is just the page's own bits
+// contact page form (demo, nothing gets sent)
 
 (() => {
 
@@ -27,10 +25,10 @@ const confetti=document.getElementById("contactConfetti");
 
 const sendLabel=sendBtn.textContent;
 const messageMin=10;
-const productTopics=["product","repair","order"]; // the topics where "which squircle?" is worth asking
+const productTopics=["product","repair","order"]; // topics that ask which squircle
 
 
-// topics: slides the pill onto the picked chip. `instant` jumps straight there (first paint, resizes) rather than gliding
+// slide the pill onto the picked topic
 
 function placeTopicIndicator(instant){
   const checked=topics.querySelector("input:checked");
@@ -53,7 +51,7 @@ function placeTopicIndicator(instant){
   topicIndicator.classList.add("is-on");
 }
 
-// "which squircle?" only folds open for the topics about a particular product
+// product picker for product topics
 function syncProductField(){
   const checked=topics.querySelector("input:checked");
   productField.classList.toggle("is-open",!!checked && productTopics.includes(checked.value));
@@ -65,7 +63,7 @@ topics.addEventListener("change",()=>{
 });
 
 
-// the message's character count, which goes yellow when it's nearly out of room
+// character count
 
 function updateCount(){
   const max=messageInput.maxLength>0 ? messageInput.maxLength : 500;
@@ -77,8 +75,7 @@ function updateCount(){
 messageInput.addEventListener("input",updateCount);
 
 
-// checking: each field says what's wrong in plain words. nothing shows till the first go at sending, after that the
-// messages update live as each field gets fixed
+// validation, live after the first send
 
 const checks=[
   [nameInput,value=>value.trim() ? "" : "We'll need a name to reply to."],
@@ -108,7 +105,7 @@ function clearChecks(){
   });
 }
 
-// a field that's still wrong gives a little shake, same as the buy page's unfinished steps
+// shake a bad field
 function nudge(field){
   field.classList.remove("is-nudged");
   field.offsetWidth; // restart the shake if it's already played
@@ -130,7 +127,7 @@ form.addEventListener("submit",e=>{
     return;
   }
 
-  // "sending" for a beat, so it feels like it's actually going somewhere
+  // fake send delay
   sendBtn.classList.add("is-sending");
   sendBtn.setAttribute("aria-disabled","true");
   sendBtn.textContent="Sending";
@@ -150,7 +147,7 @@ function showSent(){
   burstConfetti();
 }
 
-// back to a fresh form
+// reset the form
 againBtn.addEventListener("click",()=>{
   form.reset();
   clearChecks();
@@ -162,8 +159,7 @@ againBtn.addEventListener("click",()=>{
   nameInput.focus({preventScroll:true});
 });
 
-// brand-coloured confetti bursting out of the blocks then falling away, the buy page's "nice build!" burst. squares
-// and circles, like the logo
+// confetti
 function burstConfetti(){
   if(!hasGsap || reducedMotion || !confetti)return;
   const colours=["var(--accent)","var(--accent-2)","var(--accent-3)","var(--whiteline)"];
@@ -190,8 +186,7 @@ function burstConfetti(){
 }
 
 
-// scroll reveal: the info and the card swing in the first time they scroll into view. Contact.css only hides them while
-// the body has .has-reveal, so without this (or with reduced motion) they're simply there
+// scroll reveal
 
 if(!reducedMotion && "IntersectionObserver" in window){
   document.body.classList.add("has-reveal");
@@ -214,8 +209,7 @@ updateCount();
 syncProductField();
 placeTopicIndicator(true);
 
-// the chips change size as fonts land and the window resizes (and rewrap on smaller screens), so the pill re-measures
-// along with them
+// remeasure the pill on resize
 if("ResizeObserver" in window)new ResizeObserver(()=>placeTopicIndicator(true)).observe(topics);
 if(document.fonts && document.fonts.ready)document.fonts.ready.then(()=>placeTopicIndicator(true));
 

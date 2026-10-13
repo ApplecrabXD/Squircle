@@ -11,8 +11,7 @@
 <link rel="stylesheet" href="../CSS/Buy.css">
 </head>
 
-<!-- one buy page for every product: ?product=lappy (or gammy, ally, flippy, watchy, nuker) picks which one.
-     the steps themselves are built by Buy.js from its catalogue, so prices + options all live in one place -->
+<!-- one buy page, ?product= picks which -->
 
 <body class="buy-page">
 
@@ -63,7 +62,7 @@
     </button>
   </div>
 
-  <!-- the hamburger menu, every page on the site. drops out from under the menu button (Script.js) -->
+  <!-- hamburger menu -->
   <div class="nav-menu-panel" id="navMenuPanel">
     <span class="nav-menu-indicator" aria-hidden="true"></span>
 
@@ -113,7 +112,7 @@
 <section class="buy-config" id="buyConfig">
   <div class="buy-layout">
 
-    <!-- the stage: sticks beside the steps and shows the build as it comes together -->
+    <!-- sticky stage -->
     <aside class="buy-stage" aria-label="Your build">
       <div class="buy-stage-frame" id="buyStageFrame">
 
@@ -142,7 +141,7 @@
       </div>
     </aside>
 
-    <!-- Buy.js renders one .buy-step per choice in here, ahead of the review -->
+    <!-- steps rendered by Buy.js -->
     <form class="buy-steps" id="buyForm" aria-label="Configure your build" novalidate>
 
       <section class="buy-step buy-step--review" id="buyReview">
@@ -254,12 +253,12 @@
   </div>
 
   <div class="footer-bottom">
-    <span>&copy; 2026 Squircle. All rights reserved.</span>
+    <span>2026 Squircle. Released into the public domain under <a href="https://unlicense.org/" target="_blank" rel="noopener">The Unlicense</a>.</span>
   </div>
 
 </footer>
 
-<!-- "add to bag" celebration. it's a demo site, so this owns up to that instead of pretending to take an order -->
+<!-- add to bag dialog (demo) -->
 <dialog class="buy-dialog" id="buyDialog" aria-labelledby="buyDialogTitle">
   <div class="buy-confetti" id="buyConfetti" aria-hidden="true"></div>
   <div class="buy-dialog-card">

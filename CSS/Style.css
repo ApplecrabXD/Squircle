@@ -9,7 +9,7 @@
   --background:#ededed;
   --zone-dark:#090e11;
 
-  /* what the canvas + body actually paint; overridden per scroll zone below */
+  /* canvas + body fill, set per zone below */
   --zone-bg:var(--background);
 }
 
@@ -20,8 +20,7 @@
   }
 }
 
-/* scroll-driven background zones: hero+product = orange, about = purple, footer = black.
-/* html[data-zone] is set by Script.js as the user scrolls mode colors above, these are fixed brand colors */
+/* scroll zones, html[data-zone] set by Script.js */
 html[data-zone="orange"]{--zone-bg:var(--accent);}
 html[data-zone="purple"]{--zone-bg:var(--accent-2);}
 html[data-zone="black"]{--zone-bg:var(--zone-dark);}
@@ -74,7 +73,7 @@ html,body{
   z-index:0;
 }
 
-/* film grain, sits directly above the canvas but still below all page content */
+/* film grain, above the canvas, below content */
 .grain{
   position:fixed;
   inset:0;
@@ -104,8 +103,7 @@ html,body{
   100%{background-position:0 0;}
 }
 
-/* the intro already played this tab, so the inline script in every page's <head> sets html.intro-seen before anything
-   paints and the splash (loading bar and all) never shows up when moving between pages */
+/* skip the splash once the intro has played this tab */
 html.intro-seen #splash{display:none;}
 
 #splash{
@@ -117,7 +115,7 @@ html.intro-seen #splash{display:none;}
   align-items:center;
   justify-content:center;
 
-  /* always the dark zone colour, the intro needs it and it hands straight off into the black hero */
+  /* always the dark zone colour */
   background:var(--zone-dark);
   overflow:hidden;
 
@@ -182,8 +180,7 @@ html.intro-seen #splash{display:none;}
   100%{transform:rotate(0deg);}
 }
 
-/* the circles' part of the dance: same holds as the squares' turns so they all move together. uses the separate
-   scale property, not transform, so it never fights the rotate the blocks sit at */
+/* circles' dance, uses scale so it won't fight rotate */
 @keyframes blockPulse{
   0%,20%{scale:1;}
   50%,70%{scale:1.12;}
@@ -223,8 +220,7 @@ html.intro-seen #splash{display:none;}
   width:100%;
 }
 
-/* osu!lazer style intro that plays once loading is done. Script.js builds these and drives them with a gsap timeline,
-   while it runs the logo's own css transition is off so it doesn't fight gsap (it comes back for the flight to the nav) */
+/* osu!lazer style intro, driven by gsap in Script.js */
 #splash.intro .building-blocks{transition:none;}
 
 .splash-welcome{
@@ -241,7 +237,7 @@ html.intro-seen #splash{display:none;}
   visibility:hidden;
 }
 
-/* thin and spaced out like osu!'s "welcome to osu!", the inline-block is so gsap can shake it during the glitch */
+/* thin + spaced like osu!'s welcome */
 .splash-welcome-text{
   display:inline-block;
   white-space:nowrap;
@@ -253,7 +249,7 @@ html.intro-seen #splash{display:none;}
   color:var(--whiteline);
 }
 
-/* the last word lands in the brand font, same as the hero's Squircle */
+/* last word in the brand font */
 .splash-welcome-text span{
   font-family:"SuperMalibu","obliqua",sans-serif;
   font-weight:400;
@@ -275,7 +271,7 @@ html.intro-seen #splash{display:none;}
   visibility:hidden;
 }
 
-/* outline round the logo that draws itself in (pathLength 100), then gets sent out as the ripple */
+/* logo outline, draws in then ripples */
 .splash-ring{
   position:absolute;
   inset:0;
@@ -529,7 +525,7 @@ html.intro-seen #splash{display:none;}
   cursor:pointer;
 }
 
-/* the three bars, which fold into an x while the menu's open (Script.js toggles .nav-menu-open on the navbar) */
+/* hamburger bars, fold into an x when open */
 .nav-menu-bars{
   position:relative;
   display:block;
@@ -556,8 +552,7 @@ html.intro-seen #splash{display:none;}
 .navbar.nav-menu-open .nav-menu-bars span:nth-child(2){opacity:0;}
 .navbar.nav-menu-open .nav-menu-bars span:nth-child(3){top:6px; rotate:-45deg;}
 
-/* product-page buy pill: tucked behind the middle orb (z-index -1 inside the navbar's own stacking context)
-   and drops out from under the glass once the hero is scrolled past. Script.js toggles .nav-buy-shown */
+/* product page buy pill, drops out from under the nav */
 .nav-buy{
   position:absolute;
   z-index:-1;
@@ -580,7 +575,7 @@ html.intro-seen #splash{display:none;}
   opacity:0;
   transform:translateY(-58px) scale(.9);
 
-  /* hiding: quick tuck back up. visibility flips only after the tuck finishes so it doesn't vanish mid-animation */
+  /* hiding: quick tuck */
   transition:
     transform .45s cubic-bezier(.22,1,.36,1),
     opacity .3s ease,
@@ -591,7 +586,7 @@ html.intro-seen #splash{display:none;}
     box-shadow .35s ease;
 }
 
-/* showing: springy drop that overshoots a touch then settles */
+/* showing: springy drop */
 .navbar.nav-buy-shown .nav-buy{
   visibility:visible;
   opacity:1;
@@ -607,7 +602,7 @@ html.intro-seen #splash{display:none;}
     box-shadow .35s ease;
 }
 
-/* the individual scale property so the hover grow doesn't fight the show/hide transform */
+/* scale so hover won't fight the transform */
 .nav-buy:hover{scale:1.05;}
 
 .nav-buy-name{
@@ -623,9 +618,7 @@ html.intro-seen #splash{display:none;}
   opacity:.7;
 }
 
-/* two classes so it outranks the plain .btn sizing further down the file (one class lost to it and the button
-   rendered full size, spilling out of the pill). height:100% fills the pill's inner height exactly, and with
-   the same 5px inset on every side its rounded end sits concentric inside the pill's, so nothing gets clipped */
+/* two classes to beat .btn sizing */
 .nav-buy .nav-buy-btn{
   height:100%;
   padding:0 14px;
@@ -639,14 +632,13 @@ html.intro-seen #splash{display:none;}
   .nav-buy{transform:none;}
 }
 
-/* hamburger menu: every page on the site in a glass panel that drops out from under the menu button, with the same
-   springy drop as the buy pill above. Script.js toggles .nav-menu-open on the navbar */
+/* hamburger menu panel */
 .nav-menu-panel{
   position:absolute;
   top:calc(100% + 12px);
   right:0;
 
-  /* one tall column: the main pages, then the products under them */
+  /* main pages, then products */
   display:flex;
   flex-direction:column;
   gap:14px;
@@ -654,28 +646,26 @@ html.intro-seen #splash{display:none;}
   padding:16px;
   border-radius:28px;
 
-  /* scrolls inside itself if the screen's too short to fit it all */
+  /* scrolls if the screen is short */
   max-height:calc(100vh - 122px);
   max-height:calc(100dvh - 122px);
   overflow-y:auto;
   overscroll-behavior:contain;
   scrollbar-width:none;
 
-  /* frosted glass, so the page shows through blurred. it's whole lists of text over anything (photos, the marquees, the
-     line art), so it gets a smoked tint of the zone colour, and what shows through is dimmed too so white text still
-     reads even with a white photo right behind it */
+  /* smoked frosted glass so text stays readable */
   background:color-mix(in srgb, color-mix(in srgb, var(--zone-bg) 85%, #000) 45%, transparent);
   border:1px solid color-mix(in srgb, var(--line) 16%, transparent);
   backdrop-filter:blur(40px) saturate(150%) brightness(.6);
   -webkit-backdrop-filter:blur(40px) saturate(150%) brightness(.6);
   box-shadow:0 24px 60px rgba(0,0,0,.3);
 
-  /* its own stack, so the hover pill can sit behind the links at z-index -1 */
+  /* own stack for the hover pill */
   isolation:isolate;
   pointer-events:auto;
   transform-origin:top right;
 
-  /* hiding: quick tuck back up, visibility only flips once that's done (same as the buy pill) */
+  /* hiding: quick tuck */
   visibility:hidden;
   opacity:0;
   transform:translateY(-14px) scale(.94);
@@ -687,7 +677,7 @@ html.intro-seen #splash{display:none;}
     border-color .35s ease;
 }
 
-/* showing: springy drop that overshoots a touch then settles */
+/* showing: springy drop */
 .navbar.nav-menu-open .nav-menu-panel{
   visibility:visible;
   opacity:1;
@@ -708,7 +698,7 @@ html.intro-seen #splash{display:none;}
   min-width:0;
 }
 
-/* a hairline between the main pages and the products, same as the shop's filter groups */
+/* divider */
 .nav-menu-group + .nav-menu-group{
   padding-top:12px;
   border-top:1px solid color-mix(in srgb, var(--line) 14%, transparent);
@@ -742,10 +732,10 @@ html.intro-seen #splash{display:none;}
   white-space:nowrap;
 }
 
-/* the main pages read bigger than the products beside them */
+/* main pages read bigger */
 .nav-menu-group--site .nav-menu-link{padding:10px 16px; font-size:1.45rem;}
 
-/* what each product actually is, since the names don't say */
+/* product descriptions */
 .nav-menu-link small{
   font-family:"obliqua",sans-serif;
   font-size:.7rem;
@@ -756,8 +746,7 @@ html.intro-seen #splash{display:none;}
 
 .nav-menu-link:focus-visible{outline:2px solid var(--line); outline-offset:-2px;}
 
-/* the hover pill, the same trick as .nav-indicator, just sliding up and down the list instead of across. it rests on
-   the page you're on when nothing's hovered (Script.js) */
+/* hover pill, slides vertically */
 .nav-menu-indicator{
   position:absolute;
   z-index:-1;
@@ -781,7 +770,7 @@ html.intro-seen #splash{display:none;}
 
 .nav-menu-indicator.is-on{opacity:1;}
 
-/* the rows drop in one after another, top to bottom, as it opens (Script.js numbers them as --i) */
+/* rows drop in one by one */
 .nav-menu-heading,
 .nav-menu-link{
   opacity:0;
@@ -798,7 +787,7 @@ html.intro-seen #splash{display:none;}
     translate .5s cubic-bezier(.22,1,.36,1) calc(.06s + var(--i,0) * 28ms);
 }
 
-/* the buy pill tucks back under the nav while the menu's open, so the two never pile up on each other */
+/* hide the buy pill while the menu's open */
 .navbar.nav-menu-open .nav-buy{
   visibility:hidden;
   opacity:0;
@@ -859,7 +848,7 @@ html.intro-seen #splash{display:none;}
   }
 }
 
-/* scroll zones orange/purple/black need to workout a light them */
+/* scroll zones need a light theme */
 html[data-zone] .nav-logo,
 html[data-zone] .nav-links,
 html[data-zone] .nav-menu,
@@ -911,7 +900,7 @@ html[data-zone] .nav-indicator{
 .hero-copy,
 .hero-behind,
 .btn{font-family:"SuperMalibu","obliqua",sans-serif;}
-/* same size + two lines as every other page's hero title (.lappy-hero-title in Products.css) */
+/* same as every hero title */
 .hero-title{
   font-weight:400;
   font-size:clamp(2.4rem,5.5vw,6.2rem);
@@ -948,8 +937,7 @@ html[data-zone] .nav-indicator{
 
 .hero-copy .hero-buttons{justify-content:center;}
 
-/* hero entrance, the same rise + pop the other pages' heroes do (Products.css), waiting on the same #splash.loaded hook.
-   it moves the title and buttons rather than .hero-copy itself since gsap fades that one out on scroll */
+/* hero entrance */
 #splash:not(.loaded) ~ .hero-wrap .hero-title,
 #splash:not(.loaded) ~ .hero-wrap .hero-buttons,
 #splash:not(.loaded) ~ .hero-wrap .hero-laptop img{opacity:0;}
@@ -959,14 +947,13 @@ html[data-zone] .nav-indicator{
 #splash.loaded ~ .hero-wrap .hero-buttons{animation:lappy-hero-rise 1s cubic-bezier(.22,1,.36,1) .4s both;}
 #splash.loaded ~ .hero-wrap .hero-laptop img{animation:hero-laptop-slide 1.2s cubic-bezier(.22,1,.36,1) .35s both;}
 
-/* the laptop slides in like every other page's hero shot (lappy-hero-slide in Products.css), but on the separate
-   translate + rotate properties, since gsap already owns .hero-laptop's transform and Script.js's bounce owns the img's */
+/* laptop slide-in, on translate + rotate */
 @keyframes hero-laptop-slide{
   from{opacity:0; translate:140px 0; rotate:4deg;}
   to{opacity:1; translate:0 0; rotate:0deg;}
 }
 
-/* shared with every page's hero, so they live here with the rest of the shared bits rather than in Products.css */
+/* shared hero keyframes */
 @keyframes lappy-hero-rise{
   from{opacity:0; transform:translateY(70px) rotate(-3deg);}
   to{opacity:1; transform:none;}
@@ -1045,7 +1032,7 @@ html[data-zone] .nav-indicator{
   -webkit-backdrop-filter:blur(25px) saturate(160%);
 }
 
-/* orange zone only change the colours as ornage is the noraml acsent colour */
+/* orange zone colour swaps */
 html[data-zone="orange"] .btn-fill{
   background:var(--whiteline);
   border-color:var(--whiteline);
@@ -1117,12 +1104,12 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   padding-right:2.5rem;
 }
 
-/* important palette color primary bar, scrolling right to left */
+/* primary bar, right to left */
 .marquee-a{background:var(--accent);}
 .marquee-a .marquee-set{color:var(--background);}
 .marquee-a .marquee-track{animation:marquee-rtl 22s linear infinite;}
 
-/* secondary + tertiary palette colors lighter-weight bar, scrolling left to right */
+/* secondary bar, left to right */
 .marquee-b{background:var(--accent-2);}
 .marquee-b .marquee-set{color:var(--accent-3);}
 .marquee-b .marquee-track{animation:marquee-ltr 26s linear infinite;}
@@ -1157,7 +1144,7 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   width:100%;
   overflow:hidden;
 
-  /* fades cards in/out at the edges instead of hard clip */
+  /* fade cards at the edges */
   -webkit-mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);
   mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);
 }
@@ -1186,12 +1173,11 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   font-family:"SuperMalibu","obliqua",sans-serif;
   color:var(--line);
 
-  /* 260px wide, or narrower on short screens so the image, info card and button all fit in the 82vh track with room
-     left over for the hover lift */
+  /* 260px, narrower on short screens */
   --media-w:min(260px, (82vh - 265px) * .5625);
 }
 
-/* card order image / info / buy -> buy / info / image */
+/* image / info / buy -> buy / info / image */
 .product-card--alt{flex-direction:column-reverse;}
 .product-card{transition:transform .4s cubic-bezier(.22,1,.36,1);}
 .product-card:hover{transform:translateY(-12px);}
@@ -1227,10 +1213,7 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
 .product-card:hover .product-media img{transform:scale(1.1);}
 
-/* name, tagline + price sit on their own card like the shop's product cards, rather than straight on the canvas where
-   the line art runs through the letters. it's the other pages' smoked glass, just as a solid tint of the zone colour:
-   the edge fade on .product-viewport is a mask, and backdrop-filter can't see past a masked parent, so real glass here
-   lets the line art straight through */
+/* solid tint, not glass (glass can't see past a mask) */
 .product-info{
   display:flex;
   flex-direction:column;
@@ -1257,7 +1240,7 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   color:color-mix(in srgb, var(--line) 75%, transparent);
 }
 
-/* yellow like the shop's prices, white on the orange zone where yellow's too low-contrast to read */
+/* yellow, white on orange */
 .product-price{
   margin-top:4px;
   font-size:1.3rem;
@@ -1305,7 +1288,7 @@ html[data-zone="orange"] .product-price{color:var(--whiteline);}
 
   padding:140px 48px;
 
-  /* glass for the copy cards, the same recipe as the shop, buy and about pages, flipped per scroll zone below */
+  /* glass copy cards */
   --card-bg:rgba(0,0,0,.035);
   --card-border:rgba(0,0,0,.08);
   --glass:blur(25px) saturate(160%);
@@ -1313,8 +1296,7 @@ html[data-zone="orange"] .product-price{color:var(--whiteline);}
 
 html[data-zone] .about-wrap{--card-bg:rgba(255,255,255,.05); --card-border:rgba(255,255,255,.14);}
 
-/* smoked rather than white glass on orange and purple: a white tint there goes hot red-orange (or hot magenta) and
-   washes the copy out, and so does the saturate() boost */
+/* smoked glass on orange + purple */
 html[data-zone="orange"] .about-wrap,
 html[data-zone="purple"] .about-wrap{
   --card-bg:rgba(0,0,0,.1);
@@ -1328,7 +1310,7 @@ html[data-zone="purple"] .about-wrap{
   overflow:hidden;
   background:color-mix(in srgb, var(--line) 6%, transparent);
 
-  /* reveal on opacity + translate (with the stagger below), hover on transform (without it), so the two never fight */
+  /* reveal and hover on separate properties */
   opacity:0;
   translate:0 48px;
   transition:
@@ -1358,8 +1340,7 @@ html[data-zone="purple"] .about-wrap{
 
 .about-media:hover img{transform:scale(1.1);}
 
-/* the copy sits on its own frosted card like the other pages' text, so the line art blurs away behind it. it rises in
-   with the images either side of it (Script.js adds .in-view) */
+/* frosted copy card */
 .about-copy{
   display:flex;
   flex-direction:column;
@@ -1401,8 +1382,7 @@ html[data-zone="purple"] .about-wrap{
 
 .about-heading{position:relative;display:inline-block;}
 
-/* the scribble's tilted loop dips below About Us, so that heading gets a little extra room before the copy under it.
-   it also stays on one line, since the loop is drawn round one line of text */
+/* room for the scribble loop, one line */
 .about-heading:has(.about-scribble){margin-bottom:30px;}
 .about-heading:has(.about-scribble) .about-title{white-space:nowrap;}
 
@@ -1414,9 +1394,7 @@ html[data-zone="purple"] .about-wrap{
   color:var(--line);
 }
 
-/* the "Squircle" scribble over About Us. the first time it scrolls into view (Script.js adds .in-view) the letters pop in
-   one after another and the marker loop gets drawn round them. hovering it undoes the lot, last letter first with the
-   loop winding back, so "About Us" can be read underneath, and moving off scribbles it back on again */
+/* "Squircle" scribble, draws in, hover undoes it */
 .about-scribble{
   position:absolute;
   left:50%;
@@ -1440,17 +1418,16 @@ html[data-zone="purple"] .about-wrap{
   color:var(--accent);
   white-space:nowrap;
 
-  /* hovering the word counts as hovering the heading too, not just the About Us under it. it's the word's own box
-     and that never moves, so the hover can't flicker on and off while the letters shrink away */
+  /* hovering the word counts as the heading */
   pointer-events:auto;
 }
 
-/* Script.js wraps each letter in one of these, with its place in the word as --i (S is 0) and the letter count as --n */
+/* one per letter, --i index, --n count */
 .about-scribble-letter{
   display:inline-block;
   transform-origin:50% 70%;
 
-  /* hidden: before it's been seen, and while it's hovered */
+  /* hidden */
   opacity:0;
   transform:translateY(.35em) scale(.3) rotate(var(--tilt,-24deg));
 
@@ -1460,14 +1437,14 @@ html[data-zone="purple"] .about-wrap{
     opacity .2s ease calc((var(--n,1) - 1 - var(--i,0)) * 16ms);
 }
 
-/* every other letter leans the other way so they don't all pop in the same */
+/* alternate letter tilt */
 .about-scribble-letter:nth-child(even){--tilt:20deg;}
 
 .about-heading.in-view:not(:hover) .about-scribble-letter{
   opacity:1;
   transform:none;
 
-  /* the pop in, springy and first letter first */
+  /* pop in */
   transition:
     transform .6s cubic-bezier(.34,1.56,.64,1) calc(var(--i,0) * 55ms),
     opacity .25s ease calc(var(--i,0) * 55ms);
@@ -1486,16 +1463,15 @@ html[data-zone="purple"] .about-wrap{
   stroke:var(--accent);
   stroke-width:3;
   stroke-linecap:round;
-  /* the gap's a hair longer than the loop (pathLength 100) and hidden sits in the middle of it. a plain 100 / 100 left
-     a zero length dash right on the loop's end, which the round cap still drew as a dot */
+  /* dash slightly longer than the loop to avoid a dot */
   stroke-dasharray:100 101;
   stroke-dashoffset:100.5;
 
-  /* the undo, winds back the way it was drawn */
+  /* undo */
   transition:stroke-dashoffset .35s cubic-bezier(.55,0,.45,1);
 }
 
-/* starts from the S end once a few letters are in, and closes as the last one lands */
+/* draw the loop */
 .about-heading.in-view:not(:hover) .about-scribble-circle path{
   stroke-dashoffset:0;
   transition:stroke-dashoffset .75s cubic-bezier(.65,0,.35,1) .3s;
@@ -1510,8 +1486,7 @@ html[data-zone="purple"] .about-wrap{
   opacity:.7;
 }
 
-/* a stat under the copy, same as the product pages' feature cards. yellow reads fine on the purple zone (it's the purple
-   marquee's own pairing) and goes white on orange like everywhere else */
+/* stat, yellow, white on orange */
 .about-stat{
   display:flex;
   flex-direction:column;
@@ -1536,8 +1511,7 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   color:color-mix(in srgb, var(--line) 65%, transparent);
 }
 
-/* tablets: four across squeezes the copy cards down to a sliver, so the row goes two by two instead. the html order
-   (image, copy, copy, image) keeps it the same zig-zag */
+/* tablets: two by two */
 @media (max-width:1200px){
   .about-wrap{grid-template-columns:1fr 1fr;}
 }
@@ -1632,7 +1606,7 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   user-select:none;
 }
 
-/* easter egg deltarune and undertaile opens the overlay (Script.js) */
+/* easter egg overlay */
 .deltarune-battle{
   position:fixed;
   inset:0;
@@ -1850,7 +1824,7 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
 .flappy-msg[hidden]{display:none;}
 .flappy-close{font-family:Arial,sans-serif;}
 
-/* idle wiggle reusing splash screen animation */
+/* idle wiggle */
 .footer-blocks .block-orange{animation:orangeMove 3s ease-in-out infinite;}
 .footer-blocks .block-purple{animation:purpleMove 3s ease-in-out infinite;}
 .footer-blocks .block-gray,
@@ -1938,7 +1912,7 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
 
 .footer-top:hover{transform:translateY(-4px); background:rgba(0,0,0,.065);}
 
-/* acknowledgement of country + LGBTQIA+ welcome, each with a small flag image (Assets/Flag) */
+/* acknowledgement of country + LGBTQIA+ welcome */
 .footer-acknowledge{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -1981,6 +1955,7 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   color:var(--line);
   opacity:.45;
 }
+.footer-bottom a{color:inherit; text-underline-offset:2px;}
 
 @media (prefers-color-scheme:dark){
   .site-footer{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
@@ -1995,7 +1970,7 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   }
 }
 
-/* scroll zones footer is always black and .btn-outline appears in hero and more info both need light tinted glass */
+/* footer is always black, light glass buttons */
 html[data-zone] .site-footer{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
 html[data-zone] .footer-top{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
 html[data-zone] .footer-top:hover{background:rgba(255,255,255,.12);}
@@ -2009,7 +1984,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   .nav-buy{top:calc(100% + 8px);}
   .nav-buy-name{display:none;}
 
-  /* the menu goes the full width of the nav on phones */
+  /* full width menu on phones */
   .nav-menu-panel{
     left:0;
     width:auto;
@@ -2017,15 +1992,14 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     max-height:calc(100dvh - 110px);
   }
 
-  /* scroll animation is desktop-only mobile gets stacked hero */
+  /* mobile gets a stacked hero */
   .hero-wrap{height:auto;}
 
   .hero-sticky{
     position:static;
     height:auto;
     overflow:visible;
-    /* the laptop's slide-in starts off to the right. clip (not hidden) so it can't widen the page and make it scroll
-       sideways, same as .lappy-hero */
+    /* clip so the slide-in can't scroll sideways */
     overflow-x:clip;
 
     display:flex;
@@ -2065,7 +2039,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     transform:none;
   }
 
-  /* scroll-jacked pan is desktop-only; mobile gets a simple stacked list */
+  /* mobile gets a stacked list */
   .product-wrap{height:auto;}
 
   .product-sticky{
@@ -2097,7 +2071,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     height:auto;
     padding:0;
 
-    /* no 82vh track to fit into once it's a stacked list */
+    /* no track to fit */
     --media-w:260px;
   }
 
@@ -2151,7 +2125,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
   .footer-blocks .block-gray,
   .footer-blocks .block-white{animation:none;}
 
-  /* the scribble doesn't pop or draw, it just fades in and out */
+  /* scribble just fades */
   .about-scribble-letter,
   .about-heading.in-view:not(:hover) .about-scribble-letter{transform:none; transition:opacity .3s ease;}
 

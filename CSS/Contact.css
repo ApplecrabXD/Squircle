@@ -1,11 +1,8 @@
-/* contact page (contact.html): say hello. the hero, marquee and closing banner are the product pages' lappy-* pieces
-   from Products.css, so everything here is the hero's little chat plus the contact form itself. Contact.js drives the
-   form. it doesn't actually send anything, it just looks and behaves like it does */
+/* contact page, hero chat + form */
 
-/* page-wide tones + glass (same recipe as the shop, buy and about pages) */
+/* tones + glass */
 .contact-page{
-  /* softer text tones mixed into the zone colour rather than faded with transparency, so they stay solid and the line
-     art passes behind the letters instead of showing through them */
+  /* solid softer text tones */
   --contact-soft-75:color-mix(in srgb, var(--line) 75%, var(--zone-bg));
   --contact-soft-60:color-mix(in srgb, var(--line) 60%, var(--zone-bg));
 
@@ -13,11 +10,11 @@
   --card-border:rgba(0,0,0,.08);
   --glass:blur(25px) saturate(160%);
 
-  /* the picked topic: the accent pill with white text, same as the shop's sort and the buy page's options */
+  /* picked topic */
   --pick-bg:var(--accent);
   --pick-ink:#fff;
 
-  /* a lighter orange for the error messages, so they still read on the dark zone */
+  /* light orange errors */
   --contact-error:color-mix(in srgb, var(--accent) 60%, #fff);
 }
 
@@ -27,11 +24,10 @@ html[data-zone] .contact-page{--card-bg:rgba(255,255,255,.05); --card-border:rgb
 button.btn{cursor:pointer;}
 
 
-/* hero extras: the shared lappy-hero brings the title, these add the buttons and the chat in place of a product shot */
+/* hero extras: buttons + chat */
 .contact-hero-buttons{justify-content:center;}
 
-/* the buttons join the hero entrance with the same rise as the title, and the chat slides in like the product pages'
-   hero shot */
+/* extras join the hero entrance */
 #splash:not(.loaded) ~ .lappy-hero .contact-hero-buttons,
 #splash:not(.loaded) ~ .lappy-hero .contact-hero-visual{opacity:0;}
 
@@ -43,7 +39,7 @@ button.btn{cursor:pointer;}
   width:min(42vw,480px);
 }
 
-/* the chat floats the same way the product pages' hero shots do */
+/* chat float */
 .contact-chat{
   display:flex;
   flex-direction:column;
@@ -61,7 +57,7 @@ button.btn{cursor:pointer;}
   transform-origin:bottom left;
 }
 
-/* squircle's replies sit on the right with the logo beside them */
+/* squircle's replies */
 .contact-msg--us{
   align-self:flex-end;
   flex-direction:row-reverse;
@@ -90,7 +86,7 @@ button.btn{cursor:pointer;}
   color:#fff;
 }
 
-/* the logo in a little glass orb, like the nav's */
+/* logo orb */
 .contact-avatar{
   flex:0 0 auto;
   width:36px;
@@ -104,7 +100,7 @@ button.btn{cursor:pointer;}
   user-select:none;
 }
 
-/* the last bubble is you, typing. it's your turn, the form's right below */
+/* your typing bubble */
 .contact-bubble--typing{
   display:flex;
   gap:6px;
@@ -128,8 +124,7 @@ button.btn{cursor:pointer;}
   30%{translate:0 -6px; opacity:1;}
 }
 
-/* the messages pop in one after another once the hero has landed, like they're coming in live. scale + translate
-   rather than transform, so they never fight the chat's float */
+/* messages pop in */
 #splash:not(.loaded) ~ .lappy-hero .contact-msg{opacity:0;}
 
 #splash.loaded ~ .lappy-hero .contact-msg{animation:contact-msg-in .55s cubic-bezier(.34,1.56,.64,1) both;}
@@ -145,13 +140,13 @@ button.btn{cursor:pointer;}
 }
 
 
-/* the contact section: who to talk to on the left, the form on the right */
+/* contact section */
 .contact{
   position:relative;
   z-index:1;
   padding:120px 8% 140px;
 
-  /* the sent screen's confetti flies out past the card. clip (not hidden) so it can't make the page scroll sideways */
+  /* clip the confetti */
   overflow-x:clip;
 }
 
@@ -165,7 +160,7 @@ button.btn{cursor:pointer;}
   margin:0 auto;
 }
 
-/* sticks beside the form while it scrolls past */
+/* sticky info */
 .contact-info{
   position:sticky;
   top:120px;
@@ -199,7 +194,7 @@ button.btn{cursor:pointer;}
   padding:0;
 }
 
-/* a hairline between each one, same as the shop's filter groups */
+/* divider */
 .contact-detail{
   display:flex;
   flex-direction:column;
@@ -253,7 +248,7 @@ button.btn{cursor:pointer;}
 .contact-social:focus-visible{outline:2px solid var(--line); outline-offset:3px;}
 
 
-/* the card: the form and the sent screen share its one grid cell, so swapping between them never changes its size */
+/* form + sent screen share a cell */
 .contact-card{
   position:relative;
   display:grid;
@@ -298,7 +293,7 @@ button.btn{cursor:pointer;}
   border:0;
 }
 
-/* floating the legend takes it out of the fieldset's border-gap rendering so it lays out like any other label */
+/* float the legend */
 legend.contact-label{float:left; width:100%; padding:0; margin-bottom:10px;}
 legend.contact-label + *{clear:both;}
 
@@ -308,7 +303,7 @@ legend.contact-label + *{clear:both;}
   text-transform:none;
 }
 
-/* the inputs are pills like every button and chip on the site, the message box a rounded card */
+/* pill inputs */
 .contact-input{
   width:100%;
   margin:0;
@@ -331,7 +326,7 @@ legend.contact-label + *{clear:both;}
 
 .contact-input:hover{border-color:color-mix(in srgb, var(--line) 32%, transparent);}
 
-/* focus: an accent ring, the same glow the shop's price slider thumb gets */
+/* focus ring */
 .contact-input:focus{
   border-color:var(--accent);
   box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 32%, transparent);
@@ -339,8 +334,7 @@ legend.contact-label + *{clear:both;}
 
 .contact-input[aria-invalid="true"]{border-color:var(--contact-error);}
 
-/* browsers paint autofilled fields their own pale colour, which looks wrong on the dark glass. the never-ending
-   transition keeps that colour from ever arriving */
+/* block autofill colours */
 .contact-input:-webkit-autofill,
 .contact-input:-webkit-autofill:hover,
 .contact-input:-webkit-autofill:focus{
@@ -356,7 +350,7 @@ legend.contact-label + *{clear:both;}
   line-height:1.5;
 }
 
-/* the dropdown: the browser draws its own list when it opens, color-scheme asks for its dark one to match */
+/* dark dropdown */
 .contact-select{position:relative;}
 
 .contact-select .contact-input{
@@ -402,7 +396,7 @@ legend.contact-label + *{clear:both;}
   transition:color .25s ease;
 }
 
-/* nearly out of room: it goes the price yellow */
+/* nearly full */
 .contact-count.is-near{color:var(--accent-3);}
 
 .contact-error{
@@ -414,7 +408,7 @@ legend.contact-label + *{clear:both;}
 
 .contact-error:empty{display:none;}
 
-/* a field that's still wrong on send gets a little shake, same as the buy page's unfinished steps */
+/* shake */
 .contact-field.is-nudged .contact-input{animation:contact-nudge .5s ease;}
 
 @keyframes contact-nudge{
@@ -426,8 +420,7 @@ legend.contact-label + *{clear:both;}
 }
 
 
-/* topics: one pick only, so it gets the sliding pill (the same trick as .nav-indicator and the buy page's options),
-   measured both ways since the chips wrap onto more rows on smaller screens */
+/* topic chips + sliding pill */
 .contact-chips{
   position:relative;
   display:flex;
@@ -483,7 +476,7 @@ legend.contact-label + *{clear:both;}
 .contact-chip:hover{transform:scale(1.04);}
 .contact-chip:active{transform:scale(.97);}
 
-/* the real radio stays in the label for keyboard + screen readers, it just isn't drawn */
+/* hidden radio, still accessible */
 .contact-chip input{
   position:absolute;
   width:1px;
@@ -494,8 +487,7 @@ legend.contact-label + *{clear:both;}
 
 .contact-chip:has(input:focus-visible){outline:2px solid var(--line); outline-offset:3px;}
 
-/* picked: the chip goes clear so the pill behind it shows through (Contact.js sets .is-picked). it stops growing on
-   hover too, or it'd grow out of the pill */
+/* picked: clear so the pill shows */
 .contact-chips .contact-chip.is-picked{
   background:transparent;
   border-color:transparent;
@@ -505,9 +497,7 @@ legend.contact-label + *{clear:both;}
 .contact-chips .contact-chip.is-picked:hover{transform:none;}
 
 
-/* "which squircle?" only shows for the topics about a particular product (Contact.js sets .is-open), folding open with
-   the same 0fr -> 1fr row trick as the spec descriptions on the product pages. the negative margin cancels the form's
-   gap while it's shut, so it doesn't leave a double gap */
+/* which squircle fold out */
 .contact-reveal{
   display:grid;
   grid-template-rows:0fr;
@@ -518,8 +508,7 @@ legend.contact-label + *{clear:both;}
 
 .contact-reveal.is-open{grid-template-rows:1fr; margin-top:0;}
 
-/* hidden (not just clipped) while shut, so nothing in there can be tabbed to. the small padding/margin pair gives the
-   focus ring room before the clip, same as the shop's folding filters */
+/* hidden while shut */
 .contact-reveal-inner{
   min-height:0;
   overflow:hidden;
@@ -550,7 +539,7 @@ legend.contact-label + *{clear:both;}
   color:var(--contact-soft-60);
 }
 
-/* sending: the hover arrow turns into a little spinner for a beat (Contact.js) */
+/* sending spinner */
 .contact-send.is-sending{pointer-events:none;}
 
 .contact-send.is-sending::after{
@@ -572,7 +561,7 @@ legend.contact-label + *{clear:both;}
 @keyframes contact-spin{to{rotate:360deg;}}
 
 
-/* sent: the form fades out and this fades in over the top of it (Contact.js adds .is-sent to the card) */
+/* sent screen */
 .contact-sent{
   position:relative;
 
@@ -601,7 +590,7 @@ legend.contact-label + *{clear:both;}
   transition:opacity .4s ease .15s, visibility 0s;
 }
 
-/* the splash screen's building blocks doing their little dance, same as the buy page's "nice build!" */
+/* celebrating blocks */
 .contact-sent-blocks{
   position:relative;
   width:84px;
@@ -630,7 +619,7 @@ legend.contact-label + *{clear:both;}
   color:var(--line);
 }
 
-/* it gets focus when it appears so screen readers announce it, but it isn't something you can click */
+/* focusable for screen readers */
 .contact-sent-title:focus{outline:none;}
 
 .contact-sent-text{
@@ -670,7 +659,7 @@ legend.contact-label + *{clear:both;}
 .contact-card.is-sent .contact-sent-note{animation:lappy-hero-rise .8s cubic-bezier(.22,1,.36,1) .35s both;}
 .contact-card.is-sent .contact-sent-buttons{animation:lappy-hero-rise .8s cubic-bezier(.22,1,.36,1) .45s both;}
 
-/* confetti bursts out from the blocks (Contact.js), squares and circles like the logo */
+/* confetti */
 .contact-confetti{
   position:absolute;
   z-index:2;
@@ -689,10 +678,7 @@ legend.contact-label + *{clear:both;}
 }
 
 
-/* scroll reveal (Contact.js adds .in-view the first time each one scrolls in): the info swings in from the left and the
-   card from the right, like the about page's name section. only while the body has .has-reveal (Contact.js again), so
-   without the script they're simply there. no transition into the hidden state, so hiding them at start-up can't play
-   as a fade out */
+/* scroll reveal */
 .contact-info,
 .contact-card{
   transition:
@@ -705,7 +691,7 @@ legend.contact-label + *{clear:both;}
 .has-reveal .contact-card:not(.in-view){opacity:0; translate:100px 0; rotate:3deg; transition:none;}
 
 
-/* tablets: the info sits above the form instead of beside it */
+/* tablets: info above form */
 @media (max-width:900px){
   .contact-layout{grid-template-columns:minmax(0,1fr);}
   .contact-info{position:static;}
@@ -719,12 +705,12 @@ legend.contact-label + *{clear:both;}
   .contact{padding:90px 24px 100px;}
   .contact-row{grid-template-columns:minmax(0,1fr);}
 
-  /* every card's below the info now, so it rises in rather than swinging in from the side */
+  /* card rises in */
   .has-reveal .contact-card:not(.in-view){translate:0 60px; rotate:0deg;}
   .has-reveal .contact-info:not(.in-view){translate:0 60px; rotate:0deg;}
 }
 
-/* reduced motion: no float, no pops, no shakes, no swinging in, everything simply there */
+/* reduced motion */
 @media (prefers-reduced-motion:reduce){
   #splash.loaded ~ .lappy-hero .contact-hero-buttons,
   #splash.loaded ~ .lappy-hero .contact-hero-visual,

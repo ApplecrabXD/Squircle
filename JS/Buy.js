@@ -1,6 +1,4 @@
-// buy page configurator (Buy/index.html). one page serves every product: ?product=lappy picks which, and every other
-// pick rides along in the query string too, so a build survives a reload and can be shared as a link.
-// picking an option swaps the stage image, then the page glides on to the next step, apple store style
+// buy page configurator, picks live in the url
 
 (() => {
 
@@ -14,18 +12,14 @@ const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // catalogue
 
-// placeholder art till the real product shots exist. picking an option that has an image swaps the stage over to it,
-// so real photos later are just new paths here, or an image of their own on each option
+// placeholder art for now
 const IMG={
   laptop:"../Assets/Lappy/Logo%20in%20laptop.png",
   wide:"../Assets/Temp/16x9.png",
   tall:"../Assets/Temp/9x16.jpg"
 };
 
-// prices in whole dollars. base is the "From" price on each product page and every pick adds on top of it.
-// specs are each product page's spec list, minus customisation (that's the shared colour step at the end).
-// a spec with `byo` is one of the parts the diy copy says you fit yourself: diy builds get a bring your own option on
-// it, which knocks `byo` dollars off for the included part you're leaving out
+// prices in dollars, byo knocks the part off
 const buyProducts={
   lappy:{
     name:"Lappy 13 Pro",
@@ -252,8 +246,7 @@ const buyProducts={
   }
 };
 
-// the brand palette. tint gets multiplied over the stage image to recolour it (see .buy-stage-tint), a touch lighter
-// than the swatch since multiplying darkens. white leaves the image as it is
+// brand palette, tint is multiplied over the image
 const buyColours=[
   {value:"orange",name:"Orange",swatch:"var(--accent)",tint:"#ff4a1c"},
   {value:"purple",name:"Purple",swatch:"var(--accent-2)",tint:"#b414d8"},
@@ -262,7 +255,7 @@ const buyColours=[
   {value:"white",name:"White",swatch:"var(--whiteline)",tint:""}
 ];
 
-// step one is the product itself, everything after it gets rebuilt whenever that changes
+// step one is the product
 const productStep={
   key:"product",
   title:"Product",
@@ -278,7 +271,7 @@ const productStep={
   }))
 };
 
-// the part a diy build leaves out of the box, tacked on the end of a spec's options
+// bring your own option
 function byoOption(product,spec){
   return{value:"byo",name:"Bring Your Own",detail:"Ships without one, so you can fit your own.",price:-spec.byo,image:product.image};
 }
@@ -301,9 +294,9 @@ function stepsFor(product,build){
 
 const picks={};      // step key -> picked value, product included
 let product=null;    // the current buyProducts entry
-let steps=[];        // step definitions for the current product, in order
-const sections=[];   // the rendered .buy-step for each of those, same order
-let currentIndex=0;  // the step crossing the middle of the screen right now (steps.length = the review)
+let steps=[];        // steps for this product
+const sections=[];   // .buy-step per step
+let currentIndex=0;  // step in the middle of the screen
 
 const reviewList=document.getElementById("buyReviewList");
 const reviewNote=document.getElementById("buyReviewNote");
@@ -333,10 +326,10 @@ function optionFor(step){return step.options.find(option=>option.value===picks[s
 function stepIndexOf(key){return steps.findIndex(step=>step.key===key);}
 function colourPicked(){return buyColours.find(colour=>colour.value===picks.colour)||null;}
 
-// first step still waiting on a pick, -1 once they all have one. every step after it is locked
+// first unpicked step, -1 if done
 function firstOpen(){return steps.findIndex(step=>!optionFor(step));}
 
-// an index one past the last step means the review
+// past the last step = review
 function sectionFor(index){return index<steps.length?sections[index]:buyReview;}
 
 function totalPrice(){
@@ -392,8 +385,7 @@ function renderStep(step,index){
   return section;
 }
 
-// (re)builds every step from `from` onwards. the product step only ever gets built once, so switching product never
-// pulls the focused radio out from under a keyboard user
+// rebuild steps from `from` onwards
 function renderSteps(from){
   sections.splice(from).forEach(section=>{
     unwatch(section);
@@ -413,8 +405,7 @@ function renderSteps(from){
     `<button type="button" class="buy-dot" data-index="${i}" aria-label="Go to ${step.title}"></button>`).join("");
 }
 
-// slides a step's pill onto its checked option. `instant` jumps straight there (first paint, resizes), otherwise it
-// glides on the css transition. offsetLeft/Top ignore transforms, so mid-hover or mid-reveal the measure stays true
+// slide a step's pill onto its pick
 function placeIndicator(section,instant){
   const group=section.querySelector(".buy-options");
   const indicator=group.querySelector(".buy-options-indicator");
@@ -440,7 +431,7 @@ function placeIndicator(section,instant){
   indicator.classList.add("is-on");
 }
 
-// everything that follows from the picks: which steps are open, the dots, the review, the price, the url
+// update everything after a pick
 function refresh(){
   const open=firstOpen();
   const done=open===-1;
@@ -484,8 +475,7 @@ function renderReview(open){
     :`${left} ${left===1?"pick":"picks"} to go. Next up: ${steps[open].title}.`;
 }
 
-// new product: drop the old one's spec picks (build and colour carry over, every product has those), rebuild the steps
-// after the product step, and retitle everything that names it
+// switch product
 function switchProduct(){
   product=buyProducts[picks.product];
   Object.keys(picks).forEach(key=>{
@@ -496,8 +486,7 @@ function switchProduct(){
   nameProduct();
 }
 
-// diy builds get the bring your own options, so going to or from diy rebuilds the specs after the build step. going
-// pre-built drops any bring your own picks, since those steps need a real part again
+// diy adds byo options, pre-built drops them
 function switchBuild(wasDiy){
   if(wasDiy===(picks.build==="diy"))return;
   Object.keys(picks).forEach(key=>{
@@ -516,7 +505,7 @@ function nameProduct(){
   learnLink.setAttribute("href",product.page);
 }
 
-// the picks live in the query string, so reloading or sharing the link brings the same build back
+// sync picks to the url
 function syncUrl(){
   const query=new URLSearchParams();
   steps.forEach(step=>{
@@ -531,7 +520,7 @@ function syncUrl(){
 const shownTotal={value:0};
 let lastTotal=null;
 
-// rolls every price readout (stage, review, dialog) up or down to the new total
+// roll price readouts to the new total
 function setTotal(value){
   if(value===lastTotal)return;
   const delta=lastTotal===null?0:value-lastTotal;
@@ -552,7 +541,7 @@ function paintTotal(){
   totalEls.forEach(el=>{el.textContent=text;});
 }
 
-// the little "+ $300" that pops out beside the stage total
+// "+ $300" pop beside the total
 function popDelta(delta){
   if(reducedMotion)return;
   const bubble=document.createElement("span");
@@ -577,8 +566,7 @@ function loadImage(src){
 
 let swapToken=0;
 
-// out to the left, in from the right with a little spin, same direction of travel as the product page reveals. waits
-// for the new image to decode first so it never pops in half drawn. `force` replays it even for the same image
+// swap the stage image once it's decoded
 function swapStage(src,force){
   if(!src)return;
   if(!force && new URL(src,location.href).href===stageImg.src){bumpStage(); return;}
@@ -597,7 +585,7 @@ function swapStage(src,force){
   });
 }
 
-// same image as before: a little squash and spring instead, so the pick still visibly lands
+// same image: squash and spring instead
 function bumpStage(){
   if(!hasGsap || reducedMotion)return;
   gsap.fromTo(stageMedia,{scale:.94},{scale:1,duration:.6,ease:"back.out(3)",overwrite:"auto"});
@@ -605,13 +593,13 @@ function bumpStage(){
 
 function setStageImage(src){
   stageImg.src=src;
-  // the tint is masked to the picture's own shape, so the mask follows it onto the new one
+  // mask follows the new image
   const mask=`url("${stageImg.src}")`;
   stageTint.style.webkitMaskImage=mask;
   stageTint.style.maskImage=mask;
 }
 
-// colour: tints the product and the glow behind it
+// colour tint + glow
 function showColour(colour){
   const tint=colour?colour.tint:"";
   stageTint.style.backgroundColor=tint||"transparent";
@@ -619,7 +607,7 @@ function showColour(colour){
   stageFrame.style.setProperty("--buy-glow",colour?colour.swatch:"");
 }
 
-// hovering (or arrowing onto) a swatch previews it on the stage and names it, leaving puts the real pick back
+// preview swatches on hover
 function previewColour(value){
   const colour=buyColours.find(c=>c.value===value)||colourPicked();
   showColour(colour);
@@ -629,7 +617,7 @@ function previewColour(value){
   if(name)name.textContent=colour?colour.name:"";
 }
 
-// what a pick does to the stage: its image if it has one, plus the tint for the colour step
+// apply a pick to the stage
 function showPick(step){
   const option=optionFor(step);
   if(!option)return;
@@ -637,7 +625,7 @@ function showPick(step){
   swapStage(option.image,step.key==="product");
 }
 
-// the stage leans toward the cursor a touch. mouse/trackpad only
+// stage leans toward the cursor
 if(hasGsap && !reducedMotion && matchMedia("(hover:hover) and (pointer:fine)").matches){
   gsap.set(stageTilt,{transformPerspective:900});
   const tiltY=gsap.quickTo(stageTilt,"rotationY",{duration:.7,ease:"power3.out"});
@@ -657,8 +645,7 @@ if(hasGsap && !reducedMotion && matchMedia("(hover:hover) and (pointer:fine)").m
 let glide=null;
 let advanceTimer=0;
 
-// eased scroll for every jump on this page. tweened through gsap (not css smooth scrolling) for the apple-ish ease,
-// and so it can be dropped the moment the user scrolls for themselves
+// gsap eased scroll, cancels if the user scrolls
 function glideTo(y){
   stopGlide();
   y=Math.max(0,Math.min(document.documentElement.scrollHeight-innerHeight,y));
@@ -678,7 +665,7 @@ function stopGlide(){
   if(glide){glide.kill(); glide=null;}
 }
 
-// scrolling for themselves also cancels an advance that hasn't set off yet
+// user scroll cancels a pending advance
 function userScrolled(){
   stopGlide();
   clearTimeout(advanceTimer);
@@ -691,8 +678,7 @@ addEventListener("keydown",e=>{
   if(["ArrowUp","ArrowDown","PageUp","PageDown","Home","End"," "].includes(e.key) && !e.target.closest("input, textarea, select, button"))userScrolled();
 });
 
-// glides a step into place, landing where its css scroll-margin-top asks (just under the stage on phones).
-// `focus` takes keyboard focus along, onto the step's picked option, its first one, or the review's add to bag
+// glide to a step, optionally moving focus
 function goTo(index,focus){
   const section=sectionFor(index);
   if(!section)return;
@@ -705,8 +691,7 @@ function goTo(index,focus){
   }
 }
 
-// after a fresh pick, wait a beat (long enough to watch it land and the stage swap) then glide on to the next step
-// still waiting on a pick, or the review once there are none left
+// auto-advance to the next step after a pick
 function queueAdvance(from,focus){
   clearTimeout(advanceTimer);
   advanceTimer=setTimeout(()=>{
@@ -723,7 +708,7 @@ function goToOpen(focus){
 
 // observers
 
-// .in-view the first time a step scrolls in (plays its reveal), same -15% look-ahead as the product page reveals
+// reveal steps on first view
 const revealObserver="IntersectionObserver" in window?new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
@@ -733,14 +718,14 @@ const revealObserver="IntersectionObserver" in window?new IntersectionObserver(e
   });
 },{rootMargin:"0px 0px -15% 0px"}):null;
 
-// whichever step crosses the middle of the screen is "current" for the stage's step label and dots
+// track the current step
 const currentObserver="IntersectionObserver" in window?new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting)setCurrent(entry.target===buyReview?steps.length:sections.indexOf(entry.target));
   });
 },{rootMargin:"-45% 0px -54% 0px"}):null;
 
-// option groups change size as fonts land and the window resizes, so their pills re-measure along with them
+// remeasure pills on resize
 const groupObserver="ResizeObserver" in window?new ResizeObserver(entries=>{
   entries.forEach(entry=>{
     const section=entry.target.closest(".buy-step");
@@ -783,7 +768,7 @@ buyForm.addEventListener("keydown",e=>{
   if(e.target.type!=="radio")return;
   if(e.key===" ")lastSpace=performance.now();
 
-  // enter on a picked option means "next", the keyboard version of the auto-advance (it'd submit the form otherwise)
+  // enter = next
   if(e.key==="Enter"){
     e.preventDefault();
     const index=stepIndexOf(e.target.name);
@@ -799,8 +784,7 @@ buyForm.addEventListener("change",e=>{
   const step=steps[index];
   const fresh=!optionFor(step);
   const wasDiy=picks.build==="diy";
-  // arrow keys change radios too, but only a click/tap or space counts as "chosen", so arrowing through the options to
-  // compare them never yanks the page away
+  // arrowing doesn't auto-advance
   const chosen=performance.now()-lastPointer<1200 || performance.now()-lastSpace<600;
 
   picks[step.key]=input.value;
@@ -832,8 +816,7 @@ buyForm.addEventListener("focusout",e=>{
   if(e.target.closest(".buy-swatch"))previewColour(null);
 });
 
-// review rows jump back to their step (or to the step holding it up, if it's still locked), the lock note jumps to
-// the step it's waiting on. a keyboard click (detail 0) takes focus along with it
+// review rows jump back to their step
 buyForm.addEventListener("click",e=>{
   const change=e.target.closest(".buy-review-change");
   if(change){
@@ -860,7 +843,7 @@ buyForm.addEventListener("submit",e=>{
   const open=firstOpen();
   if(open===-1){openDialog(); return;}
 
-  // something's still missing: glide back to it and give its options a shake once it's there
+  // something's missing, go shake it
   goTo(open,true);
   const section=sections[open];
   setTimeout(()=>{
@@ -882,12 +865,12 @@ function closeDialog(){
   else dialog.removeAttribute("open");
 }
 
-// the dialog fills the screen, so a click that lands on it (not the card) was a click on the backdrop
+// backdrop click
 dialog.addEventListener("click",e=>{
   if(e.target===dialog || e.target.closest("[data-buy-close]"))closeDialog();
 });
 
-// brand-coloured confetti bursting out from behind the card, then falling away
+// confetti
 function burstConfetti(){
   if(!hasGsap || reducedMotion)return;
   const colours=["var(--accent)","var(--accent-2)","var(--accent-3)","var(--whiteline)"];
@@ -913,8 +896,7 @@ function burstConfetti(){
   }
 }
 
-// share: the url already holds the whole build. opens the system share sheet where there is one (phones, safari,
-// chromium on windows / chromeos, https only), and falls back to copying the link everywhere else
+// share sheet, or copy the link
 const canShare=!!navigator.share && window.isSecureContext;
 const shareLabel=canShare?"Share":"Copy Link";
 shareBtn.textContent=shareLabel;
@@ -926,7 +908,7 @@ shareBtn.addEventListener("click",()=>{
       text:`My ${product.name} build: ${steps.slice(1).map(step=>optionFor(step)).filter(Boolean).map(option=>option.name).join(", ")}.`,
       url:location.href
     }).catch(err=>{
-      // closing the sheet rejects too (AbortError), that's not a failure. anything else, copy instead
+      // AbortError is fine, else copy
       if(err.name!=="AbortError")copyLink();
     });
     return;
@@ -934,7 +916,7 @@ shareBtn.addEventListener("click",()=>{
   copyLink();
 });
 
-// clipboard api where allowed (https / localhost), the old execCommand trick everywhere else
+// copy to clipboard
 function copyLink(){
   const done=ok=>{
     shareBtn.textContent=ok?"Link Copied!":"Couldn't Copy";
@@ -960,7 +942,7 @@ function copyLink(){
 }
 
 
-// start-up: product from the url (lappy if it's missing or not one of ours), then any picks that are valid for it
+// start-up
 
 const query=new URLSearchParams(location.search);
 const startProduct=query.get("product");

@@ -19,6 +19,9 @@ const IMG={
   tall:"../Assets/Temp/9x16.jpg"
 };
 
+// real lappy photos, "CPU/Intel L" -> the .webp
+function lappyImg(name){return"../Assets/Lappy/"+encodeURI(name)+".webp";}
+
 // prices in dollars, byo knocks the part off
 const buyProducts={
   lappy:{
@@ -29,29 +32,32 @@ const buyProducts={
     thumb:IMG.laptop,
     base:1499,
     buildFee:150,
-    diy:"Order the barebones chassis, then fit your own RAM, storage and ports at your own pace.",
+    diy:"Order the barebones chassis, then fit your own RAM, storage, battery and ports at your own pace.",
     prebuilt:"Every part picked, fitted and tested, so it all just works and none of the stress lands on you.",
-    colour:"Colours the lid and the keyboard deck.",
+    alt:"Lappy 13 Pro with the Squircle logo on screen",
+    banner:lappyImg("Views/Screen L"),
+    diyImage:lappyImg("Views/Keyboard L"),
+    prebuiltImage:lappyImg("Views/Top L"),
     specs:[
-      {key:"cpu",title:"CPU",question:"How much power do you need?",help:"Everyday speed all the way up to desktop-class performance.",options:[
-        {value:"ultra-5",name:"Intel Core Ultra 5",detail:"Everyday speed with all-day battery.",price:0,image:IMG.laptop},
-        {value:"ultra-7",name:"Intel Core Ultra 7",detail:"Extra headroom for creative apps.",price:300,image:IMG.wide},
-        {value:"ultra-9",name:"Intel Core Ultra 9",detail:"Desktop-class performance on the go.",price:600,image:IMG.tall}
+      {key:"cpu",title:"CPU",question:"Intel or AMD?",help:"Both stay fast, cool and quiet. Pick the one that suits how you work.",options:[
+        {value:"intel",name:"Intel Core Ultra 7",detail:"All-day battery and quick everyday speed.",price:0,image:lappyImg("CPU/Intel L")},
+        {value:"amd",name:"AMD Ryzen AI 9",detail:"Extra graphics muscle for games and creative apps.",price:200,image:lappyImg("CPU/AMD L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"You can upgrade it yourself later, so there's no wrong answer.",byo:40,options:[
-        {value:"8gb",name:"8GB",detail:"Browsing, docs and streaming.",price:0,image:IMG.laptop},
-        {value:"16gb",name:"16GB",detail:"Comfortable for most people.",price:150,image:IMG.wide},
-        {value:"32gb",name:"32GB",detail:"Big projects and a silly number of tabs.",price:350,image:IMG.tall},
-        {value:"64gb",name:"64GB",detail:"Virtual machines and heavy editing.",price:700,image:IMG.wide}
+      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"You can upgrade it yourself later, so there's no wrong answer.",byo:40,byoImage:lappyImg("RAM/RAM L"),options:[
+        {value:"8gb",name:"8GB",detail:"Browsing, docs and streaming.",price:0,image:lappyImg("RAM/8GB L")},
+        {value:"16gb",name:"16GB",detail:"Comfortable for most people.",price:150,image:lappyImg("RAM/16GB L")},
+        {value:"32gb",name:"32GB",detail:"Big projects and a silly number of tabs.",price:350,image:lappyImg("RAM/32GB L")},
+        {value:"64gb",name:"64GB",detail:"Virtual machines and heavy editing.",price:700,image:lappyImg("RAM/64GB L")}
       ]},
-      {key:"storage",title:"Storage",question:"How much room do you need?",help:"Swap the drive out yourself whenever you need more.",byo:50,options:[
-        {value:"512gb",name:"512GB",detail:"Apps, docs and a decent photo library.",price:0,image:IMG.laptop},
-        {value:"1tb",name:"1TB",detail:"Room for games and big files.",price:150,image:IMG.wide},
-        {value:"2tb",name:"2TB",detail:"Never think about storage again.",price:400,image:IMG.tall}
+      {key:"storage",title:"Storage",question:"How much room do you need?",help:"Swap the drive out yourself whenever you need more.",byo:50,byoImage:lappyImg("Views/Keyboard L"),options:[
+        {value:"512gb",name:"512GB",detail:"Apps, docs and a decent photo library.",price:0,image:lappyImg("Storage/512GB L")},
+        {value:"1tb",name:"1TB",detail:"Room for games and big files.",price:150,image:lappyImg("Storage/1TB L")},
+        {value:"2tb",name:"2TB",detail:"Never think about storage again.",price:400,image:lappyImg("Storage/2TB L")},
+        {value:"4tb",name:"4TB",detail:"Every game, photo and project, all at once.",price:800,image:lappyImg("Storage/4TB L")}
       ]},
-      {key:"cooling",title:"Cooling",question:"How hard will you push it?",help:"Pick the cooling that matches how you work.",options:[
-        {value:"passive",name:"Passive",detail:"Silent and fanless, for lighter work.",price:0,image:IMG.laptop},
-        {value:"dual-fan",name:"Dual-Fan",detail:"Holds full speed under heavy load.",price:100,image:IMG.wide}
+      {key:"battery",title:"Battery",question:"How long between charges?",help:"Both swap out in minutes with a single screwdriver.",byo:40,byoImage:lappyImg("Views/Keyboard L"),options:[
+        {value:"standard",name:"Standard",detail:"A full day of school or work.",price:0,image:lappyImg("Battery/Battery L")},
+        {value:"plus",name:"Battery Plus",detail:"Hours more between charges, a touch heavier.",price:100,image:lappyImg("Battery/Battery Plus L")}
       ]},
       {key:"cards",title:"Expansion Cards",question:"Which ports do you want?",help:"Four swappable bays. Change your mind any time.",byo:40,options:[
         {value:"essentials",name:"Essentials",detail:"2× USB-C, USB-A and HDMI.",price:0,image:IMG.laptop},
@@ -71,7 +77,6 @@ const buyProducts={
     buildFee:200,
     diy:"Order the case, board and power supply, then fit your own GPU, CPU, RAM and storage.",
     prebuilt:"Fitted, cable-managed and stress-tested before it ships. Just plug it in and play.",
-    colour:"Colours the case, with a glass side panel to show it off.",
     specs:[
       {key:"cpu",title:"CPU",question:"How hard will you push it?",help:"Solid mid-range all the way up to top-tier gaming and streaming power.",byo:250,options:[
         {value:"8-core",name:"8-Core",detail:"Smooth gaming at high settings.",price:0,image:IMG.laptop},
@@ -93,10 +98,6 @@ const buyProducts={
         {value:"1tb",name:"1TB NVMe",detail:"A healthy handful of big games.",price:0,image:IMG.laptop},
         {value:"2tb",name:"2TB NVMe",detail:"Most of your library, installed.",price:150,image:IMG.wide},
         {value:"4tb",name:"4TB NVMe",detail:"Never uninstall anything again.",price:400,image:IMG.tall}
-      ]},
-      {key:"cooling",title:"Cooling",question:"Air or liquid?",help:"Match the cooling to how hard you push it.",options:[
-        {value:"air",name:"High-Airflow Air",detail:"Big fans, easy to maintain.",price:0,image:IMG.laptop},
-        {value:"liquid",name:"360mm Liquid Loop",detail:"Cooler and quieter under load.",price:250,image:IMG.wide}
       ]}
     ]
   },
@@ -111,7 +112,6 @@ const buyProducts={
     buildFee:100,
     diy:"Order the barebones handheld, then fit your own storage, battery and sticks.",
     prebuilt:"Every part picked, fitted and tested, ready to play straight out of the box.",
-    colour:"Colours the shell, button caps and stick tops.",
     specs:[
       {key:"processor",title:"Processor",question:"Battery life or frame rate?",help:"Handheld-tuned chips that balance battery life against raw speed.",options:[
         {value:"balanced",name:"Balanced",detail:"Tuned for longer play sessions.",price:0,image:IMG.laptop},
@@ -147,7 +147,6 @@ const buyProducts={
     buildFee:120,
     diy:"Order the core phone, then fit your own battery, back panels and cover screen.",
     prebuilt:"Every part picked, fitted and fold-tested, ready to flip straight out of the box.",
-    colour:"Colours the frame and the back panel.",
     specs:[
       {key:"processor",title:"Processor",question:"How quick do you need it?",help:"A flagship mobile chip tuned to stay cool and quick, even folded shut.",options:[
         {value:"flagship",name:"Flagship",detail:"Fast, cool and efficient.",price:0,image:IMG.laptop},
@@ -183,7 +182,6 @@ const buyProducts={
     buildFee:60,
     diy:"Order the core watch, then fit your own battery, bezel and strap.",
     prebuilt:"Every part picked, fitted and tested, ready to wear straight out of the box.",
-    colour:"Colours the case and the strap.",
     specs:[
       {key:"size",title:"Size",question:"Which fits your wrist?",help:"Same features in both, the bigger one just lasts longer.",options:[
         {value:"41mm",name:"41mm",detail:"Slim and light.",price:0,image:IMG.laptop},
@@ -218,7 +216,6 @@ const buyProducts={
     buildFee:40,
     diy:"The high-voltage core ships sealed. You fit the door, turntable and control panel.",
     prebuilt:"Every part picked, fitted and safety-tested, ready to heat straight out of the box.",
-    colour:"Colours the body and the door trim.",
     specs:[
       {key:"power",title:"Power",question:"How fast do you need it hot?",help:"More watts, less waiting.",options:[
         {value:"900w",name:"900W",detail:"Great for everyday reheating.",price:0,image:IMG.laptop},
@@ -246,21 +243,12 @@ const buyProducts={
   }
 };
 
-// brand palette, tint is multiplied over the image
-const buyColours=[
-  {value:"orange",name:"Orange",swatch:"var(--accent)",tint:"#ff4a1c"},
-  {value:"purple",name:"Purple",swatch:"var(--accent-2)",tint:"#b414d8"},
-  {value:"yellow",name:"Yellow",swatch:"var(--accent-3)",tint:"#ffd84a"},
-  {value:"black",name:"Black",swatch:"var(--zone-dark)",tint:"#3b4045"},
-  {value:"white",name:"White",swatch:"var(--whiteline)",tint:""}
-];
-
 // step one is the product
 const productStep={
   key:"product",
   title:"Product",
   question:"Which one's for you?",
-  help:"Switching keeps your build and colour picks.",
+  help:"Switching keeps your build pick.",
   options:Object.keys(buyProducts).map(key=>({
     value:key,
     name:buyProducts[key].name,
@@ -273,19 +261,19 @@ const productStep={
 
 // bring your own option
 function byoOption(product,spec){
-  return{value:"byo",name:"Bring Your Own",detail:"Ships without one, so you can fit your own.",price:-spec.byo,image:product.image};
+  return{value:"byo",name:"Bring Your Own",detail:"Ships without one, so you can fit your own.",price:-spec.byo,image:spec.byoImage||product.image};
 }
 
 function stepsFor(product,build){
+  const diyImage=product.diyImage||IMG.wide;
+  const prebuiltImage=product.prebuiltImage||IMG.wide;
   return[
     productStep,
     {key:"build",title:"Build",question:"Who's putting it together?",help:"Same parts either way. It's your build, your parts, your call.",layout:"cards",options:[
-      {value:"diy",name:"DIY",detail:product.diy,price:0,thumb:IMG.wide,image:IMG.wide},
-      {value:"prebuilt",name:"Pre-Built",detail:product.prebuilt,price:product.buildFee,thumb:IMG.wide,image:product.image}
+      {value:"diy",name:"DIY",detail:product.diy,price:0,thumb:diyImage,image:diyImage},
+      {value:"prebuilt",name:"Pre-Built",detail:product.prebuilt,price:product.buildFee,thumb:prebuiltImage,image:product.prebuiltImage||product.image}
     ]},
-    ...product.specs.map(spec=>build==="diy" && spec.byo?{...spec,options:spec.options.concat(byoOption(product,spec))}:spec),
-    {key:"colour",title:"Colour",question:"Make it unmistakably yours.",help:product.colour,layout:"swatches",
-      options:buyColours.map(colour=>({...colour,price:0,image:product.image}))}
+    ...product.specs.map(spec=>build==="diy" && spec.byo?{...spec,options:spec.options.concat(byoOption(product,spec))}:spec)
   ];
 }
 
@@ -307,9 +295,9 @@ const stageFrame=document.getElementById("buyStageFrame");
 const stageTilt=document.getElementById("buyStageTilt");
 const stageMedia=document.getElementById("buyStageMedia");
 const stageImg=document.getElementById("buyStageImg");
-const stageTint=document.getElementById("buyStageTint");
 const stagePrice=document.getElementById("buyStagePrice");
 const heroImg=document.getElementById("buyHeroImg");
+const bannerImg=document.getElementById("buyBannerImg");
 const learnLink=document.getElementById("buyLearn");
 const startBtn=document.getElementById("buyStart");
 const shareBtn=document.getElementById("buyShare");
@@ -324,7 +312,6 @@ function priceLabel(n){return n>0?"+ "+money(n):n<0?"− "+money(-n):"Included";
 function pad(n){return String(n).padStart(2,"0");}
 function optionFor(step){return step.options.find(option=>option.value===picks[step.key]);}
 function stepIndexOf(key){return steps.findIndex(step=>step.key===key);}
-function colourPicked(){return buyColours.find(colour=>colour.value===picks.colour)||null;}
 
 // first unpicked step, -1 if done
 function firstOpen(){return steps.findIndex(step=>!optionFor(step));}
@@ -344,13 +331,6 @@ function totalPrice(){
 
 function optionHtml(step,option,i){
   const checked=picks[step.key]===option.value?" checked":"";
-
-  if(step.layout==="swatches")return`
-    <label class="buy-swatch" style="--i:${i}; --swatch:${option.swatch}">
-      <input type="radio" name="${step.key}" value="${option.value}" aria-label="${option.name}"${checked}>
-      <span class="buy-swatch-dot"></span>
-    </label>`;
-
   return`
     <label class="buy-option" style="--i:${i}">
       <input type="radio" name="${step.key}" value="${option.value}"${checked}>
@@ -365,7 +345,6 @@ function optionHtml(step,option,i){
 
 function renderStep(step,index){
   const layout=step.layout||"rows";
-  const picked=optionFor(step);
 
   const section=document.createElement("section");
   section.className="buy-step";
@@ -379,7 +358,6 @@ function renderStep(step,index){
         <span class="buy-options-indicator" aria-hidden="true"></span>
         ${step.options.map((option,i)=>optionHtml(step,option,i)).join("")}
       </div>
-      ${layout==="swatches"?`<p class="buy-swatch-name" aria-hidden="true">${picked?picked.name:""}</p>`:""}
     </fieldset>
     <button type="button" class="buy-step-lock"></button>`;
   return section;
@@ -479,7 +457,7 @@ function renderReview(open){
 function switchProduct(){
   product=buyProducts[picks.product];
   Object.keys(picks).forEach(key=>{
-    if(key!=="product" && key!=="build" && key!=="colour")delete picks[key];
+    if(key!=="product" && key!=="build")delete picks[key];
   });
   steps=stepsFor(product,picks.build);
   renderSteps(1);
@@ -501,7 +479,10 @@ function nameProduct(){
   document.querySelectorAll("[data-buy-from]").forEach(el=>{el.textContent=money(product.base);});
   document.title="Buy "+product.name;
   heroImg.src=product.image;
-  heroImg.alt=stageImg.alt=product.name+", placeholder image";
+  heroImg.alt=stageImg.alt=product.alt||product.name+", placeholder image";
+  // closing banner, placeholder until a product has its own shot
+  bannerImg.src=product.banner||IMG.wide;
+  bannerImg.alt=product.banner?product.name:"Placeholder image";
   learnLink.setAttribute("href",product.page);
 }
 
@@ -593,35 +574,12 @@ function bumpStage(){
 
 function setStageImage(src){
   stageImg.src=src;
-  // mask follows the new image
-  const mask=`url("${stageImg.src}")`;
-  stageTint.style.webkitMaskImage=mask;
-  stageTint.style.maskImage=mask;
-}
-
-// colour tint + glow
-function showColour(colour){
-  const tint=colour?colour.tint:"";
-  stageTint.style.backgroundColor=tint||"transparent";
-  stageTint.classList.toggle("is-on",!!tint);
-  stageFrame.style.setProperty("--buy-glow",colour?colour.swatch:"");
-}
-
-// preview swatches on hover
-function previewColour(value){
-  const colour=buyColours.find(c=>c.value===value)||colourPicked();
-  showColour(colour);
-
-  const section=sections[stepIndexOf("colour")];
-  const name=section && section.querySelector(".buy-swatch-name");
-  if(name)name.textContent=colour?colour.name:"";
 }
 
 // apply a pick to the stage
 function showPick(step){
   const option=optionFor(step);
   if(!option)return;
-  if(step.key==="colour")previewColour(option.value);
   swapStage(option.image,step.key==="product");
 }
 
@@ -761,7 +719,7 @@ let lastPointer=0;
 let lastSpace=0;
 
 buyForm.addEventListener("pointerdown",e=>{
-  if(e.target.closest(".buy-option, .buy-swatch"))lastPointer=performance.now();
+  if(e.target.closest(".buy-option"))lastPointer=performance.now();
 });
 
 buyForm.addEventListener("keydown",e=>{
@@ -796,24 +754,6 @@ buyForm.addEventListener("change",e=>{
   refresh();
 
   if(chosen && (fresh || step.key==="product"))queueAdvance(index,false);
-});
-
-buyForm.addEventListener("pointerover",e=>{
-  const swatch=e.target.closest(".buy-swatch");
-  if(swatch && !swatch.closest(".is-locked"))previewColour(swatch.querySelector("input").value);
-});
-
-buyForm.addEventListener("pointerout",e=>{
-  const swatch=e.target.closest(".buy-swatch");
-  if(swatch && !swatch.contains(e.relatedTarget))previewColour(null);
-});
-
-buyForm.addEventListener("focusin",e=>{
-  if(e.target.closest(".buy-swatch"))previewColour(e.target.value);
-});
-
-buyForm.addEventListener("focusout",e=>{
-  if(e.target.closest(".buy-swatch"))previewColour(null);
 });
 
 // review rows jump back to their step
@@ -959,7 +899,6 @@ steps.forEach(step=>{
 renderSteps(0);
 nameProduct();
 setStageImage(product.image);
-showColour(colourPicked());
 
 if(revealObserver)revealObserver.observe(buyReview);
 else buyReview.classList.add("in-view");

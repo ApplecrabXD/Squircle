@@ -1549,6 +1549,9 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   border-radius:28px;
   object-fit:cover;
 
+  /* card tint behind cut-out product shots */
+  background:color-mix(in srgb, var(--line) 6%, transparent);
+
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 

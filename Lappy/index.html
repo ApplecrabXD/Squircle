@@ -128,13 +128,13 @@
 
 <div class="marquee marquee-b lappy-marquee">
   <div class="marquee-track">
-    <span class="marquee-set">Fully Repairable&nbsp;• Intel-Powered&nbsp;• Upgradeable RAM &amp; Storage&nbsp;• Swappable Ports&nbsp;• </span>
-    <span class="marquee-set" aria-hidden="true">Fully Repairable&nbsp;• Intel-Powered&nbsp;• Upgradeable RAM &amp; Storage&nbsp;• Swappable Ports&nbsp;• </span>
+    <span class="marquee-set">Fully Repairable&nbsp;• Intel or AMD&nbsp;• Upgradeable RAM &amp; Storage&nbsp;• Swappable Ports&nbsp;• </span>
+    <span class="marquee-set" aria-hidden="true">Fully Repairable&nbsp;• Intel or AMD&nbsp;• Upgradeable RAM &amp; Storage&nbsp;• Swappable Ports&nbsp;• </span>
   </div>
 </div>
 
 <section class="about-banner">
-  <img src="../Assets/Temp/16x9.png" alt="Lappy 13 Pro laptop, placeholder image">
+  <img src="../Assets/Lappy/Views/Top%20L.webp" alt="Lid of the Lappy 13 Pro">
 </section>
 
 <section class="lappy-showcase" id="lappyShowcase">
@@ -142,8 +142,12 @@
     <div class="lappy-showcase-track" id="lappyShowcaseTrack">
 
       <article class="lappy-panel">
+        <!-- the box goes landscape on phones, so phones get the L shot -->
         <div class="lappy-panel-media" data-fx="left">
-          <img src="../Assets/Temp/9x16.jpg" alt="Lappy 13 Pro, placeholder image">
+          <picture>
+            <source media="(max-width:650px)" srcset="../Assets/Lappy/Views/Keyboard%20L.webp">
+            <img src="../Assets/Lappy/Views/Keyboard%20P.webp" alt="Keyboard deck of the Lappy 13 Pro">
+          </picture>
         </div>
         <span class="lappy-panel-index" aria-hidden="true">01</span>
         <div class="lappy-panel-body">
@@ -155,19 +159,25 @@
 
       <article class="lappy-panel">
         <div class="lappy-panel-media" data-fx="left">
-          <img src="../Assets/Temp/9x16.jpg" alt="Lappy 13 Pro, placeholder image">
+          <picture>
+            <source media="(max-width:650px)" srcset="../Assets/Lappy/CPU/Intel%20AMD%20L.webp">
+            <img src="../Assets/Lappy/CPU/Intel%20AMD%20P.webp" alt="Underside of the Lappy 13 Pro with the Intel and AMD logos">
+          </picture>
         </div>
         <span class="lappy-panel-index" aria-hidden="true">02</span>
         <div class="lappy-panel-body">
           <h2 class="lappy-panel-title" data-fx="up">Power that doesn't quit, even under real load.</h2>
-          <p class="lappy-panel-text" data-fx="right">A full desktop-class Intel chip tuned to stay cool, quiet, and fast no matter what you throw at it.</p>
-          <span class="lappy-panel-stat" data-fx="scale">14-core<small>Intel processor</small></span>
+          <p class="lappy-panel-text" data-fx="right">A full desktop-class Intel or AMD chip tuned to stay cool, quiet, and fast no matter what you throw at it.</p>
+          <span class="lappy-panel-stat" data-fx="scale">14-core<small>Intel or AMD processor</small></span>
         </div>
       </article>
 
       <article class="lappy-panel">
         <div class="lappy-panel-media" data-fx="left">
-          <img src="../Assets/Temp/9x16.jpg" alt="Lappy 13 Pro, placeholder image">
+          <picture>
+            <source media="(max-width:650px)" srcset="../Assets/Lappy/RAM/RAM%20L.webp">
+            <img src="../Assets/Lappy/RAM/RAM%20P.webp" alt="Underside of the Lappy 13 Pro with its RAM slots">
+          </picture>
         </div>
         <span class="lappy-panel-index" aria-hidden="true">03</span>
         <div class="lappy-panel-body">
@@ -205,16 +215,16 @@
 
     <article class="lappy-option">
       <div class="lappy-option-media">
-        <img src="../Assets/Temp/16x9.png" alt="DIY Lappy 13 Pro build, placeholder image">
+        <img src="../Assets/Lappy/Views/Keyboard%20L.webp" alt="Lappy 13 Pro keyboard deck, ready for your own parts">
       </div>
       <h2 class="lappy-option-title" style="text-align: center;">DIY</h2>
-      <p class="lappy-option-text" style="text-align: justify;">Build it yourself. Order the barebones chassis, then source and fit your own RAM, storage, and ports at your own pace — it's your build, your parts, your call.</p>
+      <p class="lappy-option-text" style="text-align: justify;">Build it yourself. Order the barebones chassis, then source and fit your own RAM, storage, battery, and ports at your own pace — it's your build, your parts, your call.</p>
       <a href="../Buy/?product=lappy&amp;build=diy" class="btn btn-fill lappy-option-btn">Configure Now</a>
     </article>
 
     <article class="lappy-option">
       <div class="lappy-option-media">
-        <img src="../Assets/Temp/16x9.png" alt="Pre-built Lappy 13 Pro, placeholder image">
+        <img src="../Assets/Lappy/Views/Top%20L.webp" alt="Lid of a finished Lappy 13 Pro">
       </div>
       <h2 class="lappy-option-title" style="text-align: center;">Pre-Built</h2>
       <p class="lappy-option-text" style="text-align: justify;">We build it for you. Every part picked, fitted, and tested before it ships, so it all just works and none of the stress lands on you.</p>
@@ -227,47 +237,43 @@
 <section class="lappy-configurator" id="lappyConfigurator">
 
   <div class="lappy-configurator-media">
-    <img id="lappyConfiguratorImg" src="../Assets/Lappy/Logo in laptop.png" alt="Lappy 13 Pro laptop">
+    <img id="lappyConfiguratorImg" src="../Assets/Lappy/CPU/Intel%20AMD%20L.webp" alt="Lappy 13 Pro laptop">
   </div>
 
   <div class="lappy-spec-list">
     <span class="lappy-spec-indicator" aria-hidden="true"></span>
 
-    <button type="button" class="lappy-spec-btn is-active" data-image="../Assets/Lappy/Logo in laptop.png">
+    <button type="button" class="lappy-spec-btn is-active" data-image="../Assets/Lappy/CPU/Intel%20AMD%20L.webp">
       <span class="lappy-spec-label">CPU</span>
-      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: choose from a range of Intel processors, from everyday to desktop-class performance.</span></span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: pick an Intel or AMD processor, both tuned to stay fast, cool and quiet.</span></span>
     </button>
 
-    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/RAM/RAM%20L.webp">
       <span class="lappy-spec-label">RAM</span>
       <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: configure anywhere from 8GB up to 64GB, upgradeable yourself later on.</span></span>
     </button>
 
-    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Storage/4TB%20L.webp">
       <span class="lappy-spec-label">Storage</span>
       <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: pick your drive size and swap it out yourself whenever you need more room.</span></span>
     </button>
 
-    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
-      <span class="lappy-spec-label">Cooling</span>
-      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: dual-fan or passive cooling options to match how hard you push it.</span></span>
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Battery/Battery%20L.webp">
+      <span class="lappy-spec-label">Battery</span>
+      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: a standard or Battery Plus pack, both swappable yourself in minutes.</span></span>
     </button>
 
-    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
+    <!-- stand-in image until the expansion card shots are done -->
+    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Views/Keyboard%20L.webp">
       <span class="lappy-spec-label">Expansion Cards</span>
       <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: choose which swappable port modules ship in each of the four bays.</span></span>
-    </button>
-
-    <button type="button" class="lappy-spec-btn" data-image="../Assets/Lappy/Logo in laptop.png">
-      <span class="lappy-spec-label">Customisation</span>
-      <span class="lappy-spec-desc-wrap"><span class="lappy-spec-desc">Placeholder spec text: pick a panel colour and engraving to make it unmistakably yours.</span></span>
     </button>
   </div>
 
 </section>
 
 <section class="about-banner lappy-buy-banner">
-  <img src="../Assets/Temp/16x9.png" alt="Lappy 13 Pro laptop, placeholder image">
+  <img src="../Assets/Lappy/Views/Keyboard%20L.webp" alt="Keyboard deck of the Lappy 13 Pro">
   <div class="lappy-buy-banner-copy">
     <h2 class="lappy-buy-banner-title">Lappy 13 Pro</h2>
     <a href="#lappyOptions" class="btn btn-fill">Buy Now</a>

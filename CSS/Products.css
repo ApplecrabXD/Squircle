@@ -673,6 +673,9 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   font-size:clamp(2rem,5vw,4.4rem);
   line-height:1.05;
   color:#fff;
+
+  /* keeps it readable over light photos */
+  text-shadow:0 2px 18px rgba(0,0,0,.5);
 }
 
 @media (max-width:650px){

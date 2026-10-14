@@ -21,6 +21,8 @@ const IMG={
 
 // real lappy photos, "CPU/Intel L" -> the .webp
 function lappyImg(name){return"../Assets/Lappy/"+encodeURI(name)+".webp";}
+// same for flippy, "SOC/SOC Elite L" -> the .webp
+function flippyImg(name){return"../Assets/Flippy%206/"+encodeURI(name)+".webp";}
 
 // prices in dollars, byo knocks the part off
 const buyProducts={
@@ -141,33 +143,33 @@ const buyProducts={
     name:"Flippy 6 Pro",
     tagline:"The phone that folds in half.",
     page:"../Flippy%206%20Pro/",
-    image:IMG.laptop,
-    thumb:IMG.tall,
+    image:flippyImg("Hero"),
+    thumb:flippyImg("Views/Cover Screen P"),
     base:1699,
     buildFee:120,
     diy:"Order the core phone, then fit your own battery, back panels and cover screen.",
     prebuilt:"Every part picked, fitted and fold-tested, ready to flip straight out of the box.",
+    alt:"Flippy 6 Pro folding phone, half open",
+    banner:flippyImg("Views/Main Screen L"),
+    diyImage:flippyImg("Views/Side L"),
+    prebuiltImage:flippyImg("Views/Stand Mode L"),
     specs:[
       {key:"processor",title:"Processor",question:"How quick do you need it?",help:"A flagship mobile chip tuned to stay cool and quick, even folded shut.",options:[
-        {value:"flagship",name:"Flagship",detail:"Fast, cool and efficient.",price:0,image:IMG.laptop},
-        {value:"flagship-max",name:"Flagship Max",detail:"Higher clocks for gaming and video.",price:150,image:IMG.wide}
+        {value:"8-gen-3",name:"Snapdragon 8 Gen 3",detail:"Fast, cool and efficient.",price:0,image:flippyImg("SOC/SOC L")},
+        {value:"8-elite",name:"Snapdragon 8 Elite",detail:"Higher clocks for gaming and video.",price:150,image:flippyImg("SOC/SOC Elite L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"12GB as standard, or step up for heavy multitasking.",options:[
-        {value:"12gb",name:"12GB",detail:"Plenty for everyday apps.",price:0,image:IMG.laptop},
-        {value:"16gb",name:"16GB",detail:"Split-screen everything, all day.",price:100,image:IMG.wide}
+      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"8GB as standard, or step up for heavy multitasking.",options:[
+        {value:"8gb",name:"8GB",detail:"Plenty for everyday apps.",price:0,image:flippyImg("RAM/8GB L")},
+        {value:"16gb",name:"16GB",detail:"Split-screen everything, all day.",price:100,image:flippyImg("RAM/16GB L")}
       ]},
       {key:"storage",title:"Storage",question:"How much do you keep on your phone?",help:"Room for all your photos, apps and videos.",options:[
-        {value:"256gb",name:"256GB",detail:"Plenty for most people.",price:0,image:IMG.laptop},
-        {value:"512gb",name:"512GB",detail:"For the camera-roll hoarders.",price:150,image:IMG.wide},
-        {value:"1tb",name:"1TB",detail:"Shoot 4K video without a second thought.",price:350,image:IMG.tall}
+        {value:"256gb",name:"256GB",detail:"Plenty for most people.",price:0,image:flippyImg("Storage/256GB L")},
+        {value:"512gb",name:"512GB",detail:"For the camera-roll hoarders.",price:150,image:flippyImg("Storage/512GB L")},
+        {value:"1tb",name:"1TB",detail:"Shoot 4K video without a second thought.",price:350,image:flippyImg("Storage/1TB L")}
       ]},
-      {key:"camera",title:"Camera",question:"What do you shoot?",help:"Every camera works straight from the cover screen.",options:[
-        {value:"dual",name:"Dual",detail:"50MP main plus an ultra-wide.",price:0,image:IMG.laptop},
-        {value:"triple",name:"Triple",detail:"Adds a 3× telephoto for closer shots.",price:150,image:IMG.wide}
-      ]},
-      {key:"battery",title:"Battery",question:"How long between charges?",help:"Both are replaceable yourself later on.",byo:30,options:[
-        {value:"standard",name:"Standard",detail:"Comfortably all day.",price:0,image:IMG.laptop},
-        {value:"extended",name:"Extended",detail:"A day and a half, easy.",price:60,image:IMG.wide}
+      {key:"battery",title:"Battery",question:"How long between charges?",help:"Both are replaceable yourself later on.",byo:30,byoImage:flippyImg("Views/Side L"),options:[
+        {value:"standard",name:"Standard",detail:"Comfortably all day.",price:0,image:flippyImg("Battery/Battery L")},
+        {value:"plus",name:"Battery Plus",detail:"A day and a half, easy.",price:60,image:flippyImg("Battery/Battery Plus L")}
       ]}
     ]
   },

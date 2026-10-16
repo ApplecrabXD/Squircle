@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Contact Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
-<!-- skip the splash if the intro already played -->
-<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- skip the splash if the intro already played (but replay it on refresh) -->
+<script>try{var nav=performance.getEntriesByType("navigation")[0];if(nav&&nav.type==="reload")sessionStorage.removeItem("squircleIntroSeen");else if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="CSS/Style.css">
 <link rel="stylesheet" href="CSS/Products.css">
@@ -108,9 +108,9 @@
   <div class="contact-hero-visual" aria-hidden="true">
     <div class="contact-chat">
       <p class="contact-msg contact-msg--you"><span class="contact-bubble">Can I really open a Lappy with one screwdriver?</span></p>
-      <p class="contact-msg contact-msg--us"><img class="contact-avatar" src="Assets/Logos/Logo.svg" alt=""><span class="contact-bubble">Yep. No glue, no rivets, every part comes out.</span></p>
+      <p class="contact-msg contact-msg--us"><img class="contact-avatar" src="Assets/Logos/Logo.svg" alt=""><span class="contact-bubble">Yep. and everything inside is removable.</span></p>
       <p class="contact-msg contact-msg--you"><span class="contact-bubble">Even the microwave?</span></p>
-      <p class="contact-msg contact-msg--us"><img class="contact-avatar" src="Assets/Logos/Logo.svg" alt=""><span class="contact-bubble">Especially the microwave.</span></p>
+      <p class="contact-msg contact-msg--us"><img class="contact-avatar" src="Assets/Logos/Logo.svg" alt=""><span class="contact-bubble">Especially the microwave. Thats the Squircle way!</span></p>
       <p class="contact-msg contact-msg--you"><span class="contact-bubble contact-bubble--typing"><span></span><span></span><span></span></span></p>
     </div>
   </div>
@@ -120,28 +120,23 @@
   <div class="contact-layout">
 
     <div class="contact-info">
-      <h2 class="contact-title" id="contactTitle">Drop us a line.</h2>
-      <p class="contact-lede">A question about a build, stuck halfway through a repair, or just want to say hi? Send it over. A real person reads every message.</p>
+      <h2 class="contact-title" id="contactTitle">Say Hi</h2>
+      <p class="contact-lede">No matter the question we here at Squircle are hear to help</p>
 
       <ul class="contact-details">
-        <li class="contact-detail">
-          <span class="contact-detail-label">Where</span>
-          <span class="contact-detail-value">Adelaide, on Kaurna Country</span>
-        </li>
         <li class="contact-detail">
           <span class="contact-detail-label">Replies</span>
           <span class="contact-detail-value">Usually within a day</span>
         </li>
         <li class="contact-detail">
           <span class="contact-detail-label">Repairs</span>
-          <span class="contact-detail-value">Tell us which part, we'll talk you through it</span>
+          <span class="contact-detail-value">Tell us which part, we'll talk you through it or send you a replacemnt</span>
         </li>
       </ul>
 
       <div class="contact-socials">
-        <a href="#" class="contact-social">Instagram</a>
-        <a href="#" class="contact-social">Twitter / X</a>
-        <a href="#" class="contact-social">TikTok</a>
+        <a href="https://www.instagram.com/applecrabxd/" class="btn btn-fill" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://bsky.app/profile/applecrabxd.bsky.social" class="btn btn-outline" target="_blank" rel="noopener">Blue Sky</a>
       </div>
     </div>
 
@@ -275,21 +270,19 @@
         <h4 class="footer-heading">Site</h4>
         <a href="index.html">Home</a>
         <a href="Shop/">Shop</a>
-        <a href="#">Placeholder</a>
+        <a href="Buy/">Build</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Company</h4>
         <a href="about.html">About Us</a>
-        <a href="knowlage.html">Knowlage Base</a>
         <a href="contact.html">Contact</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Follow</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter / X</a>
-        <a href="#">TikTok</a>
+        <a href="https://www.instagram.com/applecrabxd/">Instagram</a>
+        <a href="https://bsky.app/profile/applecrabxd.bsky.social">Blue Sky</a>
       </div>
     </nav>
 

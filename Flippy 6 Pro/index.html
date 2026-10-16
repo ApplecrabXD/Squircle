@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flippy 6 Pro</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
-<!-- skip the splash if the intro already played -->
-<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- skip the splash if the intro already played (but replay it on refresh) -->
+<script>try{var nav=performance.getEntriesByType("navigation")[0];if(nav&&nav.type==="reload")sessionStorage.removeItem("squircleIntroSeen");else if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../CSS/Style.css">
 <link rel="stylesheet" href="../CSS/Products.css">
@@ -309,21 +309,19 @@
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
         <a href="../Shop/">Shop</a>
-        <a href="#">Placeholder</a>
+        <a href="../Buy/">Build</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Company</h4>
         <a href="../about.html">About Us</a>
-        <a href="../knowlage.html">Knowlage Base</a>
         <a href="../contact.html">Contact</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Follow</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter / X</a>
-        <a href="#">TikTok</a>
+        <a href="https://www.instagram.com/applecrabxd/">Instagram</a>
+        <a href="https://bsky.app/profile/applecrabxd.bsky.social">Blue Sky</a>
       </div>
     </nav>
 

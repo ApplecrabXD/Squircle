@@ -226,27 +226,8 @@ button.btn{cursor:pointer;}
 .contact-socials{
   display:flex;
   flex-wrap:wrap;
-  gap:8px;
+  gap:12px;
 }
-
-.contact-social{
-  padding:8px 16px;
-  border-radius:100px;
-
-  background:var(--card-bg);
-  border:1px solid var(--card-border);
-
-  font-family:"obliqua",sans-serif;
-  font-size:.88rem;
-  color:var(--line);
-  text-decoration:none;
-
-  transition:transform .25s ease, background .35s ease, border-color .35s ease;
-}
-
-.contact-social:hover{transform:scale(1.05);}
-.contact-social:focus-visible{outline:2px solid var(--line); outline-offset:3px;}
-
 
 /* form + sent screen share a cell */
 .contact-card{

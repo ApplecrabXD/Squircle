@@ -91,10 +91,9 @@ const nameWrap=document.getElementById("aboutusName");
 const nameSticky=document.getElementById("aboutusNameSticky");
 const nameStage=document.getElementById("aboutusNameStage");
 const nameShape=document.getElementById("aboutusNameShape");
-const nameN=document.getElementById("aboutusNameN");
 const nameChips=document.getElementById("aboutusNameChips");
 
-if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
+if(nameWrap && nameSticky && nameStage && nameShape && nameChips){
   const beats=Array.from(nameWrap.querySelectorAll(".aboutus-name-beat"));
   const chips=Array.from(nameChips.querySelectorAll(".aboutus-name-chip"));
   const chipIndicator=nameChips.querySelector(".aboutus-name-chip-indicator");
@@ -139,7 +138,6 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
     if(Math.abs(n-lastN)>.001){
       lastN=n;
       nameShape.setAttribute("d",shapePath(n));
-      nameN.textContent="n = "+(n<9.95?n.toFixed(1):Math.round(n));
     }
 
     setBeat(p<.3?0:p<.62?1:2);
@@ -175,6 +173,16 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
   // default to the squircle with every beat listed
   render(1);
 
+  // scroll spot for each chip, picked inside the holds
+  const BEAT_P=[0,.51,1];
+  let nameST=null;
+
+  chips.forEach((chip,i)=>chip.addEventListener("click",()=>{
+    if(!nameST){render(BEAT_P[i]);return;}
+    const top=nameST.start+(nameST.end-nameST.start)*BEAT_P[i];
+    scrollTo({top:Math.ceil(top),behavior:reducedMotion?"auto":"smooth"});
+  }));
+
   if(hasGsap && !reducedMotion){
     const morph={p:0};
 
@@ -199,8 +207,10 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
             invalidateOnRefresh:true,
           }
         });
+        nameST=tween.scrollTrigger;
 
         return ()=>{
+          nameST=null;
           tween.scrollTrigger && tween.scrollTrigger.kill();
           tween.kill();
           nameWrap.classList.remove("is-scrubbed");
@@ -219,8 +229,10 @@ if(nameWrap && nameSticky && nameStage && nameShape && nameN && nameChips){
           onUpdate:()=>render(morph.p),
           scrollTrigger:{trigger:nameStage,start:"top 85%",end:"bottom 30%",scrub:1}
         });
+        nameST=tween.scrollTrigger;
 
         return ()=>{
+          nameST=null;
           tween.scrollTrigger && tween.scrollTrigger.kill();
           tween.kill();
           render(1);

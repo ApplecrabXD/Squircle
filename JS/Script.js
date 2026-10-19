@@ -820,6 +820,32 @@ if(lappyReveals.length && "IntersectionObserver" in window){
   lappyReveals.forEach(el=>lappyRevealObserver.observe(el));
 }
 
+// diy screwdriver keeps spinning while the mouse is over it, then settles back upright
+// (product pages + the buy page, buy.js draws its cards later so this listens on the whole document)
+const diySpinReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const diySpinTime=3; // seconds for one full turn, bigger is slower
+
+// the screwdriver this pointer just came onto or left, null if it only moved inside the card
+function diySpinImg(e){
+  if(e.pointerType==="touch")return null; // mouse over only
+  const host=e.target.closest(".lappy-option-media--diy, .buy-option");
+  if(!host || host.contains(e.relatedTarget) || host.closest(".is-locked"))return null;
+  return host.querySelector(".lappy-option-media--diy img, .buy-option-thumb--icon img");
+}
+
+// gsap only counts --diy-turn up (the css turns it into rotate), so the card's css hover zoom still works
+if(window.gsap && !diySpinReduced){
+  document.addEventListener("pointerover",e=>{
+    const img=diySpinImg(e);
+    if(img)gsap.to(img,{"--diy-turn":"+=360",duration:diySpinTime,ease:"none",repeat:-1,overwrite:true});
+  });
+  document.addEventListener("pointerout",e=>{
+    const img=diySpinImg(e);
+    // nearest upright, so it never turns more than half a spin to get there
+    if(img)gsap.to(img,{"--diy-turn":Math.round(parseFloat(gsap.getProperty(img,"--diy-turn"))/360)*360,duration:.8,ease:"power3.out",overwrite:true});
+  });
+}
+
 // spec configurator
 const lappyConfiguratorImg=document.getElementById("lappyConfiguratorImg");
 const lappySpecList=document.querySelector(".lappy-spec-list");

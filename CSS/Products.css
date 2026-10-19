@@ -346,6 +346,26 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 
 .lappy-option-media:hover img{transform:scale(1.1);}
 
+/* diy screwdriver, tiny pixel art so it sits in the middle instead of filling the box */
+.lappy-option-media--diy{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  container-type:inline-size;
+}
+
+.lappy-option-media--diy img{
+  width:auto;
+  height:60%;
+  /* same 60% but snapped to whole 68px steps (the art is 68px tall) so the pixels stay even */
+  height:max(68px,round(nearest,34cqw,68px));
+  image-rendering:pixelated;
+
+  /* Script.js spins it by counting --diy-turn up in degrees while it's hovered */
+  --diy-turn:0;
+  rotate:calc(var(--diy-turn) * 1deg);
+}
+
 .lappy-option-title,
 .lappy-option-text{
   opacity:0;

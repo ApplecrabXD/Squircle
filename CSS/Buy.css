@@ -522,6 +522,26 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
 .buy-options--cards .buy-option-text,
 .buy-options--cards .buy-option-price{padding:0 8px;}
 
+/* diy screwdriver, tiny pixel art so it sits in the middle instead of filling the thumb */
+.buy-option-thumb--icon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  container-type:inline-size;
+}
+
+.buy-option-thumb--icon img{
+  width:auto;
+  height:60%;
+  /* same 60% but snapped to whole 68px steps (the art is 68px tall) so the pixels stay even */
+  height:max(68px,round(nearest,34cqw,68px));
+  image-rendering:pixelated;
+
+  /* Script.js spins it by counting --diy-turn up in degrees while the card is hovered */
+  --diy-turn:0;
+  rotate:calc(var(--diy-turn) * 1deg);
+}
+
 /* locked steps */
 .buy-step.is-locked .buy-options{opacity:.3;}
 .buy-step.is-locked .buy-option{cursor:default;}
@@ -929,6 +949,8 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-options--cards{display:flex; flex-direction:column; gap:10px;}
   .buy-options--cards .buy-option{flex-direction:row; align-items:center; gap:12px; padding:14px 16px;}
   .buy-options--cards .buy-option-thumb{width:46px; height:46px; aspect-ratio:auto;}
+  /* the 46px thumb is smaller than the art, so shrink it smooth instead of pixelated */
+  .buy-options--cards .buy-option-thumb--icon img{height:80%; image-rendering:auto;}
   .buy-options--cards .buy-option-text,
   .buy-options--cards .buy-option-price{padding:0;}
 

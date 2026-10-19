@@ -16,7 +16,8 @@ const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const IMG={
   laptop:"../Assets/Lappy/Logo%20in%20laptop.png",
   wide:"../Assets/Temp/16x9.png",
-  tall:"../Assets/Temp/9x16.jpg"
+  tall:"../Assets/Temp/9x16.jpg",
+  diy:"../Assets/DIY/diy.png" // pixel art screwdriver, every diy card uses it
 };
 
 // real lappy photos, "CPU/Intel L" -> the .webp
@@ -278,7 +279,7 @@ function stepsFor(product,build){
   return[
     productStep,
     {key:"build",title:"Build",question:"Who's putting it together?",help:"Same parts either way. It's your build, your parts, your call.",layout:"cards",options:[
-      {value:"diy",name:"DIY",detail:product.diy,price:0,thumb:diyImage,image:diyImage},
+      {value:"diy",name:"DIY",detail:product.diy,price:0,thumb:IMG.diy,icon:true,image:diyImage},
       {value:"prebuilt",name:"Pre-Built",detail:product.prebuilt,price:product.buildFee,thumb:prebuiltImage,image:product.prebuiltImage||product.image}
     ]},
     ...product.specs.map(spec=>build==="diy" && spec.byo?{...spec,options:spec.options.concat(byoOption(product,spec))}:spec)
@@ -342,7 +343,7 @@ function optionHtml(step,option,i){
   return`
     <label class="buy-option" style="--i:${i}">
       <input type="radio" name="${step.key}" value="${option.value}"${checked}>
-      ${option.thumb?`<span class="buy-option-thumb"><img src="${option.thumb}" alt=""></span>`:""}
+      ${option.thumb?`<span class="buy-option-thumb${option.icon?" buy-option-thumb--icon":""}"><img src="${option.thumb}" alt=""></span>`:""}
       <span class="buy-option-text">
         <span class="buy-option-name">${option.name}</span>
         ${option.detail?`<span class="buy-option-detail">${option.detail}</span>`:""}

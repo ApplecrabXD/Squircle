@@ -26,6 +26,12 @@ function lappyImg(name){return"../Assets/Lappy/"+encodeURI(name)+".webp";}
 function flippyImg(name){return"../Assets/Flippy%206/"+encodeURI(name)+".webp";}
 // and watchy, "Size/41mm L" -> the .webp
 function watchyImg(name){return"../Assets/Watchy%203/"+encodeURI(name)+".webp";}
+// and nuker, "Power/900W L" -> the .webp
+function nukerImg(name){return"../Assets/Nuker/"+encodeURI(name)+".webp";}
+// and gammy, "CPU/8-Core L" -> the .webp
+function gammyImg(name){return"../Assets/Gammy%20Pro%20Max/"+encodeURI(name)+".webp";}
+// and ally, "Display/OLED L" -> the .webp
+function allyImg(name){return"../Assets/Ally%20Maxx/"+encodeURI(name)+".webp";}
 
 // prices in dollars, byo knocks the part off
 const buyProducts={
@@ -76,33 +82,37 @@ const buyProducts={
     name:"Gammy Pro Max",
     tagline:"The liquid-cooled gaming PC.",
     page:"../Gammy%20Pro%20Max/",
-    image:IMG.laptop,
-    thumb:IMG.tall,
+    image:gammyImg("Hero"),
+    thumb:gammyImg("Views/Front P"),
     base:2999,
     buildFee:200,
     diy:"Order the case, board and power supply, then fit your own GPU, CPU, RAM and storage.",
     prebuilt:"Fitted, cable-managed and stress-tested before it ships. Just plug it in and play.",
+    alt:"Gammy Pro Max gaming PC, seen at an angle",
+    banner:gammyImg("Views/Inside L"),
+    diyImage:gammyImg("Views/Angle L"),
+    prebuiltImage:gammyImg("Views/Front L"),
     specs:[
-      {key:"cpu",title:"CPU",question:"How hard will you push it?",help:"Solid mid-range all the way up to top-tier gaming and streaming power.",byo:250,options:[
-        {value:"8-core",name:"8-Core",detail:"Smooth gaming at high settings.",price:0,image:IMG.laptop},
-        {value:"12-core",name:"12-Core",detail:"Game and stream at the same time.",price:250,image:IMG.wide},
-        {value:"16-core",name:"16-Core",detail:"Top-tier power for everything at once.",price:550,image:IMG.tall}
+      {key:"cpu",title:"CPU",question:"How hard will you push it?",help:"Solid mid-range all the way up to top-tier gaming and streaming power.",byo:250,byoImage:gammyImg("Views/Angle L"),options:[
+        {value:"8-core",name:"8-Core",detail:"Smooth gaming at high settings.",price:0,image:gammyImg("CPU/8-Core L")},
+        {value:"12-core",name:"12-Core",detail:"Game and stream at the same time.",price:250,image:gammyImg("CPU/12-Core L")},
+        {value:"16-core",name:"16-Core",detail:"Top-tier power for everything at once.",price:550,image:gammyImg("CPU/16-Core L")}
       ]},
-      {key:"gpu",title:"GPU",question:"What resolution do you play at?",help:"From smooth 1440p all the way up to high-refresh 4K.",byo:500,options:[
-        {value:"1440p",name:"1440p Ready",detail:"High frame rates at 1440p.",price:0,image:IMG.laptop},
-        {value:"4k",name:"4K Ready",detail:"Smooth 4K at high settings.",price:600,image:IMG.wide},
-        {value:"4k-high-refresh",name:"4K High-Refresh",detail:"4K at 144Hz and beyond.",price:1200,image:IMG.tall}
+      {key:"gpu",title:"GPU",question:"What resolution do you play at?",help:"From smooth 1440p all the way up to high-refresh 4K.",byo:500,byoImage:gammyImg("Views/Angle L"),options:[
+        {value:"1440p",name:"1440p Ready",detail:"High frame rates at 1440p.",price:0,image:gammyImg("GPU/1440p L")},
+        {value:"4k",name:"4K Ready",detail:"Smooth 4K at high settings.",price:600,image:gammyImg("GPU/4K L")},
+        {value:"4k-high-refresh",name:"4K High-Refresh",detail:"4K at 144Hz and beyond.",price:1200,image:gammyImg("GPU/4K High-Refresh L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much memory do you need?",help:"There are free slots to add more yourself later on.",byo:60,options:[
-        {value:"16gb",name:"16GB",detail:"Plenty for gaming.",price:0,image:IMG.laptop},
-        {value:"32gb",name:"32GB",detail:"Gaming with Discord, a browser and a stream open.",price:120,image:IMG.wide},
-        {value:"64gb",name:"64GB",detail:"Video editing and 3D work.",price:300,image:IMG.tall},
-        {value:"128gb",name:"128GB",detail:"Because you can.",price:650,image:IMG.wide}
+      {key:"ram",title:"RAM",question:"How much memory do you need?",help:"There are free slots to add more yourself later on.",byo:60,byoImage:gammyImg("Views/Angle L"),options:[
+        {value:"16gb",name:"16GB",detail:"Plenty for gaming.",price:0,image:gammyImg("RAM/16GB L")},
+        {value:"32gb",name:"32GB",detail:"Gaming with Discord, a browser and a stream open.",price:120,image:gammyImg("RAM/32GB L")},
+        {value:"64gb",name:"64GB",detail:"Video editing and 3D work.",price:300,image:gammyImg("RAM/64GB L")},
+        {value:"128gb",name:"128GB",detail:"Because you can.",price:650,image:gammyImg("RAM/128GB L")}
       ]},
-      {key:"storage",title:"Storage",question:"How big is your game library?",help:"Fast NVMe drives plus spare bays, so you never run out of room.",byo:80,options:[
-        {value:"1tb",name:"1TB NVMe",detail:"A healthy handful of big games.",price:0,image:IMG.laptop},
-        {value:"2tb",name:"2TB NVMe",detail:"Most of your library, installed.",price:150,image:IMG.wide},
-        {value:"4tb",name:"4TB NVMe",detail:"Never uninstall anything again.",price:400,image:IMG.tall}
+      {key:"storage",title:"Storage",question:"How big is your game library?",help:"Fast NVMe drives plus spare bays, so you never run out of room.",byo:80,byoImage:gammyImg("Views/Angle L"),options:[
+        {value:"1tb",name:"1TB NVMe",detail:"A healthy handful of big games.",price:0,image:gammyImg("Storage/1TB L")},
+        {value:"2tb",name:"2TB NVMe",detail:"Most of your library, installed.",price:150,image:gammyImg("Storage/2TB L")},
+        {value:"4tb",name:"4TB NVMe",detail:"Never uninstall anything again.",price:400,image:gammyImg("Storage/4TB L")}
       ]}
     ]
   },
@@ -111,33 +121,37 @@ const buyProducts={
     name:"Ally Maxx",
     tagline:"The handheld that plays anywhere.",
     page:"../Ally%20Maxx/",
-    image:IMG.laptop,
-    thumb:IMG.tall,
+    image:allyImg("Hero"),
+    thumb:allyImg("Views/Front P"),
     base:999,
     buildFee:100,
     diy:"Order the barebones handheld, then fit your own storage, battery and sticks.",
     prebuilt:"Every part picked, fitted and tested, ready to play straight out of the box.",
+    alt:"Ally Maxx handheld gaming PC, seen at an angle",
+    banner:allyImg("Views/Top L"),
+    diyImage:allyImg("Views/Back L"),
+    prebuiltImage:allyImg("Views/Angle L"),
     specs:[
       {key:"processor",title:"Processor",question:"Battery life or frame rate?",help:"Handheld-tuned chips that balance battery life against raw speed.",options:[
-        {value:"balanced",name:"Balanced",detail:"Tuned for longer play sessions.",price:0,image:IMG.laptop},
-        {value:"performance",name:"Performance",detail:"Higher clocks for higher frame rates.",price:200,image:IMG.wide}
+        {value:"balanced",name:"Balanced",detail:"Tuned for longer play sessions.",price:0,image:allyImg("Processor/Balanced L")},
+        {value:"performance",name:"Performance",detail:"Higher clocks for higher frame rates.",price:200,image:allyImg("Processor/Performance L")}
       ]},
       {key:"ram",title:"RAM",question:"How much memory?",help:"Fast shared memory for smooth play.",options:[
-        {value:"16gb",name:"16GB",detail:"Smooth in most games.",price:0,image:IMG.laptop},
-        {value:"24gb",name:"24GB",detail:"Extra headroom for the big ones.",price:100,image:IMG.wide}
+        {value:"16gb",name:"16GB",detail:"Smooth in most games.",price:0,image:allyImg("RAM/16GB L")},
+        {value:"24gb",name:"24GB",detail:"Extra headroom for the big ones.",price:100,image:allyImg("RAM/24GB L")}
       ]},
-      {key:"storage",title:"Storage",question:"How many games come with you?",help:"There's a microSD slot for extra room on the go, too.",byo:50,options:[
-        {value:"512gb",name:"512GB",detail:"A few big games and plenty of indies.",price:0,image:IMG.laptop},
-        {value:"1tb",name:"1TB",detail:"Your whole backlog, finally.",price:100,image:IMG.wide},
-        {value:"2tb",name:"2TB",detail:"Leave nothing at home.",price:250,image:IMG.tall}
+      {key:"storage",title:"Storage",question:"How many games come with you?",help:"There's a microSD slot for extra room on the go, too.",byo:50,byoImage:allyImg("Views/Back L"),options:[
+        {value:"512gb",name:"512GB",detail:"A few big games and plenty of indies.",price:0,image:allyImg("Storage/512GB L")},
+        {value:"1tb",name:"1TB",detail:"Your whole backlog, finally.",price:100,image:allyImg("Storage/1TB L")},
+        {value:"2tb",name:"2TB",detail:"Leave nothing at home.",price:250,image:allyImg("Storage/2TB L")}
       ]},
       {key:"display",title:"Display",question:"Which screen?",help:"Both are 1080p at a buttery 120Hz.",options:[
-        {value:"lcd",name:"120Hz LCD",detail:"Bright, sharp and smooth.",price:0,image:IMG.laptop},
-        {value:"oled",name:"120Hz OLED",detail:"Deeper blacks and richer colour.",price:150,image:IMG.wide}
+        {value:"lcd",name:"120Hz LCD",detail:"Bright, sharp and smooth.",price:0,image:allyImg("Display/LCD L")},
+        {value:"oled",name:"120Hz OLED",detail:"Deeper blacks and richer colour.",price:150,image:allyImg("Display/OLED L")}
       ]},
-      {key:"battery",title:"Battery",question:"How long do you play?",help:"Both packs swap out in under a minute.",byo:40,options:[
-        {value:"standard",name:"Standard",detail:"A few hours of big-budget games.",price:0,image:IMG.laptop},
-        {value:"extended",name:"Extended",detail:"Longer sessions, a touch heavier.",price:80,image:IMG.wide}
+      {key:"battery",title:"Battery",question:"How long do you play?",help:"Both packs swap out in under a minute.",byo:40,byoImage:allyImg("Views/Back L"),options:[
+        {value:"standard",name:"Standard",detail:"A few hours of big-budget games.",price:0,image:allyImg("Battery/Battery L")},
+        {value:"extended",name:"Extended",detail:"Longer sessions, a touch heavier.",price:80,image:allyImg("Battery/Extended L")}
       ]}
     ]
   },
@@ -219,34 +233,38 @@ const buyProducts={
     name:"Nuker",
     tagline:"The microwave you'll never throw out.",
     page:"../Nuker/",
-    image:IMG.laptop,
-    thumb:IMG.tall,
+    image:nukerImg("Hero"),
+    thumb:nukerImg("Views/Front P"),
     base:349,
     buildFee:40,
     diy:"The high-voltage core ships sealed. You fit the door, turntable and control panel.",
     prebuilt:"Every part picked, fitted and safety-tested, ready to heat straight out of the box.",
+    alt:"Nuker microwave, seen from the front",
+    banner:nukerImg("Views/Door Mesh L"),
+    diyImage:nukerImg("Views/Door Off L"),
+    prebuiltImage:nukerImg("Views/Front L"),
     specs:[
       {key:"power",title:"Power",question:"How fast do you need it hot?",help:"More watts, less waiting.",options:[
-        {value:"900w",name:"900W",detail:"Great for everyday reheating.",price:0,image:IMG.laptop},
-        {value:"1000w",name:"1000W",detail:"A little quicker at everything.",price:40,image:IMG.wide},
-        {value:"1200w",name:"1200W Inverter",detail:"Even heat, no more cold middles.",price:90,image:IMG.tall}
+        {value:"900w",name:"900W",detail:"Great for everyday reheating.",price:0,image:nukerImg("Power/900W L")},
+        {value:"1000w",name:"1000W",detail:"A little quicker at everything.",price:40,image:nukerImg("Power/1000W L")},
+        {value:"1200w",name:"1200W Inverter",detail:"Even heat, no more cold middles.",price:90,image:nukerImg("Power/1200W Inverter L")}
       ]},
       {key:"capacity",title:"Capacity",question:"How much do you cook at once?",help:"Compact for small kitchens, family-size for everything else.",options:[
-        {value:"23l",name:"23L Compact",detail:"Fits small kitchens.",price:0,image:IMG.laptop},
-        {value:"32l",name:"32L Family",detail:"Fits casserole dishes.",price:60,image:IMG.wide}
+        {value:"23l",name:"23L Compact",detail:"Fits small kitchens.",price:0,image:nukerImg("Capacity/23L L")},
+        {value:"32l",name:"32L Family",detail:"Fits casserole dishes.",price:60,image:nukerImg("Capacity/32L L")}
       ]},
-      {key:"turntable",title:"Turntable",question:"Round or flat?",help:"A classic spinning plate, or a flat floor for big square dishes.",byo:15,options:[
-        {value:"glass",name:"Glass Turntable",detail:"The classic spinning plate.",price:0,image:IMG.laptop},
-        {value:"flat-bed",name:"Flat-Bed",detail:"Fits big square dishes.",price:40,image:IMG.wide}
+      {key:"turntable",title:"Turntable",question:"Round or flat?",help:"A classic spinning plate, or a flat floor for big square dishes.",byo:15,byoImage:nukerImg("Views/Turntable L"),options:[
+        {value:"glass",name:"Glass Turntable",detail:"The classic spinning plate.",price:0,image:nukerImg("Turntable/Glass Turntable L")},
+        {value:"flat-bed",name:"Flat-Bed",detail:"Fits big square dishes.",price:40,image:nukerImg("Turntable/Flat-Bed L")}
       ]},
       {key:"presets",title:"Presets",question:"How much should it do for you?",help:"Popcorn, defrost, reheat and more, one tap each.",options:[
-        {value:"standard",name:"12 Presets",detail:"All the classics.",price:0,image:IMG.laptop},
-        {value:"custom",name:"12 Presets + 6 Custom",detail:"Save your own one-tap programs.",price:20,image:IMG.wide}
+        {value:"standard",name:"12 Presets",detail:"All the classics.",price:0,image:nukerImg("Presets/Presets L")},
+        {value:"custom",name:"12 Presets + 6 Custom",detail:"Save your own one-tap programs.",price:20,image:nukerImg("Presets/Presets Plus L")}
       ]},
-      {key:"controls",title:"Controls",question:"Dial, buttons or touch?",help:"Swap to a different panel later if you change your mind.",byo:20,options:[
-        {value:"dial",name:"Dial",detail:"Twist and go.",price:0,image:IMG.laptop},
-        {value:"buttons",name:"Buttons",detail:"Clicky and precise.",price:0,image:IMG.wide},
-        {value:"touch",name:"Touch Panel",detail:"Smooth glass, easy to wipe clean.",price:30,image:IMG.tall}
+      {key:"controls",title:"Controls",question:"Dial, buttons or touch?",help:"Swap to a different panel later if you change your mind.",byo:20,byoImage:nukerImg("Views/Controls L"),options:[
+        {value:"dial",name:"Dial",detail:"Twist and go.",price:0,image:nukerImg("Controls/Dial L")},
+        {value:"buttons",name:"Buttons",detail:"Clicky and precise.",price:0,image:nukerImg("Controls/Buttons L")},
+        {value:"touch",name:"Touch Panel",detail:"Smooth glass, easy to wipe clean.",price:30,image:nukerImg("Controls/Touch Panel L")}
       ]}
     ]
   }

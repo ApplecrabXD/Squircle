@@ -23,10 +23,19 @@ if(splash && loadingBar && introSeen){
   try{sessionStorage.setItem(introKey,"1");}catch(e){}
 
   const minimumTime=1000; // ms, the intro plays straight after this now so the loader only needs to be up long enough to see
-  const startTime=performance.now();
+  const maximumTime=10000; // ms, safety net, nobody stays on the loading screen longer than this
+  const introTime=6000; // ms, the intro hands off at about 4s, if it's still going after this it's frozen
+  let startTime=performance.now();
 
   let pageLoaded=false;
   let loadingFinished=false;
+  let splashDone=false; // heading to the nav (or skipped), nothing else touches the splash after this
+  let introTimeline=null;
+  let safetyNet=null; // skip timer, see skipSplash
+
+  // webkit heads up (the head script turns it on), the loader waits till it's closed
+  const noticeBtn=document.querySelector("#engineNotice button");
+  let noticeOpen=!!noticeBtn && document.documentElement.classList.contains("engine-notice-on");
 
   // preload the intro fonts now
   const introFonts=document.fonts ? Promise.all([document.fonts.load('300 1em "azo-sans-web"'),document.fonts.load('1em "SuperMalibu"')]).catch(()=>{}) : Promise.resolve();
@@ -34,7 +43,7 @@ if(splash && loadingBar && introSeen){
 
   // Loading
   function updateLoading(){
-    if(pageLoaded){loadingBar.style.width="100%"; return;}
+    if(pageLoaded || splashDone){loadingBar.style.width="100%"; return;}
 
     const resources=performance.getEntriesByType("resource");
     const total=resources.length+1;
@@ -50,6 +59,7 @@ if(splash && loadingBar && introSeen){
 
   // move animation to nav
 function moveAnimationToNavbar(){
+  if(splashDone)return; splashDone=true;
   if(!splashBlocks || !navBlocks){ splash.classList.add("loaded"); splash.style.display="none"; return; }
 
   // hand the logo back to css for the flight
@@ -90,6 +100,7 @@ function moveAnimationToNavbar(){
 
   // osu!lazer style intro, any click or key skips it
   function playIntro(){
+    if(splashDone)return; // the safety net already skipped it
     const center=document.querySelector(".splash-center");
     const loadContainer=document.querySelector(".loading-container");
     const blocks=splashBlocks ? [".block-orange",".block-gray",".block-purple",".block-white"].map(c=>splashBlocks.querySelector(c)) : [];
@@ -148,6 +159,8 @@ function moveAnimationToNavbar(){
     const ringPath=ring.querySelector("path");
 
     const tl=gsap.timeline();
+    introTimeline=tl;
+    armSafetyNet(introTime); // the intro gets its own clock so a slow load still sees all of it
 
     function skipIntro(){if(tl.time()<at.reveal) tl.seek("reveal");}
     splash.addEventListener("pointerdown",skipIntro);
@@ -244,7 +257,7 @@ function moveAnimationToNavbar(){
 
   // end splash screen
   function finishSplash(){
-    if(!pageLoaded || loadingFinished)return; loadingFinished=true;
+    if(!pageLoaded || noticeOpen || loadingFinished)return; loadingFinished=true;
 
     loadingBar.style.width="100%";
 
@@ -253,6 +266,46 @@ function moveAnimationToNavbar(){
       setTimeout(playIntro,Math.max(0,minimumTime-(performance.now()-startTime)));
     });
   }
+
+  // safety net: still on the splash when the clock runs out, skip to the site
+  function armSafetyNet(ms){
+    clearTimeout(safetyNet);
+    safetyNet=setTimeout(skipSplash,ms);
+  }
+  function skipSplash(){
+    if(splashDone)return;
+    // background tab, gsap holds the intro till they look so the clock waits too
+    if(introTimeline && document.hidden){
+      document.addEventListener("visibilitychange",()=>armSafetyNet(introTime),{once:true});
+      return;
+    }
+    loadingFinished=true; // a late load event won't start the intro now
+    try{
+      if(introTimeline)introTimeline.progress(1); // jumping to the end hands off to the nav like normal
+      if(!splashDone)moveAnimationToNavbar();
+    }catch(e){
+      // whatever broke, just get the splash out of the way
+      splashDone=true;
+      splash.classList.add("loaded");
+      splash.style.display="none";
+    }
+  }
+
+  // closing the heads up hands over to the loader, and it stays closed after that
+  if(noticeOpen){
+    noticeBtn.focus({preventScroll:true}); // enter/space closes it, safari won't tab to buttons
+    noticeBtn.addEventListener("click",()=>{
+      try{localStorage.setItem("squircleEngineNotice","1");}catch(e){}
+      document.documentElement.classList.remove("engine-notice-on");
+      noticeBtn.blur();
+      noticeOpen=false;
+      startTime=performance.now(); // the loader still gets its moment
+      armSafetyNet(maximumTime); // and the safety net clock starts now
+      finishSplash();
+    },{once:true});
+  }
+  // no heads up, the safety net clock started with the page
+  else armSafetyNet(Math.max(0,maximumTime-performance.now()));
 
   window.addEventListener("load",()=>{pageLoaded=true; finishSplash();});
 }

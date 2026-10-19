@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lappy 13 Pro</title>
 <link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
-<!-- skip the splash if the intro already played -->
-<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- skip the splash if the intro already played (but replay it on refresh) -->
+<script>try{var nav=performance.getEntriesByType("navigation")[0];if(nav&&nav.type==="reload")sessionStorage.removeItem("squircleIntroSeen");else if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- heads up for webkit (safari and every iphone browser) until it's been closed once -->
+<script>try{var ua=navigator.userAgent,ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);if((ios||(/AppleWebKit/.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua)))&&localStorage.getItem("squircleEngineNotice")!=="1"){document.documentElement.classList.add("engine-notice-on");if(ios)document.documentElement.classList.add("engine-ios");}}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="../CSS/Style.css">
 <link rel="stylesheet" href="../CSS/Products.css">
@@ -15,6 +17,15 @@
 <body>
 
 <div id="splash">
+  <!-- webkit heads up, only shows on safari and iphones (head script + Script.js) -->
+  <div class="engine-notice" id="engineNotice" role="dialog" aria-labelledby="engineNoticeTitle">
+    <div class="engine-notice-card">
+      <h2 class="engine-notice-title" id="engineNoticeTitle">Heads <span>Up!</span></h2>
+      <p class="engine-notice-text">Squircle is built for Chromium and Gecko browsers like Chrome, Edge and Firefox. Your browser runs on WebKit, so some things might not work quite right.</p>
+      <p class="engine-notice-text engine-notice-ios">On iPhone and iPad every browser runs on WebKit (even Chrome and Firefox), so for the full experience try a computer.</p>
+      <button type="button" class="btn btn-fill engine-notice-btn">Continue Anyway</button>
+    </div>
+  </div>
   <div class="splash-center">
     <div class="building-blocks">
       <img
@@ -306,21 +317,19 @@
         <h4 class="footer-heading">Site</h4>
         <a href="../index.html">Home</a>
         <a href="../Shop/">Shop</a>
-        <a href="#">Placeholder</a>
+        <a href="../Buy/">Build</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Company</h4>
         <a href="../about.html">About Us</a>
-        <a href="../knowlage.html">Knowlage Base</a>
         <a href="../contact.html">Contact</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Follow</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter / X</a>
-        <a href="#">TikTok</a>
+        <a href="https://www.instagram.com/applecrabxd/">Instagram</a>
+        <a href="https://bsky.app/profile/applecrabxd.bsky.social">Blue Sky</a>
       </div>
     </nav>
 

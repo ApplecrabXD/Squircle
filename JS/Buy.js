@@ -23,6 +23,8 @@ const IMG={
 function lappyImg(name){return"../Assets/Lappy/"+encodeURI(name)+".webp";}
 // same for flippy, "SOC/SOC Elite L" -> the .webp
 function flippyImg(name){return"../Assets/Flippy%206/"+encodeURI(name)+".webp";}
+// and watchy, "Size/41mm L" -> the .webp
+function watchyImg(name){return"../Assets/Watchy%203/"+encodeURI(name)+".webp";}
 
 // prices in dollars, byo knocks the part off
 const buyProducts={
@@ -178,32 +180,36 @@ const buyProducts={
     name:"Watchy 3",
     tagline:"The watch that tracks it all.",
     page:"../Watchy%203/",
-    image:IMG.laptop,
-    thumb:IMG.tall,
+    image:watchyImg("Hero"),
+    thumb:watchyImg("Views/Flat P"),
     base:549,
     buildFee:60,
     diy:"Order the core watch, then fit your own battery, bezel and strap.",
     prebuilt:"Every part picked, fitted and tested, ready to wear straight out of the box.",
+    alt:"Watchy 3 smartwatch, seen at an angle",
+    banner:watchyImg("Views/Flat L"),
+    diyImage:watchyImg("Views/Side L"),
+    prebuiltImage:watchyImg("Views/Angle L"),
     specs:[
       {key:"size",title:"Size",question:"Which fits your wrist?",help:"Same features in both, the bigger one just lasts longer.",options:[
-        {value:"41mm",name:"41mm",detail:"Slim and light.",price:0,image:IMG.laptop},
-        {value:"45mm",name:"45mm",detail:"Bigger screen, bigger battery.",price:50,image:IMG.wide}
+        {value:"41mm",name:"41mm",detail:"Slim and light.",price:0,image:watchyImg("Size/41mm L")},
+        {value:"46mm",name:"46mm",detail:"Bigger screen, bigger battery.",price:50,image:watchyImg("Size/46mm L")}
       ]},
       {key:"display",title:"Display",question:"Which glass?",help:"An always-on OLED either way, bright enough to read in full sun.",options:[
-        {value:"ion",name:"Ion Glass",detail:"Light and tough.",price:0,image:IMG.laptop},
-        {value:"sapphire",name:"Sapphire Crystal",detail:"Basically scratch-proof.",price:100,image:IMG.wide}
+        {value:"ion",name:"Ion Glass",detail:"Light and tough.",price:0,image:watchyImg("Display/Glass L")},
+        {value:"sapphire",name:"Sapphire Glass",detail:"Basically scratch-proof.",price:100,image:watchyImg("Display/Sapphire Glass L")}
       ]},
       {key:"sensors",title:"Sensors",question:"How much do you want to track?",help:"All-day health tracking, as deep as you like.",options:[
-        {value:"essentials",name:"Essentials",detail:"Heart rate and blood oxygen.",price:0,image:IMG.laptop},
-        {value:"full-health",name:"Full Health",detail:"Adds skin temperature and ECG.",price:80,image:IMG.wide}
+        {value:"essentials",name:"Essentials",detail:"Heart rate and blood oxygen.",price:0,image:watchyImg("Sensors/Sensors L")},
+        {value:"full-health",name:"Full Health",detail:"Adds skin temperature and ECG.",price:80,image:watchyImg("Sensors/Sensors Plus L")}
       ]},
-      {key:"battery",title:"Battery",question:"How often do you want to charge?",help:"Both are replaceable yourself later on.",byo:20,options:[
-        {value:"standard",name:"Standard",detail:"Two days per charge.",price:0,image:IMG.laptop},
-        {value:"extended",name:"Extended",detail:"Up to four days per charge.",price:40,image:IMG.wide}
+      {key:"battery",title:"Battery",question:"How often do you want to charge?",help:"Both are replaceable yourself later on.",byo:20,byoImage:watchyImg("Views/Angle L"),options:[
+        {value:"standard",name:"Standard",detail:"Two days per charge.",price:0,image:watchyImg("Battery/Battery L")},
+        {value:"plus",name:"Battery Plus",detail:"Up to four days per charge.",price:40,image:watchyImg("Battery/Battery Plus L")}
       ]},
       {key:"connectivity",title:"Connectivity",question:"Leave your phone at home?",help:"Bluetooth and Wi-Fi come standard.",options:[
-        {value:"wifi",name:"Bluetooth + Wi-Fi",detail:"Pairs with your phone.",price:0,image:IMG.laptop},
-        {value:"lte",name:"Bluetooth + Wi-Fi + LTE",detail:"Calls and texts without your phone.",price:100,image:IMG.wide}
+        {value:"wifi",name:"Bluetooth + Wi-Fi",detail:"Pairs with your phone.",price:0,image:watchyImg("Connectivity/Wifi L")},
+        {value:"lte",name:"Bluetooth + Wi-Fi + LTE",detail:"Calls and texts without your phone.",price:100,image:watchyImg("Connectivity/Wifi Cell L")}
       ]}
     ]
   },

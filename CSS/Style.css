@@ -300,6 +300,72 @@ html.intro-seen #splash{display:none;}
   visibility:hidden;
 }
 
+/* webkit heads up, covers the splash till it's closed (Script.js) */
+.engine-notice{
+  position:absolute;
+  inset:0;
+  z-index:5;
+
+  display:flex;
+  padding:24px;
+  overflow-y:auto;
+
+  background:var(--zone-dark);
+
+  visibility:hidden;
+  opacity:0;
+  transition:opacity .4s ease,visibility .4s;
+}
+
+/* class comes from the head script so it's up before the first paint */
+html.engine-notice-on .engine-notice{
+  visibility:visible;
+  opacity:1;
+}
+
+.engine-notice-card{
+  /* auto margins centre it but still let a tall card scroll */
+  margin:auto;
+  max-width:440px;
+  padding:44px 32px;
+  border-radius:28px;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+
+  text-align:center;
+  color:var(--whiteline);
+
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.14);
+}
+
+.engine-notice-title{
+  font-family:"SuperMalibu","obliqua",sans-serif;
+  font-weight:400;
+  font-size:clamp(2rem,7vw,2.8rem);
+  line-height:1.05;
+}
+
+.engine-notice-title span{color:var(--accent);}
+
+.engine-notice-text{
+  font-family:"obliqua",sans-serif;
+  font-size:1rem;
+  line-height:1.5;
+  opacity:.75;
+  text-wrap:balance;
+}
+
+/* only iphones and ipads get the extra line */
+.engine-notice-ios{display:none; font-size:.9rem;}
+html.engine-ios .engine-notice-ios{display:block;}
+
+.engine-notice-btn{margin-top:8px; cursor:pointer;}
+.engine-notice-btn:focus-visible{outline:2px solid var(--whiteline); outline-offset:3px;}
+
 /* navbar */
 .navbar{
   position:fixed;

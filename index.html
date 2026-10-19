@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
-<!-- skip the splash if the intro already played -->
-<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- skip the splash if the intro already played (but replay it on refresh) -->
+<script>try{var nav=performance.getEntriesByType("navigation")[0];if(nav&&nav.type==="reload")sessionStorage.removeItem("squircleIntroSeen");else if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- heads up for webkit (safari and every iphone browser) until it's been closed once -->
+<script>try{var ua=navigator.userAgent,ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);if((ios||(/AppleWebKit/.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua)))&&localStorage.getItem("squircleEngineNotice")!=="1"){document.documentElement.classList.add("engine-notice-on");if(ios)document.documentElement.classList.add("engine-ios");}}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="CSS/Style.css">
 <link rel="stylesheet" href="CSS/Products.css">
@@ -48,6 +50,15 @@
 <body>
 
 <div id="splash">
+  <!-- webkit heads up, only shows on safari and iphones (head script + Script.js) -->
+  <div class="engine-notice" id="engineNotice" role="dialog" aria-labelledby="engineNoticeTitle">
+    <div class="engine-notice-card">
+      <h2 class="engine-notice-title" id="engineNoticeTitle">Heads <span>Up!</span></h2>
+      <p class="engine-notice-text">Squircle is built for Chromium and Gecko browsers like Chrome, Edge and Firefox. Your browser runs on WebKit, so some things might not work quite right.</p>
+      <p class="engine-notice-text engine-notice-ios">On iPhone and iPad every browser runs on WebKit (even Chrome and Firefox), so for the full experience try a computer.</p>
+      <button type="button" class="btn btn-fill engine-notice-btn">Continue Anyway</button>
+    </div>
+  </div>
   <div class="splash-center">
     <div class="building-blocks">
       <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
@@ -133,7 +144,6 @@
       </h1>
       <div class="hero-buttons">
         <a href="Shop/" class="btn btn-fill">Shop Now</a>
-        <a href="knowlage.html" class="btn btn-outline">Knowlage Base</a>
       </div>
     </div>
 
@@ -173,7 +183,7 @@
           </div>
           <div class="product-info">
             <h3 class="product-name">Lappy 13 Pro</h3>
-            <p class="product-text">The laptop you can fix yourself.</p>
+            <p class="product-text">Your laptop your rules</p>
             <p class="product-price"><small>From</small> $1,499</p>
           </div>
           <a href="Lappy/" class="btn btn-fill product-buy">Buy Now</a>
@@ -187,7 +197,7 @@
           </div>
           <div class="product-info">
             <h3 class="product-name">Gammy Pro Max</h3>
-            <p class="product-text">The liquid-cooled gaming PC.</p>
+            <p class="product-text">The stupidly liquid-cooled gaming beasts</p>
             <p class="product-price"><small>From</small> $2,999</p>
           </div>
           <a href="Gammy%20Pro%20Max/" class="btn btn-fill product-buy">Buy Now</a>
@@ -201,7 +211,7 @@
           </div>
           <div class="product-info">
             <h3 class="product-name">Ally Maxx</h3>
-            <p class="product-text">The handheld that plays anywhere.</p>
+            <p class="product-text">Any where any time</p>
             <p class="product-price"><small>From</small> $999</p>
           </div>
           <a href="Ally%20Maxx/" class="btn btn-fill product-buy">Buy Now</a>
@@ -215,7 +225,7 @@
           </div>
           <div class="product-info">
             <h3 class="product-name">Flippy 6 Pro</h3>
-            <p class="product-text">The phone that folds in half.</p>
+            <p class="product-text">Masive performance small form factor</p>
             <p class="product-price"><small>From</small> $1,699</p>
           </div>
           <a href="Flippy%206%20Pro/" class="btn btn-fill product-buy">Buy Now</a>
@@ -224,12 +234,12 @@
         <article class="product-card">
           <div class="product-media">
             <a href="Watchy%203/">
-              <img src="Assets/Temp/9x16.jpg" alt="Watchy 3">
+              <img src="Assets/Watchy%203/Views/Flat%20P.webp" alt="Watchy 3">
             </a>
           </div>
           <div class="product-info">
             <h3 class="product-name">Watchy 3</h3>
-            <p class="product-text">The watch that tracks it all.</p>
+            <p class="product-text">Everything you need on your wrist</p>
             <p class="product-price"><small>From</small> $549</p>
           </div>
           <a href="Watchy%203/" class="btn btn-fill product-buy">Buy Now</a>
@@ -243,7 +253,7 @@
           </div>
           <div class="product-info">
             <h3 class="product-name">Nuker</h3>
-            <p class="product-text">The microwave you'll never throw out.</p>
+            <p class="product-text">Yea we made one</p>
             <p class="product-price"><small>From</small> $349</p>
           </div>
           <a href="Nuker/" class="btn btn-fill product-buy">Buy Now</a>
@@ -257,7 +267,9 @@
 <section class="about-wrap">
 
   <div class="about-media">
-    <img src="Assets/Temp/9x16.jpg" alt="Placeholder">
+    <a href="about.html"></a>
+      <img src="Assets/Temp/9x16.jpg" alt="Placeholder">
+    </a>
   </div>
 
   <div class="about-copy">
@@ -270,7 +282,7 @@
         <span class="about-scribble-text">Squircle</span>
       </span>
     </div>
-    <p class="about-text">It started with a drawer full of dead gadgets and one rule: if we make it, you can open it. No glue, no rivets, just one screwdriver.</p>
+    <p class="about-text">It started with a drawer full of dead gadgets and one idear: if we make it, its your's to open and fix. No glue, no rivets, just one screwdriver.</p>
     <span class="about-stat">0<small>grams of glue</small></span>
     <a href="about.html" class="btn btn-fill">Learn More</a>
   </div>
@@ -279,13 +291,15 @@
     <div class="about-heading">
       <h2 class="about-title">Make it Yours</h2>
     </div>
-    <p class="about-text">Grab a DIY kit and build it yourself, or let us put it together for you. Either way, you pick every part.</p>
+    <p class="about-text">Pick up one of our DIY kit and build it yourself, or let us put it together for you. Either way, you get full control</p>
     <span class="about-stat">2<small>ways to build</small></span>
     <a href="Buy/" class="btn btn-fill">Start Building</a>
   </div>
 
   <div class="about-media">
-    <img src="Assets/Temp/9x16.jpg" alt="Placeholder">
+    <a href="Buy/">
+      <img src="Assets/Temp/9x16.jpg" alt="Placeholder">
+    </a>
   </div>
 
 </section>
@@ -325,21 +339,19 @@
         <h4 class="footer-heading">Site</h4>
         <a href="index.html">Home</a>
         <a href="Shop/">Shop</a>
-        <a href="#">Placeholder</a>
+        <a href="Buy/">Build</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Company</h4>
         <a href="about.html">About Us</a>
-        <a href="knowlage.html">Knowlage Base</a>
         <a href="contact.html">Contact</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Follow</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter / X</a>
-        <a href="#">TikTok</a>
+        <a href="https://www.instagram.com/applecrabxd/">Instagram</a>
+        <a href="https://bsky.app/profile/applecrabxd.bsky.social">Blue Sky</a>
       </div>
     </nav>
 

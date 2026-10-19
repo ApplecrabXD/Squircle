@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Squircle</title>
 <link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
-<!-- skip the splash if the intro already played -->
-<script>try{if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- skip the splash if the intro already played (but replay it on refresh) -->
+<script>try{var nav=performance.getEntriesByType("navigation")[0];if(nav&&nav.type==="reload")sessionStorage.removeItem("squircleIntroSeen");else if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
+<!-- heads up for webkit (safari and every iphone browser) until it's been closed once -->
+<script>try{var ua=navigator.userAgent,ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);if((ios||(/AppleWebKit/.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua)))&&localStorage.getItem("squircleEngineNotice")!=="1"){document.documentElement.classList.add("engine-notice-on");if(ios)document.documentElement.classList.add("engine-ios");}}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <link rel="stylesheet" href="CSS/Style.css">
 <link rel="stylesheet" href="CSS/Products.css">
@@ -18,6 +20,15 @@
 <body class="aboutus-page">
 
 <div id="splash">
+  <!-- webkit heads up, only shows on safari and iphones (head script + Script.js) -->
+  <div class="engine-notice" id="engineNotice" role="dialog" aria-labelledby="engineNoticeTitle">
+    <div class="engine-notice-card">
+      <h2 class="engine-notice-title" id="engineNoticeTitle">Heads <span>Up!</span></h2>
+      <p class="engine-notice-text">Squircle is built for Chromium and Gecko browsers like Chrome, Edge and Firefox. Your browser runs on WebKit, so some things might not work quite right.</p>
+      <p class="engine-notice-text engine-notice-ios">On iPhone and iPad every browser runs on WebKit (even Chrome and Firefox), so for the full experience try a computer.</p>
+      <button type="button" class="btn btn-fill engine-notice-btn">Continue Anyway</button>
+    </div>
+  </div>
   <div class="splash-center">
     <div class="building-blocks">
       <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
@@ -137,31 +148,30 @@
         <circle class="aboutus-name-guide" r="100"></circle>
         <path class="aboutus-name-shape" id="aboutusNameShape"></path>
       </svg>
-      <p class="aboutus-name-formula"><span>|x|<sup>n</sup> + |y|<sup>n</sup> = 1</span><span class="aboutus-name-n" id="aboutusNameN">n = 4.0</span></p>
     </div>
 
     <div class="aboutus-name-copy">
-      <h2 class="aboutus-title" id="aboutusNameTitle">What's a Squircle?</h2>
+      <h2 class="aboutus-title" id="aboutusNameTitle">What's this Squircle?</h2>
 
-      <div class="aboutus-name-chips" id="aboutusNameChips" aria-hidden="true">
-        <span class="aboutus-name-chip-indicator"></span>
-        <span class="aboutus-name-chip">Square</span>
-        <span class="aboutus-name-chip">Circle</span>
-        <span class="aboutus-name-chip">Squircle</span>
+      <div class="aboutus-name-chips" id="aboutusNameChips" role="group" aria-label="Jump to a shape">
+        <span class="aboutus-name-chip-indicator" aria-hidden="true"></span>
+        <button type="button" class="aboutus-name-chip">Square</button>
+        <button type="button" class="aboutus-name-chip">Circle</button>
+        <button type="button" class="aboutus-name-chip">Squircle</button>
       </div>
 
       <div class="aboutus-name-beats">
         <div class="aboutus-name-beat">
-          <h3 class="aboutus-name-beat-title">Start with a square.</h3>
-          <p class="aboutus-text">Strong and solid. Everything lines up and everything has its place. A bit stiff, though.</p>
+          <h3 class="aboutus-name-beat-title">A square tis but a simple item.</h3>
+          <p class="aboutus-text">Strong and solid. and the most defult shape A bit stiff, though.</p>
         </div>
         <div class="aboutus-name-beat">
-          <h3 class="aboutus-name-beat-title">Now take a circle.</h3>
-          <p class="aboutus-text">Smooth and friendly, with no corners to catch on. A bit hard to stack, though.</p>
+          <h3 class="aboutus-name-beat-title">What about the opposite. A circle.</h3>
+          <p class="aboutus-text">Smooth and friendly, still a defult shape and bit hard to stack.</p>
         </div>
         <div class="aboutus-name-beat">
-          <h3 class="aboutus-name-beat-title">Meet in the middle.</h3>
-          <p class="aboutus-text">That's a squircle: solid like a square, friendly like a circle. It's the shape of everything we make, and how we like to work. A bit of both.</p>
+          <h3 class="aboutus-name-beat-title">Whats the middle?</h3>
+          <p class="aboutus-text">Welcome To squircle: a strong square yet a friendly circle. It's the shape of everything we make, and how we like to work. A bit of both.</p>
         </div>
       </div>
     </div>
@@ -205,7 +215,7 @@
         <div class="aboutus-chapter-card">
           <p class="aboutus-chapter-year">2023</p>
           <h3 class="aboutus-chapter-title">Lappy, on a kitchen table.</h3>
-          <p class="aboutus-text">The first Lappy came together on a kitchen table in Adelaide. Swappable ports, upgradeable RAM and a back panel that lifts right off. It worked, and people wanted one.</p>
+          <p class="aboutus-text">The first Lappy came together on a kitchen table Swappable ports, upgradeable RAM and a back panel that lifts right off. It worked, and people wanted one.</p>
         </div>
       </li>
 
@@ -325,15 +335,8 @@
 <!-- school project, not a shop -->
 <section class="aboutus-maker" aria-labelledby="aboutusMakerTitle">
   <div class="aboutus-maker-card">
-    <h2 class="aboutus-title" id="aboutusMakerTitle">Squircle isn't a real company. Yet.</h2>
-    <p class="aboutus-text">It's a Web Dev final project, designed and built by <strong>ApplecrabXD</strong>. Every page is plain HTML, CSS and JavaScript with no frameworks, and GSAP doing the scroll magic. Nothing here is actually for sale, but every line of code is real.</p>
-    <ul class="aboutus-maker-tools" aria-label="Built with">
-      <li>HTML</li>
-      <li>CSS</li>
-      <li>JavaScript</li>
-      <li>GSAP</li>
-      <li>Canvas</li>
-    </ul>
+    <h2 class="aboutus-title" id="aboutusMakerTitle">Squircle isn't a real company. Yet. :(</h2>
+    <p class="aboutus-text">It's a Web Dev final project, designed and built by <a href="https://github.com/ApplecrabXD" target="_blank" rel="noopener"><strong>ApplecrabXD</strong></a>. Every page is plain HTML, CSS and JavaScript with no frameworks, databases or lookup tables, (yes that was a stupid idear, do as I say not as I do) With GSAP doing the scroll magic. Nothing here is actually for sale, but every line of code is real.</p>
     <div class="hero-buttons aboutus-maker-buttons">
       <a href="https://github.com/ApplecrabXD/Squircle" class="btn btn-fill" target="_blank" rel="noopener">See the Code</a>
       <a href="Shop/" class="btn btn-outline">Visit the Shop</a>
@@ -375,21 +378,19 @@
         <h4 class="footer-heading">Site</h4>
         <a href="index.html">Home</a>
         <a href="Shop/">Shop</a>
-        <a href="#">Placeholder</a>
+        <a href="Buy/">Build</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Company</h4>
         <a href="about.html">About Us</a>
-        <a href="knowlage.html">Knowlage Base</a>
         <a href="contact.html">Contact</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Follow</h4>
-        <a href="#">Instagram</a>
-        <a href="#">Twitter / X</a>
-        <a href="#">TikTok</a>
+        <a href="https://www.instagram.com/applecrabxd/">Instagram</a>
+        <a href="https://bsky.app/profile/applecrabxd.bsky.social">Blue Sky</a>
       </div>
     </nav>
 

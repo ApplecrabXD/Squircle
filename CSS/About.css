@@ -235,33 +235,6 @@ html[data-zone="orange"] .aboutus-page{
 
 html[data-zone="orange"] .aboutus-name-shape{fill:var(--whiteline);}
 
-.aboutus-name-formula{
-  display:flex;
-  align-items:baseline;
-  gap:16px;
-
-  font-family:"obliqua",sans-serif;
-  font-size:.95rem;
-  letter-spacing:.04em;
-  color:var(--aboutus-soft-75);
-}
-
-.aboutus-name-formula sup{font-size:.7em; line-height:0; vertical-align:.6em;}
-
-.aboutus-name-n{
-  min-width:4.5em;
-
-  font-family:"SuperMalibu","obliqua",sans-serif;
-  font-size:1.35rem;
-  letter-spacing:0;
-  color:var(--accent-3);
-
-  transition:color .35s ease;
-}
-
-/* yellow, white on orange */
-html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
-
 .aboutus-name-copy{
   flex:0 1 540px;
   min-width:0;
@@ -316,7 +289,10 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
   position:relative;
   z-index:1;
   padding:8px 16px;
+  border:0;
   border-radius:100px;
+  background:none;
+  cursor:pointer;
 
   font-family:"obliqua",sans-serif;
   font-size:.88rem;
@@ -325,7 +301,9 @@ html[data-zone="orange"] .aboutus-name-n{color:var(--whiteline);}
   transition:color .35s ease;
 }
 
+.aboutus-name-chip:hover{color:var(--accent);}
 .aboutus-name-chip.is-on{color:var(--pick-ink);}
+.aboutus-name-chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 
 /* beats: a list, or crossfading while pinned */
 .aboutus-name-beats{
@@ -589,14 +567,20 @@ html[data-zone="orange"] .aboutus-stat-num{color:var(--whiteline);}
   place-items:center;
 }
 
-/* light tile, squircle corners where supported */
+/* glass tile, squircle corners where supported */
 .aboutus-blocks-tile,
 .aboutus-mini{
   position:relative;
   aspect-ratio:1;
   border-radius:24%;
   corner-shape:squircle;
-  background:var(--whiteline);
+
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  backdrop-filter:var(--glass);
+  -webkit-backdrop-filter:var(--glass);
+
+  transition:background .35s ease, border-color .35s ease;
 }
 
 .aboutus-blocks-tile{

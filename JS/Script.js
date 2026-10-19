@@ -438,8 +438,9 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
 
     // laptop flies in, holds, then unpins
     "(min-width:651px)":()=>{
-      gsap.set(heroLaptop,{xPercent:-50,yPercent:-50});
-      gsap.set(heroBehind,{xPercent:-50,yPercent:-50});
+      // x:0 y:0 or gsap reads the css translate(-50%) back in as px on some screen sizes and stacks another -50% on top (laptop half off the top on the framework 13)
+      gsap.set(heroLaptop,{x:0,y:0,xPercent:-50,yPercent:-50});
+      gsap.set(heroBehind,{x:0,y:0,xPercent:-50,yPercent:-50});
       gsap.set(heroCopy,{pointerEvents:"auto"});
 
       const tl=gsap.timeline({

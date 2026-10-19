@@ -34,8 +34,10 @@ if(splash && loadingBar && introSeen){
   let safetyNet=null; // skip timer, see skipSplash
 
   // webkit heads up (the head script turns it on), the loader waits till it's closed
-  const noticeBtn=document.querySelector("#engineNotice button");
-  let noticeOpen=!!noticeBtn && document.documentElement.classList.contains("engine-notice-on");
+  // an old cached Style.css leaves it hidden (html attribute), so don't wait on a button nobody can read
+  const notice=document.getElementById("engineNotice");
+  const noticeBtn=notice && notice.querySelector("button");
+  let noticeOpen=!!noticeBtn && document.documentElement.classList.contains("engine-notice-on") && getComputedStyle(notice).display!=="none";
 
   // preload the intro fonts now
   const introFonts=document.fonts ? Promise.all([document.fonts.load('300 1em "azo-sans-web"'),document.fonts.load('1em "SuperMalibu"')]).catch(()=>{}) : Promise.resolve();

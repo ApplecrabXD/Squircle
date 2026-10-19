@@ -1224,13 +1224,14 @@ const dbHeart=document.getElementById("dbHeart");
 const dbEnemyImg=document.getElementById("dbEnemyImg");
 
 if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && dbHpFill && dbHpNum && dbBoard && dbHeart && dbEnemyImg){
+  // paths start with / so they still load from pages inside folders (about/, contact/)
   const dbMonsters={
     deltarune:{
       trigger:"deltarune",
-      enemyImg:"Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp",
+      enemyImg:"/Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp",
       enemyAlt:"Lancer",
       heroName:"KRIS",
-      theme:"Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer%20vs%20theme.mp3",
+      theme:"/Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer%20vs%20theme.mp3",
       introLines:[
         "* LANCER blocks the way!",
         "* \"IT'S ME, LANCER! PREPARE FOR A BATTLE ROYALE!\"",
@@ -1258,10 +1259,10 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
     },
     undertale:{
       trigger:"undertale",
-      enemyImg:"Assets/Easter%20Eggs/Deltarune%20Undertale/Sans.webp",
+      enemyImg:"/Assets/Easter%20Eggs/Deltarune%20Undertale/Sans.webp",
       enemyAlt:"Sans",
       heroName:"FRISK",
-      theme:"Assets/Easter%20Eggs/Deltarune%20Undertale/MEGALOVANIA.mp3",
+      theme:"/Assets/Easter%20Eggs/Deltarune%20Undertale/MEGALOVANIA.mp3",
       introLines:[
         "* SANS is watching you very closely.",
         "* SANS: \"heh. so you're the one everybody's talking about.\"",
@@ -1551,11 +1552,11 @@ if(flappyTrigger && flappyGame && flappyCanvas && flappyScoreEl && flappyBestEl 
   const FL_PIPE_INTERVAL=1300;
 
   const flBirdImg=new Image();
-  flBirdImg.src="Assets/Logos/Logo.png";
+  flBirdImg.src="/Assets/Logos/Logo.png";
   const flBgImg=new Image();
-  flBgImg.src="Assets/Easter%20Eggs/Flappy%20Bird/BG.png";
+  flBgImg.src="/Assets/Easter%20Eggs/Flappy%20Bird/BG.png";
   const flPipeImg=new Image();
-  flPipeImg.src="Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
+  flPipeImg.src="/Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
 
   let flState="idle"; // idle playing over
   let flBirdY,flBirdVel,flBirdRot,flPipes,flScore,flBest=0,flLast,flPipeTimer,flRaf;

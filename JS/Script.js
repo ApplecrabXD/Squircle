@@ -312,12 +312,13 @@ function moveAnimationToNavbar(){
   window.addEventListener("load",()=>{pageLoaded=true; finishSplash();});
 }
 
-// sliding nav indicator pill
+// sliding nav indicator pill, mouse only
+// (a tap fires mouseenter too, and an iphone treats the pill fading in as a hover menu so the link needs a second tap)
 const navLinksContainer = document.querySelector(".nav-links");
 const navIndicator = document.querySelector(".nav-indicator");
 const navItems = document.querySelectorAll(".nav-links a");
 
-if (navLinksContainer && navIndicator && navItems.length > 0) {
+if (navLinksContainer && navIndicator && navItems.length > 0 && matchMedia("(hover:hover)").matches) {
   navItems.forEach(link => {
     link.addEventListener("mouseenter", () => {
       const linkRect = link.getBoundingClientRect();
@@ -662,8 +663,9 @@ const productViewport=document.getElementById("productViewport");
 const productTrack=document.getElementById("productTrack");
 
 if(hasGsap && productWrap && productSticky && productViewport && productTrack){
+  // phones on their side are too short to pin, they get the stacked grid (same queries as Style.css)
   ScrollTrigger.matchMedia({
-    "(min-width:651px)":()=>{
+    "(min-width:651px) and (min-height:501px)":()=>{
       const tl=gsap.timeline({
         scrollTrigger:{
           trigger:productWrap,
@@ -689,7 +691,7 @@ if(hasGsap && productWrap && productSticky && productViewport && productTrack){
       };
     },
 
-    "(max-width:650px)":()=>{gsap.set(productTrack,{clearProps:"all"});}
+    "(max-width:650px), (max-height:500px)":()=>{gsap.set(productTrack,{clearProps:"all"});}
 
   });
 }
@@ -711,9 +713,10 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
     scale:{scale:.6,rotate:6}
   };
 
+  // stacked on phones and on short landscape screens (same queries as Products.css)
   ScrollTrigger.matchMedia({
 
-    "(min-width:651px)":()=>{
+    "(min-width:651px) and (min-height:501px)":()=>{
       // horizontal pan, pinned
       const panTween=gsap.to(lappyShowcaseTrack,{
         x:()=>-(lappyShowcaseTrack.scrollWidth-lappyShowcaseSticky.clientWidth),
@@ -757,7 +760,7 @@ if(hasGsap && lappyShowcaseWrap && lappyShowcaseSticky && lappyShowcaseTrack && 
       };
     },
 
-    "(max-width:650px)":()=>{
+    "(max-width:650px), (max-height:500px)":()=>{
       gsap.set(lappyShowcaseTrack,{clearProps:"all"});
       gsap.set(lappyShowcaseTrack.querySelectorAll("[data-fx]"),{clearProps:"all"});
     }
@@ -923,6 +926,9 @@ document.addEventListener("click",e=>{
   scrollTo({top:target.getBoundingClientRect().top+scrollY-margin,behavior:smoothScrollReduced?"auto":"smooth"});
 });
 
+// iphones only show the :active button press when the page listens for touches
+document.addEventListener("touchstart",()=>{},{passive:true});
+
 // canvas background
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
@@ -947,9 +953,12 @@ function resize(){
   ctx.setTransform(dpr,0,0,dpr,0,0);
 }
 
+// phone toolbars grow and shrink the height while you scroll, so touch screens only redraw the lines when the width changes
+let linesWidth=innerWidth;
 addEventListener("resize",()=>{
   resize();
-  if(lines.length)createlines();
+  if(lines.length && (!("ontouchstart" in window) || innerWidth!==linesWidth))createlines();
+  linesWidth=innerWidth;
 });
 
 resize();

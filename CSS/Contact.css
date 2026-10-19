@@ -305,7 +305,10 @@ legend.contact-label + *{clear:both;}
 
 .contact-input::placeholder{color:color-mix(in srgb, var(--line) 42%, transparent);}
 
-.contact-input:hover{border-color:color-mix(in srgb, var(--line) 32%, transparent);}
+/* mouse only, a tap on a phone would leave it stuck on (see Style.css) */
+@media (hover:hover){
+  .contact-input:hover{border-color:color-mix(in srgb, var(--line) 32%, transparent);}
+}
 
 /* focus ring */
 .contact-input:focus{
@@ -454,7 +457,9 @@ legend.contact-label + *{clear:both;}
   transition:transform .25s ease, background .35s ease, border-color .35s ease, color .35s ease;
 }
 
-.contact-chip:hover{transform:scale(1.04);}
+@media (hover:hover){
+  .contact-chip:hover{transform:scale(1.04);}
+}
 .contact-chip:active{transform:scale(.97);}
 
 /* hidden radio, still accessible */

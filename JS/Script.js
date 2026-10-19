@@ -438,8 +438,9 @@ if(hasGsap && heroWrap && heroCopy && heroLaptop && heroLaptopImg && heroBehind)
 
     // laptop flies in, holds, then unpins
     "(min-width:651px)":()=>{
-      gsap.set(heroLaptop,{xPercent:-50,yPercent:-50});
-      gsap.set(heroBehind,{xPercent:-50,yPercent:-50});
+      // x:0 y:0 or gsap reads the css translate(-50%) back in as px on some screen sizes and stacks another -50% on top (laptop half off the top on the framework 13)
+      gsap.set(heroLaptop,{x:0,y:0,xPercent:-50,yPercent:-50});
+      gsap.set(heroBehind,{x:0,y:0,xPercent:-50,yPercent:-50});
       gsap.set(heroCopy,{pointerEvents:"auto"});
 
       const tl=gsap.timeline({
@@ -820,6 +821,32 @@ if(lappyReveals.length && "IntersectionObserver" in window){
   lappyReveals.forEach(el=>lappyRevealObserver.observe(el));
 }
 
+// diy screwdriver keeps spinning while the mouse is over it, then settles back upright
+// (product pages + the buy page, buy.js draws its cards later so this listens on the whole document)
+const diySpinReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const diySpinTime=3; // seconds for one full turn, bigger is slower
+
+// the screwdriver this pointer just came onto or left, null if it only moved inside the card
+function diySpinImg(e){
+  if(e.pointerType==="touch")return null; // mouse over only
+  const host=e.target.closest(".lappy-option-media--diy, .buy-option");
+  if(!host || host.contains(e.relatedTarget) || host.closest(".is-locked"))return null;
+  return host.querySelector(".lappy-option-media--diy img, .buy-option-thumb--icon img");
+}
+
+// gsap only counts --diy-turn up (the css turns it into rotate), so the card's css hover zoom still works
+if(window.gsap && !diySpinReduced){
+  document.addEventListener("pointerover",e=>{
+    const img=diySpinImg(e);
+    if(img)gsap.to(img,{"--diy-turn":"+=360",duration:diySpinTime,ease:"none",repeat:-1,overwrite:true});
+  });
+  document.addEventListener("pointerout",e=>{
+    const img=diySpinImg(e);
+    // nearest upright, so it never turns more than half a spin to get there
+    if(img)gsap.to(img,{"--diy-turn":Math.round(parseFloat(gsap.getProperty(img,"--diy-turn"))/360)*360,duration:.8,ease:"power3.out",overwrite:true});
+  });
+}
+
 // spec configurator
 const lappyConfiguratorImg=document.getElementById("lappyConfiguratorImg");
 const lappySpecList=document.querySelector(".lappy-spec-list");
@@ -1198,13 +1225,14 @@ const dbHeart=document.getElementById("dbHeart");
 const dbEnemyImg=document.getElementById("dbEnemyImg");
 
 if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && dbHpFill && dbHpNum && dbBoard && dbHeart && dbEnemyImg){
+  // paths start with / so they still load from pages inside folders (about/, contact/)
   const dbMonsters={
     deltarune:{
       trigger:"deltarune",
-      enemyImg:"Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp",
+      enemyImg:"/Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp",
       enemyAlt:"Lancer",
       heroName:"KRIS",
-      theme:"Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer%20vs%20theme.mp3",
+      theme:"/Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer%20vs%20theme.mp3",
       introLines:[
         "* LANCER blocks the way!",
         "* \"IT'S ME, LANCER! PREPARE FOR A BATTLE ROYALE!\"",
@@ -1232,10 +1260,10 @@ if(dbOverlay && dbText && dbAudio && dbClose && dbMenu && dbHp && dbHpName && db
     },
     undertale:{
       trigger:"undertale",
-      enemyImg:"Assets/Easter%20Eggs/Deltarune%20Undertale/Sans.webp",
+      enemyImg:"/Assets/Easter%20Eggs/Deltarune%20Undertale/Sans.webp",
       enemyAlt:"Sans",
       heroName:"FRISK",
-      theme:"Assets/Easter%20Eggs/Deltarune%20Undertale/MEGALOVANIA.mp3",
+      theme:"/Assets/Easter%20Eggs/Deltarune%20Undertale/MEGALOVANIA.mp3",
       introLines:[
         "* SANS is watching you very closely.",
         "* SANS: \"heh. so you're the one everybody's talking about.\"",
@@ -1525,11 +1553,11 @@ if(flappyTrigger && flappyGame && flappyCanvas && flappyScoreEl && flappyBestEl 
   const FL_PIPE_INTERVAL=1300;
 
   const flBirdImg=new Image();
-  flBirdImg.src="Assets/Logos/Logo.png";
+  flBirdImg.src="/Assets/Logos/Logo.png";
   const flBgImg=new Image();
-  flBgImg.src="Assets/Easter%20Eggs/Flappy%20Bird/BG.png";
+  flBgImg.src="/Assets/Easter%20Eggs/Flappy%20Bird/BG.png";
   const flPipeImg=new Image();
-  flPipeImg.src="Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
+  flPipeImg.src="/Assets/Easter%20Eggs/Flappy%20Bird/Pipe.png";
 
   let flState="idle"; // idle playing over
   let flBirdY,flBirdVel,flBirdRot,flPipes,flScore,flBest=0,flLast,flPipeTimer,flRaf;

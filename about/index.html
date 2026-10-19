@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About Squircle</title>
-<link rel="icon" type="image/x-icon" href="Assets/Logos/Logo.svg">
+<link rel="icon" type="image/x-icon" href="../Assets/Logos/Logo.svg">
 <!-- skip the splash if the intro already played (but replay it on refresh) -->
 <script>try{var nav=performance.getEntriesByType("navigation")[0];if(nav&&nav.type==="reload")sessionStorage.removeItem("squircleIntroSeen");else if(sessionStorage.getItem("squircleIntroSeen")==="1")document.documentElement.classList.add("intro-seen");}catch(e){}</script>
 <!-- heads up for webkit (safari and every iphone browser) until it's been closed once -->
 <script>try{var ua=navigator.userAgent,ios=/iP(hone|od|ad)/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1);if((ios||(/AppleWebKit/.test(ua)&&!/Chrome|Chromium|Edg|OPR|Firefox/.test(ua)))&&localStorage.getItem("squircleEngineNotice")!=="1"){document.documentElement.classList.add("engine-notice-on");if(ios)document.documentElement.classList.add("engine-ios");}}catch(e){}</script>
 <link rel="stylesheet" href="https://use.typekit.net/orz4bhr.css">
 <!-- the ?v= makes browsers and the github cdn grab fresh files, bump it on every page when the css or js changes -->
-<link rel="stylesheet" href="CSS/Style.css?v=2">
-<link rel="stylesheet" href="CSS/Products.css?v=2">
-<link rel="stylesheet" href="CSS/About.css?v=2">
+<link rel="stylesheet" href="../CSS/Style.css?v=7">
+<link rel="stylesheet" href="../CSS/Products.css?v=7">
+<link rel="stylesheet" href="../CSS/About.css?v=7">
 </head>
 
 <!-- about page -->
@@ -25,17 +25,17 @@
   <div class="engine-notice" id="engineNotice" role="dialog" aria-labelledby="engineNoticeTitle" hidden>
     <div class="engine-notice-card">
       <h2 class="engine-notice-title" id="engineNoticeTitle">Heads <span>Up!</span></h2>
-      <p class="engine-notice-text">Squircle is built for Chromium and Gecko browsers like Chrome, Edge and Firefox. Your browser runs on WebKit, so some things might not work quite right.</p>
+      <p class="engine-notice-text">Squircle is built for Chromium and Gecko browsers like Chrome, Edge and Firefox. Your browser runs on WebKit, so some things might not work quite right, and expect the website to take 60+ seconds to load. Please use <a href="https://www.google.com/intl/en_au/chrome/">Google Chrome</a> or <a href="https://www.firefox.com/">Firefox</a>.</p>
       <p class="engine-notice-text engine-notice-ios">On iPhone and iPad every browser runs on WebKit (even Chrome and Firefox), so for the full experience try a computer.</p>
       <button type="button" class="btn btn-fill engine-notice-btn">Continue Anyway</button>
     </div>
   </div>
   <div class="splash-center">
     <div class="building-blocks">
-      <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Ornage block">
-      <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
-      <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
-      <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
+      <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="Orange block">
+      <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="Gray Block">
+      <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="Purple Block">
+      <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="White Block">
     </div>
     <div class="loading-container">
       <div class="loading-bar"></div>
@@ -50,13 +50,13 @@
 
   <div class="nav-orb">
     <a href="/" class="nav-logo">
-      <img src="Assets/Logos/Logo.svg" alt="Squircle">
+      <img src="../Assets/Logos/Logo.svg" alt="Squircle">
 
       <div class="nav-building-blocks">
-        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
-        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
-        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
-        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
       </div>
     </a>
   </div>
@@ -64,9 +64,9 @@
   <div class="nav-orb">
     <div class="nav-links">
       <div class="nav-indicator"></div>
-      <a href="index.html">Home</a>
-      <a href="Shop/">Shop</a>
-      <a href="about.html">About Us</a>
+      <a href="/">Home</a>
+      <a href="../Shop/">Shop</a>
+      <a href="../about/">About Us</a>
     </div>
   </div>
 
@@ -82,21 +82,21 @@
 
     <div class="nav-menu-group nav-menu-group--site">
       <p class="nav-menu-heading">Site</p>
-      <a href="index.html" class="nav-menu-link">Home</a>
-      <a href="Shop/" class="nav-menu-link">Shop</a>
-      <a href="about.html" class="nav-menu-link">About Us</a>
-      <a href="Buy/" class="nav-menu-link">Build Your Own</a>
-      <a href="contact.html" class="nav-menu-link">Contact</a>
+      <a href="/" class="nav-menu-link">Home</a>
+      <a href="../Shop/" class="nav-menu-link">Shop</a>
+      <a href="../about/" class="nav-menu-link">About Us</a>
+      <a href="../Buy/" class="nav-menu-link">Build Your Own</a>
+      <a href="../contact/" class="nav-menu-link">Contact</a>
     </div>
 
     <div class="nav-menu-group">
       <p class="nav-menu-heading">Products</p>
-      <a href="Lappy/" class="nav-menu-link">Lappy 13 Pro <small>Laptop</small></a>
-      <a href="Gammy%20Pro%20Max/" class="nav-menu-link">Gammy Pro Max <small>Gaming PC</small></a>
-      <a href="Ally%20Maxx/" class="nav-menu-link">Ally Maxx <small>Handheld</small></a>
-      <a href="Flippy%206%20Pro/" class="nav-menu-link">Flippy 6 Pro <small>Phone</small></a>
-      <a href="Watchy%203/" class="nav-menu-link">Watchy 3 <small>Watch</small></a>
-      <a href="Nuker/" class="nav-menu-link">Nuker <small>Microwave</small></a>
+      <a href="../Lappy/" class="nav-menu-link">Lappy 13 Pro <small>Laptop</small></a>
+      <a href="../Gammy%20Pro%20Max/" class="nav-menu-link">Gammy Pro Max <small>Gaming PC</small></a>
+      <a href="../Ally%20Maxx/" class="nav-menu-link">Ally Maxx <small>Handheld</small></a>
+      <a href="../Flippy%206%20Pro/" class="nav-menu-link">Flippy 6 Pro <small>Phone</small></a>
+      <a href="../Watchy%203/" class="nav-menu-link">Watchy 3 <small>Watch</small></a>
+      <a href="../Nuker/" class="nav-menu-link">Nuker <small>Microwave</small></a>
     </div>
   </div>
 
@@ -112,7 +112,7 @@
     </h1>
     <div class="hero-buttons aboutus-hero-buttons">
       <a href="#aboutusName" class="btn btn-fill">Our Story</a>
-      <a href="Shop/" class="btn btn-outline">Shop Now</a>
+      <a href="../Shop/" class="btn btn-outline">Shop Now</a>
     </div>
   </div>
 
@@ -121,10 +121,10 @@
     <button type="button" class="aboutus-logo" id="aboutusLogo" aria-pressed="false" aria-label="Take the Squircle logo apart">
       <span class="aboutus-logo-tilt" id="aboutusLogoTilt">
         <span class="aboutus-logo-stack">
-          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-          <img class="aboutus-logo-layer" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+          <img class="aboutus-logo-layer" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+          <img class="aboutus-logo-layer" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+          <img class="aboutus-logo-layer" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+          <img class="aboutus-logo-layer" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
         </span>
       </span>
     </button>
@@ -164,14 +164,14 @@
       <div class="aboutus-name-beats">
         <div class="aboutus-name-beat">
           <h3 class="aboutus-name-beat-title">A square tis but a simple item.</h3>
-          <p class="aboutus-text">Strong and solid. and the most defult shape A bit stiff, though.</p>
+          <p class="aboutus-text">Strong and solid. and the most default shape A bit stiff, though.</p>
         </div>
         <div class="aboutus-name-beat">
           <h3 class="aboutus-name-beat-title">What about the opposite. A circle.</h3>
-          <p class="aboutus-text">Smooth and friendly, still a defult shape and bit hard to stack.</p>
+          <p class="aboutus-text">Smooth and friendly, still a default shape and bit hard to stack.</p>
         </div>
         <div class="aboutus-name-beat">
-          <h3 class="aboutus-name-beat-title">Whats the middle?</h3>
+          <h3 class="aboutus-name-beat-title">What's the middle?</h3>
           <p class="aboutus-text">Welcome To squircle: a strong square yet a friendly circle. It's the shape of everything we make, and how we like to work. A bit of both.</p>
         </div>
       </div>
@@ -252,10 +252,10 @@
 
     <div class="aboutus-blocks-stage" aria-hidden="true">
       <div class="aboutus-blocks-tile aboutus-set" id="aboutusBlocksLogo">
-        <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-        <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-        <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-        <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+        <img data-block="orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+        <img data-block="gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+        <img data-block="purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+        <img data-block="white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
       </div>
     </div>
 
@@ -263,10 +263,10 @@
       <li class="aboutus-rule" data-block="orange">
         <div class="aboutus-rule-card">
           <span class="aboutus-mini aboutus-set" data-active="orange" aria-hidden="true">
-            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+            <img data-block="orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
           </span>
           <div class="aboutus-rule-body">
             <p class="aboutus-rule-index">The orange square</p>
@@ -279,10 +279,10 @@
       <li class="aboutus-rule" data-block="gray">
         <div class="aboutus-rule-card">
           <span class="aboutus-mini aboutus-set" data-active="gray" aria-hidden="true">
-            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+            <img data-block="orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
           </span>
           <div class="aboutus-rule-body">
             <p class="aboutus-rule-index">The grey circle</p>
@@ -295,10 +295,10 @@
       <li class="aboutus-rule" data-block="purple">
         <div class="aboutus-rule-card">
           <span class="aboutus-mini aboutus-set" data-active="purple" aria-hidden="true">
-            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+            <img data-block="orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
           </span>
           <div class="aboutus-rule-body">
             <p class="aboutus-rule-index">The purple square</p>
@@ -311,10 +311,10 @@
       <li class="aboutus-rule" data-block="white">
         <div class="aboutus-rule-card">
           <span class="aboutus-mini aboutus-set" data-active="white" aria-hidden="true">
-            <img data-block="orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
-            <img data-block="gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
-            <img data-block="purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
-            <img data-block="white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="">
+            <img data-block="orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="">
+            <img data-block="gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="">
+            <img data-block="purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="">
+            <img data-block="white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="">
           </span>
           <div class="aboutus-rule-body">
             <p class="aboutus-rule-index">The white circle</p>
@@ -337,19 +337,19 @@
 <section class="aboutus-maker" aria-labelledby="aboutusMakerTitle">
   <div class="aboutus-maker-card">
     <h2 class="aboutus-title" id="aboutusMakerTitle">Squircle isn't a real company. Yet. :(</h2>
-    <p class="aboutus-text">It's a Web Dev final project, designed and built by <a href="https://github.com/ApplecrabXD" target="_blank" rel="noopener"><strong>ApplecrabXD</strong></a>. Every page is plain HTML, CSS and JavaScript with no frameworks, databases or lookup tables, (yes that was a stupid idear, do as I say not as I do) With GSAP doing the scroll magic. Nothing here is actually for sale, but every line of code is real.</p>
+    <p class="aboutus-text">It's a Web Dev final project, designed and built by <a href="https://github.com/ApplecrabXD" target="_blank" rel="noopener"><strong>ApplecrabXD</strong></a>. Every page is plain HTML, CSS and JavaScript with no frameworks, databases or lookup tables, (yes that was a stupid idea, do as I say not as I do) With GSAP doing the scroll magic. Nothing here is actually for sale, but every line of code is real.</p>
     <div class="hero-buttons aboutus-maker-buttons">
       <a href="https://github.com/ApplecrabXD/Squircle" class="btn btn-fill" target="_blank" rel="noopener">See the Code</a>
-      <a href="Shop/" class="btn btn-outline">Visit the Shop</a>
+      <a href="../Shop/" class="btn btn-outline">Visit the Shop</a>
     </div>
   </div>
 </section>
 
 <section class="about-banner lappy-buy-banner">
-  <img src="Assets/Temp/16x9.png" alt="Placeholder image">
+  <img src="../Assets/Temp/16x9.png" alt="Placeholder image">
   <div class="lappy-buy-banner-copy">
     <h2 class="lappy-buy-banner-title">Let's Have Some Fun.</h2>
-    <a href="Shop/" class="btn btn-fill">Shop Now</a>
+    <a href="../Shop/" class="btn btn-fill">Shop Now</a>
   </div>
 </section>
 
@@ -366,10 +366,10 @@
 
     <div class="footer-brand">
       <div class="footer-blocks">
-        <img class="block-orange" src="Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
-        <img class="block-gray" src="Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
-        <img class="block-purple" src="Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
-        <img class="block-white" src="Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
+        <img class="block-orange" src="../Assets/Logos/Bulding%20Blocks/Orange.svg" alt="orange block">
+        <img class="block-gray" src="../Assets/Logos/Bulding%20Blocks/Gray.svg" alt="gray block">
+        <img class="block-purple" src="../Assets/Logos/Bulding%20Blocks/Purple.svg" alt="purple block">
+        <img class="block-white" src="../Assets/Logos/Bulding%20Blocks/White.svg" alt="white block">
       </div>
       <p class="footer-tagline">Squircle. Let's Have Some Fun.</p>
     </div>
@@ -377,15 +377,15 @@
     <nav class="footer-links">
       <div class="footer-col">
         <h4 class="footer-heading">Site</h4>
-        <a href="index.html">Home</a>
-        <a href="Shop/">Shop</a>
-        <a href="Buy/">Build</a>
+        <a href="/">Home</a>
+        <a href="../Shop/">Shop</a>
+        <a href="../Buy/">Build</a>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-heading">Company</h4>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Contact</a>
+        <a href="../about/">About Us</a>
+        <a href="../contact/">Contact</a>
       </div>
 
       <div class="footer-col">
@@ -401,11 +401,11 @@
 
   <div class="footer-acknowledge" style="text-align: justify;">
     <p class="footer-ack-item">
-      <img class="footer-flag" src="Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
+      <img class="footer-flag" src="../Assets/Flag/Aboriginal%20Flag.jpg" alt="Aboriginal flag">
       <span>We acknowledge the Kaurna people as the traditional owners and custodians of the Adelaide region. We respect their spiritual relationship with their country, and recognise that their cultural and heritage beliefs are just as important to the living Kaurna people today. We pay our respects to Elders past, present, and emerging, and extend that respect to all First Nations peoples. Always was, always will be, Aboriginal land.</span>
     </p>
     <p class="footer-ack-item">
-      <img class="footer-flag" src="Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
+      <img class="footer-flag" src="../Assets/Flag/Progress%20Flag.svg" alt="Progress Pride flag">
       <span>Squircle is a safe and welcoming space for everyone. We proudly support and celebrate the LGBTQIA+ community, whoever you are and whoever you love.</span>
     </p>
   </div>
@@ -419,7 +419,7 @@
 <!-- easter egg: deltarune / undertale -->
 <div class="deltarune-battle" id="deltaruneBattle" hidden aria-hidden="true">
   <div class="db-scene">
-    <img class="db-enemy" id="dbEnemyImg" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">
+    <img class="db-enemy" id="dbEnemyImg" src="../Assets/Easter%20Eggs/Deltarune%20Undertale/Lancer.webp" alt="">
   </div>
 
   <div class="db-hp" id="dbHp" hidden>
@@ -430,7 +430,7 @@
   </div>
 
   <div class="db-board" id="dbBoard" hidden>
-    <img class="db-heart" id="dbHeart" src="Assets/Easter%20Eggs/Deltarune%20Undertale/Heart.webp" alt="">
+    <img class="db-heart" id="dbHeart" src="../Assets/Easter%20Eggs/Deltarune%20Undertale/Heart.webp" alt="">
   </div>
 
   <div class="db-textbox">
@@ -449,8 +449,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.15.0/ScrollTrigger.min.js"></script>
-<script src="JS/Script.js?v=2"></script>
-<script src="JS/About.js?v=2"></script>
+<script src="../JS/Script.js?v=7"></script>
+<script src="../JS/About.js?v=7"></script>
 
 </body>
 </html>

@@ -327,10 +327,13 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 
 .lappy-option.in-view .lappy-option-media{opacity:1;transform:translateY(0);}
 
-.lappy-option.in-view .lappy-option-media:hover{
-  transform:translateY(-12px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
-  transition-duration:.4s;
+/* mouse only, a tap on a phone would leave it stuck on (see Style.css) */
+@media (hover:hover){
+  .lappy-option.in-view .lappy-option-media:hover{
+    transform:translateY(-12px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+    transition-duration:.4s;
+  }
 }
 
 .lappy-option-media img{
@@ -344,7 +347,9 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.lappy-option-media:hover img{transform:scale(1.1);}
+@media (hover:hover){
+  .lappy-option-media:hover img{transform:scale(1.1);}
+}
 
 /* diy screwdriver, tiny pixel art so it sits in the middle instead of filling the box */
 .lappy-option-media--diy{
@@ -401,6 +406,7 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
   font-size:1rem;
   line-height:1.6;
   color:var(--line);
+  text-align:justify;
 }
 
 /* stagger the second card */
@@ -426,6 +432,11 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 @media (max-width:650px){
   .lappy-options{padding:70px 24px;}
   .lappy-options-grid{grid-template-columns:1fr; gap:48px;}
+}
+
+/* justify leaves big gaps once the columns get narrow */
+@media (max-width:900px){
+  .lappy-option-text{text-align:left;}
 }
 
 /* spec configurator */
@@ -507,7 +518,9 @@ html[data-zone] .lappy-panel--cta .lappy-panel-body{background:none; border-colo
 
 html[data-zone] .lappy-spec-btn{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
 
-.lappy-spec-btn:hover{transform:scale(1.02);}
+@media (hover:hover){
+  .lappy-spec-btn:hover{transform:scale(1.02);}
+}
 
 .lappy-spec-btn.is-active{
   background:transparent;
@@ -617,7 +630,8 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   .lappy-spec-btn{padding:10px 18px;}
 }
 
-@media (max-width:650px){
+/* phones, and phones on their side (too short to pin): the panels stack, Script.js uses the same queries */
+@media (max-width:650px), (max-height:500px){
   .lappy-showcase{height:auto;}
 
   .lappy-showcase-sticky{
@@ -632,10 +646,21 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   }
 
   .lappy-panel{
-    flex-direction:column;
     flex:none;
     width:100%;
     height:auto;
+  }
+}
+
+/* on their side the panels keep the desktop row, just a bit tighter */
+@media (min-width:651px) and (max-height:500px){
+  .lappy-panel{padding:44px clamp(28px,7vw,160px);}
+  .lappy-panel-body{gap:16px; padding:32px 40px;}
+}
+
+@media (max-width:650px){
+  .lappy-panel{
+    flex-direction:column;
     gap:28px;
     padding:70px 24px;
   }
@@ -681,7 +706,9 @@ html[data-zone] .lappy-spec-btn.is-active{background:transparent; border-color:t
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.lappy-buy-banner:hover .lappy-buy-banner-copy::before{transform:scale(1.1);}
+@media (hover:hover){
+  .lappy-buy-banner:hover .lappy-buy-banner-copy::before{transform:scale(1.1);}
+}
 
 @media (prefers-reduced-motion:reduce){
   .lappy-buy-banner-copy::before{transition:none;}

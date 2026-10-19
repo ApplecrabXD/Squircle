@@ -146,7 +146,10 @@ html[data-zone="orange"] .shop{
   transition:transform .3s cubic-bezier(.22,1,.36,1);
 }
 
-.shop-reset:hover::after{transform:scaleX(1);}
+/* mouse only, a tap on a phone would leave it stuck on (see Style.css) */
+@media (hover:hover){
+  .shop-reset:hover::after{transform:scaleX(1);}
+}
 .shop-reset:disabled{opacity:.35; cursor:default;}
 .shop-reset:disabled::after{transform:scaleX(0);}
 .shop-reset:focus-visible{outline:2px solid var(--line); outline-offset:4px; border-radius:4px;}
@@ -170,7 +173,9 @@ html[data-zone="orange"] .shop{
   transition:transform .25s ease, background .35s ease, border-color .35s ease;
 }
 
-.shop-filters-toggle:hover{transform:scale(1.04);}
+@media (hover:hover){
+  .shop-filters-toggle:hover{transform:scale(1.04);}
+}
 .shop-filters-toggle:focus-visible{outline:2px solid var(--line); outline-offset:3px;}
 
 .shop-filters-toggle-icon{
@@ -247,7 +252,9 @@ legend.shop-group-title + *{clear:both;}
   transition:transform .25s ease, background .35s ease, border-color .35s ease, color .35s ease, opacity .35s ease;
 }
 
-.shop-chip:hover{transform:scale(1.02);}
+@media (hover:hover){
+  .shop-chip:hover{transform:scale(1.02);}
+}
 .shop-chip:active{transform:scale(.98);}
 
 /* empty at this price */
@@ -449,7 +456,9 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   transition:transform .25s ease, background .35s ease, border-color .35s ease, color .35s ease;
 }
 
-.shop-sort-option:hover{transform:scale(1.02);}
+@media (hover:hover){
+  .shop-sort-option:hover{transform:scale(1.02);}
+}
 .shop-sort-option:active{transform:scale(.98);}
 
 /* picked: clear so the pill shows */
@@ -533,9 +542,11 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
     border-color .35s ease;
 }
 
-.shop-card:hover{
-  transform:translateY(-10px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
+@media (hover:hover){
+  .shop-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+  }
 }
 
 .shop-card-media{
@@ -558,7 +569,9 @@ html[data-zone="orange"] .shop-price-value{color:var(--whiteline);}
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.shop-card:hover .shop-card-media img{transform:scale(1.1);}
+@media (hover:hover){
+  .shop-card:hover .shop-card-media img{transform:scale(1.1);}
+}
 
 .shop-card-body{
   flex:1 1 auto;
@@ -736,6 +749,12 @@ html[data-zone="orange"] .shop-card-price{color:var(--whiteline);}
 @media (max-width:650px){
   .shop{padding:96px 0 80px;}
   .shop-grid{grid-template-columns:1fr;}
+}
+
+/* fingers: bigger tap area for reset, the negative margin keeps it in place */
+@media (pointer:coarse){
+  .shop-reset{padding:10px 6px; margin:-10px -6px;}
+  .shop-reset::after{left:6px; bottom:7px; width:calc(100% - 12px);}
 }
 
 /* reduced motion */

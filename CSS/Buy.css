@@ -267,7 +267,10 @@ html[data-zone="orange"] .buy-stage-price{color:var(--whiteline);}
 .buy-dot.is-answered::before{background:var(--line);}
 .buy-dot.is-current{width:34px;}
 .buy-dot.is-current::before{width:22px;}
-.buy-dot:not(:disabled):hover::before{scale:1.35;}
+/* mouse only, a tap on a phone would leave it stuck on (see Style.css) */
+@media (hover:hover){
+  .buy-dot:not(:disabled):hover::before{scale:1.35;}
+}
 .buy-dot:disabled{cursor:default;}
 .buy-dot:disabled::before{opacity:.45;}
 .buy-dot:focus-visible{outline:2px solid var(--line); outline-offset:-2px; border-radius:100px;}
@@ -421,7 +424,9 @@ legend.buy-step-head + *{clear:both;}
 
 html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdrop-filter:blur(25px);}
 
-.buy-option:hover{transform:scale(1.02);}
+@media (hover:hover){
+  .buy-option:hover{transform:scale(1.02);}
+}
 .buy-option:active{transform:scale(.98);}
 
 /* picked: clear so the pill shows */
@@ -570,7 +575,9 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
   transition:transform .25s ease;
 }
 
-.buy-step-lock:hover{transform:scale(1.04);}
+@media (hover:hover){
+  .buy-step-lock:hover{transform:scale(1.04);}
+}
 .buy-step.is-locked .buy-step-lock{display:inline-flex;}
 
 /* shake missing picks */
@@ -663,7 +670,9 @@ html[data-zone="orange"] .buy-option{backdrop-filter:blur(25px); -webkit-backdro
   transition:transform .3s cubic-bezier(.22,1,.36,1);
 }
 
-.buy-review-change:hover::after{transform:scaleX(1);}
+@media (hover:hover){
+  .buy-review-change:hover::after{transform:scaleX(1);}
+}
 .buy-review-row.is-missing .buy-review-change{font-weight:700;}
 
 .buy-review-total{
@@ -892,8 +901,13 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-review-buttons{margin-top:18px;}
 }
 
+/* phones on their side keep the side by side layout (stacked, the sticky stage would cover most of the screen), the stage just starts higher */
+@media (min-width:651px) and (max-height:500px){
+  .buy-stage{padding:96px 0 16px;}
+}
+
 /* stacked layout */
-@media (max-width:900px){
+@media (max-width:900px) and (min-height:501px), (max-width:650px){
   .buy-layout{display:block; padding:0 24px;}
 
   .buy-stage{
@@ -974,6 +988,12 @@ html[data-zone="orange"] .buy-review-price{color:var(--whiteline);}
   .buy-review-change{grid-area:change; justify-self:end;}
 
   .buy-dialog-card{padding:36px 22px 28px;}
+}
+
+/* fingers: bigger tap area for the review "Change" links, the negative margin keeps them in place */
+@media (pointer:coarse){
+  .buy-review-change{padding:8px 6px; margin:-8px -6px;}
+  .buy-review-change::after{left:6px; bottom:5px; width:calc(100% - 12px);}
 }
 
 /* reduced motion */

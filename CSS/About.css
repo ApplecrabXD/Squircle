@@ -301,7 +301,10 @@ html[data-zone="orange"] .aboutus-name-shape{fill:var(--whiteline);}
   transition:color .35s ease;
 }
 
-.aboutus-name-chip:hover{color:var(--accent);}
+/* mouse only, a tap on a phone would leave it stuck on (see Style.css) */
+@media (hover:hover){
+  .aboutus-name-chip:hover{color:var(--accent);}
+}
 .aboutus-name-chip.is-on{color:var(--pick-ink);}
 .aboutus-name-chip:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
 
@@ -454,9 +457,11 @@ html[data-zone="orange"] .aboutus-name-shape{fill:var(--whiteline);}
   padding-right:clamp(8px,3vw,40px);
 }
 
-.aboutus-chapter-card:hover{
-  transform:translateY(-10px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
+@media (hover:hover){
+  .aboutus-chapter-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+  }
 }
 
 .aboutus-chapter-year{
@@ -509,9 +514,11 @@ html[data-zone="orange"] .aboutus-chapter-year{color:var(--whiteline);}
     border-color .35s ease;
 }
 
-.aboutus-stat:hover{
-  transform:translateY(-10px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
+@media (hover:hover){
+  .aboutus-stat:hover{
+    transform:translateY(-10px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+  }
 }
 
 /* arriving together, a beat apart */

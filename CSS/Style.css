@@ -359,6 +359,15 @@ html.engine-notice-on .engine-notice{
   text-wrap:balance;
 }
 
+/* chrome + firefox links, default blue was unreadable on the dark card */
+.engine-notice-text a{
+  color:inherit;
+  font-weight:700;
+  text-decoration-color:var(--accent);
+  text-decoration-thickness:2px;
+  text-underline-offset:3px;
+}
+
 /* only iphones and ipads get the extra line */
 .engine-notice-ios{display:none; font-size:.9rem;}
 html.engine-ios .engine-notice-ios{display:block;}
@@ -390,8 +399,12 @@ html.engine-ios .engine-notice-ios{display:block;}
   transition:transform .35s cubic-bezier(.22,1,.36,1);
 }
 
-.nav-orb:hover{
-  transform:scale(1.05);
+/* hover effects are mouse only (hover:hover), on a phone a tap leaves :hover stuck on
+   and an iphone can swallow the first tap on a link to show the hover instead */
+@media (hover:hover){
+  .nav-orb:hover{
+    transform:scale(1.05);
+  }
 }
 
 /* liquid glass */
@@ -422,13 +435,15 @@ html.engine-ios .engine-notice-ios{display:block;}
 }
 
 /* uinfied gover state */
-.nav-orb:hover .nav-logo,
-.nav-orb:hover .nav-links,
-.nav-orb:hover .nav-menu,
-.nav-buy:hover{
-  background:rgba(0,0,0,.065);
-  border-color:rgba(0,0,0,.14);
-  box-shadow:0 14px 35px rgba(0,0,0,.1),inset 0 1px 1px rgba(255,255,255,.8);
+@media (hover:hover){
+  .nav-orb:hover .nav-logo,
+  .nav-orb:hover .nav-links,
+  .nav-orb:hover .nav-menu,
+  .nav-buy:hover{
+    background:rgba(0,0,0,.065);
+    border-color:rgba(0,0,0,.14);
+    box-shadow:0 14px 35px rgba(0,0,0,.1),inset 0 1px 1px rgba(255,255,255,.8);
+  }
 }
 
 /* nav logo */
@@ -490,13 +505,15 @@ html.engine-ios .engine-notice-ios{display:block;}
   object-fit:contain;
 }
 
-.nav-orb:hover .nav-logo .nav-building-blocks{opacity:1; transform:translate(-50%, -50%) scale(1);}
-.nav-orb:hover .nav-logo > img{opacity:0; transform:scale(.7) rotate(-15deg);}
+@media (hover:hover){
+  .nav-orb:hover .nav-logo .nav-building-blocks{opacity:1; transform:translate(-50%, -50%) scale(1);}
+  .nav-orb:hover .nav-logo > img{opacity:0; transform:scale(.7) rotate(-15deg);}
 
-.nav-orb:hover .nav-logo .block-orange{animation:navOrangeMove .8s ease-in-out;}
-.nav-orb:hover .nav-logo .block-purple{animation:navPurpleMove .8s ease-in-out;}
-.nav-orb:hover .nav-logo .block-gray,
-.nav-orb:hover .nav-logo .block-white{animation:navPulse .8s ease-in-out;}
+  .nav-orb:hover .nav-logo .block-orange{animation:navOrangeMove .8s ease-in-out;}
+  .nav-orb:hover .nav-logo .block-purple{animation:navPurpleMove .8s ease-in-out;}
+  .nav-orb:hover .nav-logo .block-gray,
+  .nav-orb:hover .nav-logo .block-white{animation:navPulse .8s ease-in-out;}
+}
 
 @keyframes navPulse{
   0%{scale:1;}
@@ -567,8 +584,10 @@ html.engine-ios .engine-notice-ios{display:block;}
   transition:transform .25s ease;
 }
 
-.nav-links a:hover{
-  transform:scale(1.04);
+@media (hover:hover){
+  .nav-links a:hover{
+    transform:scale(1.04);
+  }
 }
 
 /* right nav */
@@ -669,7 +688,9 @@ html.engine-ios .engine-notice-ios{display:block;}
 }
 
 /* scale so hover won't fight the transform */
-.nav-buy:hover{scale:1.05;}
+@media (hover:hover){
+  .nav-buy:hover{scale:1.05;}
+}
 
 .nav-buy-name{
   font-family:"SuperMalibu","obliqua",sans-serif;
@@ -900,13 +921,15 @@ html.engine-ios .engine-notice-ios{display:block;}
       inset 0 1px 1px rgba(255,255,255,.1);
   }
 
-  .nav-logo:hover,
-  .nav-links:hover,
-  .nav-menu:hover,
-  .nav-buy:hover{
-    background:rgba(255,255,255,.08);
-    border-color:rgba(255,255,255,.2);
-    box-shadow:0 12px 35px rgba(0,0,0,.4),inset 0 1px 1px rgba(255,255,255,.2);
+  @media (hover:hover){
+    .nav-logo:hover,
+    .nav-links:hover,
+    .nav-menu:hover,
+    .nav-buy:hover{
+      background:rgba(255,255,255,.08);
+      border-color:rgba(255,255,255,.2);
+      box-shadow:0 12px 35px rgba(0,0,0,.4),inset 0 1px 1px rgba(255,255,255,.2);
+    }
   }
 
   .nav-indicator{
@@ -924,13 +947,15 @@ html[data-zone] .nav-buy{
   box-shadow:0 8px 30px rgba(0,0,0,.2), inset 0 1px 1px rgba(255,255,255,.15);
 }
 
-html[data-zone] .nav-orb:hover .nav-logo,
-html[data-zone] .nav-orb:hover .nav-links,
-html[data-zone] .nav-orb:hover .nav-menu,
-html[data-zone] .nav-buy:hover{
-  background:rgba(255,255,255,.11);
-  border-color:rgba(255,255,255,.25);
-  box-shadow:0 12px 35px rgba(0,0,0,.25),inset 0 1px 1px rgba(255,255,255,.25);
+@media (hover:hover){
+  html[data-zone] .nav-orb:hover .nav-logo,
+  html[data-zone] .nav-orb:hover .nav-links,
+  html[data-zone] .nav-orb:hover .nav-menu,
+  html[data-zone] .nav-buy:hover{
+    background:rgba(255,255,255,.11);
+    border-color:rgba(255,255,255,.25);
+    box-shadow:0 12px 35px rgba(0,0,0,.25),inset 0 1px 1px rgba(255,255,255,.25);
+  }
 }
 
 html[data-zone] .nav-indicator{
@@ -1056,11 +1081,13 @@ html[data-zone] .nav-indicator{
     transform .35s cubic-bezier(.22,1,.36,1);
 }
 
-.btn:hover::after{
-  max-width:24px;
-  margin-left:8px;
-  opacity:1;
-  transform:translateX(0);
+@media (hover:hover){
+  .btn:hover::after{
+    max-width:24px;
+    margin-left:8px;
+    opacity:1;
+    transform:translateX(0);
+  }
 }
 
 .btn{
@@ -1081,7 +1108,14 @@ html[data-zone] .nav-indicator{
     border-color .35s ease;
 }
 
-.btn:hover{transform:scale(1.04);}
+@media (hover:hover){
+  .btn:hover{transform:scale(1.04);}
+}
+
+/* touch screens get a little press instead */
+@media (hover:none){
+  .btn:active{transform:scale(.96);}
+}
 
 .btn-fill{
   background:var(--accent);
@@ -1246,7 +1280,10 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 /* image / info / buy -> buy / info / image */
 .product-card--alt{flex-direction:column-reverse;}
 .product-card{transition:transform .4s cubic-bezier(.22,1,.36,1);}
-.product-card:hover{transform:translateY(-12px);}
+
+@media (hover:hover){
+  .product-card:hover{transform:translateY(-12px);}
+}
 .product-media{
   width:100%;
   max-width:var(--media-w);
@@ -1259,12 +1296,14 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   transition:transform .5s cubic-bezier(.22,1,.36,1),box-shadow .4s ease;
 }
 
-.product-card:hover .product-media{
-  transform:rotate(-1.5deg);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
-}
+@media (hover:hover){
+  .product-card:hover .product-media{
+    transform:rotate(-1.5deg);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+  }
 
-.product-card--alt:hover .product-media{transform:rotate(1.5deg);}
+  .product-card--alt:hover .product-media{transform:rotate(1.5deg);}
+}
 
 .product-media img{
   display:block;
@@ -1277,7 +1316,9 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.product-card:hover .product-media img{transform:scale(1.1);}
+@media (hover:hover){
+  .product-card:hover .product-media img{transform:scale(1.1);}
+}
 
 /* solid tint, not glass (glass can't see past a mask) */
 .product-info{
@@ -1388,9 +1429,11 @@ html[data-zone="purple"] .about-wrap{
 
 .about-media.in-view{opacity:1; translate:0 0;}
 
-.about-media.in-view:hover{
-  transform:translateY(-12px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
+@media (hover:hover){
+  .about-media.in-view:hover{
+    transform:translateY(-12px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+  }
 }
 
 .about-media img{
@@ -1404,7 +1447,9 @@ html[data-zone="purple"] .about-wrap{
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.about-media:hover img{transform:scale(1.1);}
+@media (hover:hover){
+  .about-media:hover img{transform:scale(1.1);}
+}
 
 /* frosted copy card */
 .about-copy{
@@ -1436,9 +1481,11 @@ html[data-zone="purple"] .about-wrap{
 
 .about-copy.in-view{opacity:1; translate:0 0;}
 
-.about-copy.in-view:hover{
-  transform:translateY(-12px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
+@media (hover:hover){
+  .about-copy.in-view:hover{
+    transform:translateY(-12px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+  }
 }
 
 /* the row arrives together, a beat apart */
@@ -1602,10 +1649,12 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
 
 .about-banner.in-view{opacity:1;transform:translateY(0);}
 
-.about-banner.in-view:hover{
-  transform:translateY(-12px);
-  box-shadow:0 24px 48px rgba(0,0,0,.2);
-  transition-duration:.4s;
+@media (hover:hover){
+  .about-banner.in-view:hover{
+    transform:translateY(-12px);
+    box-shadow:0 24px 48px rgba(0,0,0,.2);
+    transition-duration:.4s;
+  }
 }
 
 .about-banner img{
@@ -1621,7 +1670,9 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   transition:transform .6s cubic-bezier(.22,1,.36,1);
 }
 
-.about-banner:hover img{transform:scale(1.1);}
+@media (hover:hover){
+  .about-banner:hover img{transform:scale(1.1);}
+}
 
 /* the footer */
 .site-footer{
@@ -1956,7 +2007,9 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
   transition:transform .3s cubic-bezier(.22,1,.36,1);
 }
 
-.footer-col a:hover::after{transform:scaleX(1); transform-origin:left;}
+@media (hover:hover){
+  .footer-col a:hover::after{transform:scaleX(1); transform-origin:left;}
+}
 
 .footer-top{
   display:flex;
@@ -1979,7 +2032,9 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
     background .35s ease;
 }
 
-.footer-top:hover{transform:translateY(-4px); background:rgba(0,0,0,.065);}
+@media (hover:hover){
+  .footer-top:hover{transform:translateY(-4px); background:rgba(0,0,0,.065);}
+}
 
 /* acknowledgement of country + LGBTQIA+ welcome */
 .footer-acknowledge{
@@ -2029,7 +2084,10 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
 @media (prefers-color-scheme:dark){
   .site-footer{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
   .footer-top{background:rgba(255,255,255,.015); border-color:rgba(255,255,255,.08);}
-  .footer-top:hover{background:rgba(255,255,255,.08);}
+
+  @media (hover:hover){
+    .footer-top:hover{background:rgba(255,255,255,.08);}
+  }
 }
 
 @media (prefers-color-scheme:dark){
@@ -2042,14 +2100,45 @@ html[data-zone="orange"] .about-stat{color:var(--whiteline);}
 /* footer is always black, light glass buttons */
 html[data-zone] .site-footer{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
 html[data-zone] .footer-top{background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.14);}
-html[data-zone] .footer-top:hover{background:rgba(255,255,255,.12);}
+@media (hover:hover){
+  html[data-zone] .footer-top:hover{background:rgba(255,255,255,.12);}
+}
 html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.14);}
+
+/* phones, and phones on their side (too short to pin): the product carousel doesn't pin, Script.js uses the same queries */
+@media (max-width:650px), (max-height:500px){
+  .product-wrap{height:auto;}
+
+  .product-sticky{
+    position:static;
+    height:auto;
+    display:block;
+  }
+
+  .product-viewport{
+    overflow:visible;
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
+
+  .product-track{
+    height:auto;
+
+    opacity:1;
+    transform:none;
+  }
+
+  .product-card{height:auto;}
+
+  /* every card goes image, info, buy, flipping them put two buy buttons back to back */
+  .product-card--alt{flex-direction:column;}
+}
 
 /* mobile */
 @media (max-width:650px){
   .navbar{top:18px; left:18px; right:18px;}
   .nav-links{gap:2px;}
-  .nav-links a{padding:9px 12px; font-size:13px;}
+  .nav-links a{padding:9px 12px; font-size:13px; white-space:nowrap;}
   .nav-buy{top:calc(100% + 8px);}
   .nav-buy-name{display:none;}
 
@@ -2061,7 +2150,7 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     max-height:calc(100dvh - 110px);
   }
 
-  /* mobile gets a stacked hero */
+  /* mobile gets a stacked hero, laptop in front of the marquees like on desktop */
   .hero-wrap{height:auto;}
 
   .hero-sticky{
@@ -2071,9 +2160,11 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     /* clip so the slide-in can't scroll sideways */
     overflow-x:clip;
 
-    display:flex;
-    flex-direction:column;
+    display:grid;
+    grid-template-columns:100%;
+    justify-items:center;
     align-items:center;
+    row-gap:40px;
 
     padding:100px 24px 60px;
   }
@@ -2093,51 +2184,35 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
 
   .hero-buttons{justify-content:center;}
 
+  /* same grid cell so they overlap, z-index works on grid items */
+  .hero-laptop,
+  .hero-behind{grid-area:2 / 1;}
+
   .hero-laptop{
     position:static;
     width:min(80vw,380px);
-    margin-top:40px;
     transform:none;
   }
 
   .hero-behind{
     position:static;
     width:calc(100% + 48px);
-    margin:40px -24px 0;
+    margin:0 -24px;
     opacity:1;
     transform:none;
   }
 
   /* mobile gets a stacked list */
-  .product-wrap{height:auto;}
-
-  .product-sticky{
-    position:static;
-    height:auto;
-    display:block;
-  }
-
-  .product-viewport{
-    overflow:visible;
-    -webkit-mask-image:none;
-    mask-image:none;
-  }
-
   .product-track{
     display:flex;
     flex-direction:column;
-    height:auto;
     gap:56px;
     padding:60px 24px;
-
-    opacity:1;
-    transform:none;
   }
 
   .product-card{
     flex:none;
     width:100%;
-    height:auto;
     padding:0;
 
     /* no track to fit */
@@ -2176,6 +2251,47 @@ html[data-zone] .btn-outline{background:rgba(255,255,255,.05);border-color:rgba(
     grid-template-columns:1fr;
     gap:24px;
     padding:28px 24px 0;
+  }
+}
+
+/* phones, and phones on their side where the hero copy gets squeezed next to the laptop:
+   two buttons stack at the same width instead of wrapping lopsided */
+@media (max-width:650px), (max-height:500px){
+  .hero-buttons:has(.btn + .btn){flex-direction:column; align-items:center;}
+  .hero-buttons:has(.btn + .btn) .btn{width:min(100%,280px);}
+}
+
+/* justify leaves big gaps once the columns get narrow (the html sets it on the parent) */
+@media (max-width:900px){
+  .footer-ack-item{text-align:left;}
+}
+
+/* fingers: taller footer links so they're easier to tap, the negative margin keeps the spacing the same */
+@media (pointer:coarse){
+  .footer-col a{padding:5px 0; margin:-5px 0;}
+  .footer-col a::after{bottom:2px;}
+}
+
+/* small phones (iphone se 1st gen and smaller): squeeze the links so "About Us" stays on one line */
+@media (max-width:359px){
+  .navbar{left:12px; right:12px;}
+  .nav-links a{padding:9px 8px; font-size:12px;}
+}
+
+/* phones on their side: the product row wraps into a grid instead of pinning */
+@media (min-width:651px) and (max-height:500px){
+  .product-track{
+    flex-wrap:wrap;
+    align-items:flex-start;
+    justify-content:center;
+    row-gap:56px;
+    padding:60px 24px;
+  }
+
+  .product-card{
+    flex:0 0 33.333%;
+    padding:0 12px;
+    --media-w:200px;
   }
 }
 

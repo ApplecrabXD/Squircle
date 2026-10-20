@@ -12,11 +12,9 @@ const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // catalogue
 
-// placeholder art for now
+// shared art
 const IMG={
   laptop:"../Assets/Lappy/Logo%20in%20laptop.png",
-  wide:"../Assets/Temp/16x9.png",
-  tall:"../Assets/Temp/9x16.jpg",
   diy:"../Assets/DIY/diy.png" // pixel art screwdriver, every diy card uses it
 };
 
@@ -51,29 +49,33 @@ const buyProducts={
     prebuiltImage:lappyImg("Views/Top L"),
     specs:[
       {key:"cpu",title:"CPU",question:"Intel or AMD?",help:"Both stay fast, cool and quiet. Pick the one that suits how you work.",options:[
-        {value:"intel",name:"Intel Core Ultra 7",detail:"All-day battery and quick everyday speed.",price:0,image:lappyImg("CPU/Intel L")},
-        {value:"amd",name:"AMD Ryzen AI 9",detail:"Extra graphics muscle for games and creative apps.",price:200,image:lappyImg("CPU/AMD L")}
+        {value:"intel",name:"Intel Core Ultra 5 125H",detail:"All-day battery and quick everyday speed.",price:0,image:lappyImg("CPU/Intel L")},
+        {value:"amd",name:"AMD Ryzen AI 9 HX 370",detail:"Extra graphics muscle for games and creative apps.",price:200,image:lappyImg("CPU/AMD L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"You can upgrade it yourself later, so there's no wrong answer.",byo:40,byoImage:lappyImg("RAM/RAM L"),options:[
+      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"Two DDR5 SODIMM slots take up to 128GB, and you can upgrade them yourself later.",byo:40,byoImage:lappyImg("RAM/RAM L"),options:[
         {value:"8gb",name:"8GB",detail:"Browsing, docs and streaming.",price:0,image:lappyImg("RAM/8GB L")},
         {value:"16gb",name:"16GB",detail:"Comfortable for most people.",price:150,image:lappyImg("RAM/16GB L")},
         {value:"32gb",name:"32GB",detail:"Big projects and a silly number of tabs.",price:350,image:lappyImg("RAM/32GB L")},
-        {value:"64gb",name:"64GB",detail:"Virtual machines and heavy editing.",price:700,image:lappyImg("RAM/64GB L")}
+        {value:"64gb",name:"64GB",detail:"Virtual machines and heavy editing.",price:700,image:lappyImg("RAM/64GB L")},
+        // stand-in image until the 128GB shot is done
+        {value:"128gb",name:"128GB",detail:"Both slots maxed out.",price:1400,image:lappyImg("RAM/RAM L")}
       ]},
-      {key:"storage",title:"Storage",question:"How much room do you need?",help:"Swap the drive out yourself whenever you need more.",byo:50,byoImage:lappyImg("Views/Keyboard L"),options:[
+      {key:"storage",title:"Storage",question:"How much room do you need?",help:"A standard M.2 2280 drive, up to 8TB. Swap it yourself whenever you need more.",byo:50,byoImage:lappyImg("Views/Keyboard L"),options:[
         {value:"512gb",name:"512GB",detail:"Apps, docs and a decent photo library.",price:0,image:lappyImg("Storage/512GB L")},
         {value:"1tb",name:"1TB",detail:"Room for games and big files.",price:150,image:lappyImg("Storage/1TB L")},
         {value:"2tb",name:"2TB",detail:"Never think about storage again.",price:400,image:lappyImg("Storage/2TB L")},
-        {value:"4tb",name:"4TB",detail:"Every game, photo and project, all at once.",price:800,image:lappyImg("Storage/4TB L")}
+        {value:"4tb",name:"4TB",detail:"Every game, photo and project, all at once.",price:800,image:lappyImg("Storage/4TB L")},
+        // stand-in image until the 8TB shot is done
+        {value:"8tb",name:"8TB",detail:"The most one drive can hold.",price:1600,image:lappyImg("Storage/4TB L")}
       ]},
-      {key:"battery",title:"Battery",question:"How long between charges?",help:"Both swap out in minutes with a single screwdriver.",byo:40,byoImage:lappyImg("Views/Keyboard L"),options:[
-        {value:"standard",name:"Standard",detail:"A full day of school or work.",price:0,image:lappyImg("Battery/Battery L")},
-        {value:"plus",name:"Battery Plus",detail:"Hours more between charges, a touch heavier.",price:100,image:lappyImg("Battery/Battery Plus L")}
+      {key:"battery",title:"Battery",question:"How long between charges?",help:"Hot-swappable, so changing packs takes seconds.",byo:40,byoImage:lappyImg("Views/Keyboard L"),options:[
+        {value:"standard",name:"Standard",detail:"61Wh, a full day of school or work.",price:0,image:lappyImg("Battery/Battery L")},
+        {value:"extended",name:"Extended",detail:"72Wh, hours more between charges, a touch heavier.",price:100,image:lappyImg("Battery/Battery Plus L")}
       ]},
       {key:"cards",title:"Expansion Cards",question:"Which ports do you want?",help:"Four swappable bays. Change your mind any time.",byo:40,options:[
         {value:"essentials",name:"Essentials",detail:"2× USB-C, USB-A and HDMI.",price:0,image:IMG.laptop},
-        {value:"creator",name:"Creator",detail:"2× USB-C, SD card reader and DisplayPort.",price:40,image:IMG.wide},
-        {value:"everything",name:"Everything",detail:"Four cards, plus two spares in the box.",price:90,image:IMG.tall}
+        {value:"creator",name:"Creator",detail:"2× USB-C, SD card reader and DisplayPort.",price:40,image:lappyImg("Views/Bottom L")},
+        {value:"everything",name:"Everything",detail:"Four cards, plus two spares in the box.",price:90,image:lappyImg("Views/Top L")}
       ]}
     ]
   },
@@ -93,23 +95,25 @@ const buyProducts={
     diyImage:gammyImg("Views/Angle L"),
     prebuiltImage:gammyImg("Views/Front L"),
     specs:[
-      {key:"cpu",title:"CPU",question:"How hard will you push it?",help:"Solid mid-range all the way up to top-tier gaming and streaming power.",byo:250,byoImage:gammyImg("Views/Angle L"),options:[
-        {value:"8-core",name:"8-Core",detail:"Smooth gaming at high settings.",price:0,image:gammyImg("CPU/8-Core L")},
-        {value:"12-core",name:"12-Core",detail:"Game and stream at the same time.",price:250,image:gammyImg("CPU/12-Core L")},
-        {value:"16-core",name:"16-Core",detail:"Top-tier power for everything at once.",price:550,image:gammyImg("CPU/16-Core L")}
+      {key:"cpu",title:"CPU",question:"How hard will you push it?",help:"Two from Intel, two from AMD, all ready for gaming and streaming.",byo:250,byoImage:gammyImg("Views/Angle L"),options:[
+        {value:"ryzen-7-9700x",name:"AMD Ryzen 7 9700X",detail:"8 fast cores for smooth gaming at high settings.",price:0,image:gammyImg("CPU/8-Core L")},
+        // the intel chips use the plain cpu shot until they get their own
+        {value:"ultra-7-270k",name:"Intel Core Ultra 7 270K",detail:"Game and stream at the same time.",price:150,image:gammyImg("CPU/CPU L")},
+        {value:"ultra-9-285k",name:"Intel Core Ultra 9 285K",detail:"24 cores for gaming, streaming and editing at once.",price:350,image:gammyImg("CPU/CPU L")},
+        {value:"ryzen-9-9950x3d",name:"AMD Ryzen 9 9950X3D",detail:"16 cores plus 3D V-Cache, top tier for everything.",price:550,image:gammyImg("CPU/16-Core L")}
       ]},
-      {key:"gpu",title:"GPU",question:"What resolution do you play at?",help:"From smooth 1440p all the way up to high-refresh 4K.",byo:500,byoImage:gammyImg("Views/Angle L"),options:[
-        {value:"1440p",name:"1440p Ready",detail:"High frame rates at 1440p.",price:0,image:gammyImg("GPU/1440p L")},
-        {value:"4k",name:"4K Ready",detail:"Smooth 4K at high settings.",price:600,image:gammyImg("GPU/4K L")},
-        {value:"4k-high-refresh",name:"4K High-Refresh",detail:"4K at 144Hz and beyond.",price:1200,image:gammyImg("GPU/4K High-Refresh L")}
+      {key:"gpu",title:"GPU",question:"What resolution do you play at?",help:"From butter-smooth 1440p all the way to the top of the line.",byo:500,byoImage:gammyImg("Views/Angle L"),options:[
+        {value:"rtx-4080",name:"RTX 4080",detail:"Butter-smooth gameplay at 1440p.",price:0,image:gammyImg("GPU/1440p L")},
+        {value:"rtx-5080",name:"RTX 5080",detail:"Smooth 4K, plus dual NVENC encoders and decoders for streaming.",price:600,image:gammyImg("GPU/4K L")},
+        {value:"rtx-5090",name:"RTX 5090",detail:"The top of the line, 4K at 144Hz and beyond.",price:1200,image:gammyImg("GPU/4K High-Refresh L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much memory do you need?",help:"There are free slots to add more yourself later on.",byo:60,byoImage:gammyImg("Views/Angle L"),options:[
+      {key:"ram",title:"RAM",question:"How much memory do you need?",help:"Four DDR5 slots that run at up to 9600MHz, so there's room to add more later.",byo:60,byoImage:gammyImg("Views/Angle L"),options:[
         {value:"16gb",name:"16GB",detail:"Plenty for gaming.",price:0,image:gammyImg("RAM/16GB L")},
         {value:"32gb",name:"32GB",detail:"Gaming with Discord, a browser and a stream open.",price:120,image:gammyImg("RAM/32GB L")},
         {value:"64gb",name:"64GB",detail:"Video editing and 3D work.",price:300,image:gammyImg("RAM/64GB L")},
         {value:"128gb",name:"128GB",detail:"Because you can.",price:650,image:gammyImg("RAM/128GB L")}
       ]},
-      {key:"storage",title:"Storage",question:"How big is your game library?",help:"Fast NVMe drives plus spare bays, so you never run out of room.",byo:80,byoImage:gammyImg("Views/Angle L"),options:[
+      {key:"storage",title:"Storage",question:"How big is your game library?",help:"One Gen 5 M.2, two Gen 4 M.2 and nine SATA ports, so you never run out of room.",byo:80,byoImage:gammyImg("Views/Angle L"),options:[
         {value:"1tb",name:"1TB NVMe",detail:"A healthy handful of big games.",price:0,image:gammyImg("Storage/1TB L")},
         {value:"2tb",name:"2TB NVMe",detail:"Most of your library, installed.",price:150,image:gammyImg("Storage/2TB L")},
         {value:"4tb",name:"4TB NVMe",detail:"Never uninstall anything again.",price:400,image:gammyImg("Storage/4TB L")}
@@ -132,26 +136,22 @@ const buyProducts={
     diyImage:allyImg("Views/Back L"),
     prebuiltImage:allyImg("Views/Angle L"),
     specs:[
-      {key:"processor",title:"Processor",question:"Battery life or frame rate?",help:"Handheld-tuned chips that balance battery life against raw speed.",options:[
-        {value:"balanced",name:"Balanced",detail:"Tuned for longer play sessions.",price:0,image:allyImg("Processor/Balanced L")},
-        {value:"performance",name:"Performance",detail:"Higher clocks for higher frame rates.",price:200,image:allyImg("Processor/Performance L")}
+      {key:"ram",title:"RAM",question:"How much memory?",help:"Fast LPDDR5X either way. Less power draw, or more performance.",options:[
+        {value:"16gb",name:"16GB",detail:"6400MHz, easier on the battery.",price:0,image:allyImg("RAM/16GB L")},
+        {value:"24gb",name:"24GB",detail:"7200MHz, extra headroom for the big ones.",price:100,image:allyImg("RAM/24GB L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much memory?",help:"Fast shared memory for smooth play.",options:[
-        {value:"16gb",name:"16GB",detail:"Smooth in most games.",price:0,image:allyImg("RAM/16GB L")},
-        {value:"24gb",name:"24GB",detail:"Extra headroom for the big ones.",price:100,image:allyImg("RAM/24GB L")}
-      ]},
-      {key:"storage",title:"Storage",question:"How many games come with you?",help:"There's a microSD slot for extra room on the go, too.",byo:50,byoImage:allyImg("Views/Back L"),options:[
+      {key:"storage",title:"Storage",question:"How many games come with you?",help:"From 512GB up to 2TB, plus a microSD slot for extra room on the go.",byo:50,byoImage:allyImg("Views/Back L"),options:[
         {value:"512gb",name:"512GB",detail:"A few big games and plenty of indies.",price:0,image:allyImg("Storage/512GB L")},
         {value:"1tb",name:"1TB",detail:"Your whole backlog, finally.",price:100,image:allyImg("Storage/1TB L")},
         {value:"2tb",name:"2TB",detail:"Leave nothing at home.",price:250,image:allyImg("Storage/2TB L")}
       ]},
-      {key:"display",title:"Display",question:"Which screen?",help:"Both are 1080p at a buttery 120Hz.",options:[
-        {value:"lcd",name:"120Hz LCD",detail:"Bright, sharp and smooth.",price:0,image:allyImg("Display/LCD L")},
-        {value:"oled",name:"120Hz OLED",detail:"Deeper blacks and richer colour.",price:150,image:allyImg("Display/OLED L")}
+      {key:"display",title:"Display",question:"Which screen?",help:"A sharp 1440p LCD as standard, or step up to a 4K OLED.",options:[
+        {value:"lcd",name:"1440p LCD",detail:"Bright, sharp and smooth at 120Hz.",price:0,image:allyImg("Display/LCD L")},
+        {value:"oled",name:"4K OLED",detail:"144Hz, deeper blacks and easier on the battery.",price:150,image:allyImg("Display/OLED L")}
       ]},
       {key:"battery",title:"Battery",question:"How long do you play?",help:"Both packs swap out in under a minute.",byo:40,byoImage:allyImg("Views/Back L"),options:[
-        {value:"standard",name:"Standard",detail:"A few hours of big-budget games.",price:0,image:allyImg("Battery/Battery L")},
-        {value:"extended",name:"Extended",detail:"Longer sessions, a touch heavier.",price:80,image:allyImg("Battery/Extended L")}
+        {value:"standard",name:"Standard",detail:"61Wh, up to 2 hours of play.",price:0,image:allyImg("Battery/Battery L")},
+        {value:"extended",name:"Extended",detail:"80Wh, up to 4 hours, a touch heavier.",price:80,image:allyImg("Battery/Extended L")}
       ]}
     ]
   },
@@ -164,7 +164,7 @@ const buyProducts={
     thumb:flippyImg("Views/Cover Screen P"),
     base:1699,
     buildFee:120,
-    diy:"Order the core phone, then fit your own battery, back panels and cover screen.",
+    diy:"Order the core phone, then fit your own storage, battery, back panels and cover screen.",
     prebuilt:"Every part picked, fitted and fold-tested, ready to flip straight out of the box.",
     alt:"Flippy 6 Pro folding phone, half open",
     banner:flippyImg("Views/Main Screen L"),
@@ -175,11 +175,11 @@ const buyProducts={
         {value:"8-gen-3",name:"Snapdragon 8 Gen 3",detail:"Fast, cool and efficient.",price:0,image:flippyImg("SOC/SOC L")},
         {value:"8-elite",name:"Snapdragon 8 Elite",detail:"Higher clocks for gaming and video.",price:150,image:flippyImg("SOC/SOC Elite L")}
       ]},
-      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"8GB as standard, or step up for heavy multitasking.",options:[
+      {key:"ram",title:"RAM",question:"How much do you multitask?",help:"8GB of SODIMM DDR5 as standard, or step up to 16GB for heavy multitasking.",options:[
         {value:"8gb",name:"8GB",detail:"Plenty for everyday apps.",price:0,image:flippyImg("RAM/8GB L")},
         {value:"16gb",name:"16GB",detail:"Split-screen everything, all day.",price:100,image:flippyImg("RAM/16GB L")}
       ]},
-      {key:"storage",title:"Storage",question:"How much do you keep on your phone?",help:"Room for all your photos, apps and videos.",options:[
+      {key:"storage",title:"Storage",question:"How much do you keep on your phone?",help:"Room for all your photos, apps and videos.",byo:40,byoImage:flippyImg("Views/Side L"),options:[
         {value:"256gb",name:"256GB",detail:"Plenty for most people.",price:0,image:flippyImg("Storage/256GB L")},
         {value:"512gb",name:"512GB",detail:"For the camera-roll hoarders.",price:150,image:flippyImg("Storage/512GB L")},
         {value:"1tb",name:"1TB",detail:"Shoot 4K video without a second thought.",price:350,image:flippyImg("Storage/1TB L")}
@@ -214,17 +214,17 @@ const buyProducts={
         {value:"ion",name:"Ion Glass",detail:"Light and tough.",price:0,image:watchyImg("Display/Glass L")},
         {value:"sapphire",name:"Sapphire Glass",detail:"Basically scratch-proof.",price:100,image:watchyImg("Display/Sapphire Glass L")}
       ]},
-      {key:"sensors",title:"Sensors",question:"How much do you want to track?",help:"All-day health tracking, as deep as you like.",options:[
+      {key:"sensors",title:"Sensors",question:"How much do you want to track?",help:"Top-of-the-line Siemens sensors for everyday health tracking.",options:[
         {value:"essentials",name:"Essentials",detail:"Heart rate and blood oxygen.",price:0,image:watchyImg("Sensors/Sensors L")},
-        {value:"full-health",name:"Full Health",detail:"Adds skin temperature and ECG.",price:80,image:watchyImg("Sensors/Sensors Plus L")}
+        {value:"full-health",name:"Full Health",detail:"Adds skin temperature.",price:80,image:watchyImg("Sensors/Sensors Plus L")}
       ]},
       {key:"battery",title:"Battery",question:"How often do you want to charge?",help:"Both are replaceable yourself later on.",byo:20,byoImage:watchyImg("Views/Angle L"),options:[
-        {value:"standard",name:"Standard",detail:"Two days per charge.",price:0,image:watchyImg("Battery/Battery L")},
-        {value:"plus",name:"Battery Plus",detail:"Up to four days per charge.",price:40,image:watchyImg("Battery/Battery Plus L")}
+        {value:"standard",name:"Standard",detail:"Two days per charge, even with the always-on display.",price:0,image:watchyImg("Battery/Battery L")},
+        {value:"plus",name:"Battery Plus",detail:"Four days per charge, even with the always-on display.",price:40,image:watchyImg("Battery/Battery Plus L")}
       ]},
       {key:"connectivity",title:"Connectivity",question:"Leave your phone at home?",help:"Bluetooth and Wi-Fi come standard.",options:[
         {value:"wifi",name:"Bluetooth + Wi-Fi",detail:"Pairs with your phone.",price:0,image:watchyImg("Connectivity/Wifi L")},
-        {value:"lte",name:"Bluetooth + Wi-Fi + LTE",detail:"Calls and texts without your phone.",price:100,image:watchyImg("Connectivity/Wifi Cell L")}
+        {value:"lte",name:"Bluetooth + Wi-Fi + LTE",detail:"Calls and texts, so you can leave the distractions at home.",price:100,image:watchyImg("Connectivity/Wifi Cell L")}
       ]}
     ]
   },
@@ -244,24 +244,24 @@ const buyProducts={
     diyImage:nukerImg("Views/Door Off L"),
     prebuiltImage:nukerImg("Views/Front L"),
     specs:[
-      {key:"power",title:"Power",question:"How fast do you need it hot?",help:"More watts, less waiting.",options:[
+      {key:"power",title:"Power",question:"How fast do you need it hot?",help:"From 900W up to 1200W inverter power. More watts, less waiting.",byo:40,byoImage:nukerImg("Views/Door Off L"),byoDetail:"Source your own inverter. We don't ask how you got one.",options:[
         {value:"900w",name:"900W",detail:"Great for everyday reheating.",price:0,image:nukerImg("Power/900W L")},
         {value:"1000w",name:"1000W",detail:"A little quicker at everything.",price:40,image:nukerImg("Power/1000W L")},
         {value:"1200w",name:"1200W Inverter",detail:"Even heat, no more cold middles.",price:90,image:nukerImg("Power/1200W Inverter L")}
       ]},
-      {key:"capacity",title:"Capacity",question:"How much do you cook at once?",help:"Compact for small kitchens, family-size for everything else.",options:[
+      {key:"capacity",title:"Capacity",question:"How much do you cook at once?",help:"Compact for small kitchens, or family-size for those late-night munchies.",options:[
         {value:"23l",name:"23L Compact",detail:"Fits small kitchens.",price:0,image:nukerImg("Capacity/23L L")},
         {value:"32l",name:"32L Family",detail:"Fits casserole dishes.",price:60,image:nukerImg("Capacity/32L L")}
       ]},
-      {key:"turntable",title:"Turntable",question:"Round or flat?",help:"A classic spinning plate, or a flat floor for big square dishes.",byo:15,byoImage:nukerImg("Views/Turntable L"),options:[
+      {key:"turntable",title:"Turntable",question:"Round or flat?",help:"A classic spinning plate, or a flat floor with heating elements underneath for big square dishes.",byo:15,byoImage:nukerImg("Views/Turntable L"),options:[
         {value:"glass",name:"Glass Turntable",detail:"The classic spinning plate.",price:0,image:nukerImg("Turntable/Glass Turntable L")},
         {value:"flat-bed",name:"Flat-Bed",detail:"Fits big square dishes.",price:40,image:nukerImg("Turntable/Flat-Bed L")}
       ]},
-      {key:"presets",title:"Presets",question:"How much should it do for you?",help:"Popcorn, defrost, reheat and more, one tap each.",options:[
+      {key:"presets",title:"Presets",question:"How much should it do for you?",help:"Popcorn, defrost, reheat and more, with smart sensors that cook it to perfection.",options:[
         {value:"standard",name:"12 Presets",detail:"All the classics.",price:0,image:nukerImg("Presets/Presets L")},
         {value:"custom",name:"12 Presets + 6 Custom",detail:"Save your own one-tap programs.",price:20,image:nukerImg("Presets/Presets Plus L")}
       ]},
-      {key:"controls",title:"Controls",question:"Dial, buttons or touch?",help:"Swap to a different panel later if you change your mind.",byo:20,byoImage:nukerImg("Views/Controls L"),options:[
+      {key:"controls",title:"Controls",question:"Dial, buttons or touch?",help:"Change to a different panel anytime you change your mind.",byo:20,byoImage:nukerImg("Views/Controls L"),options:[
         {value:"dial",name:"Dial",detail:"Twist and go.",price:0,image:nukerImg("Controls/Dial L")},
         {value:"buttons",name:"Buttons",detail:"Clicky and precise.",price:0,image:nukerImg("Controls/Buttons L")},
         {value:"touch",name:"Touch Panel",detail:"Smooth glass, easy to wipe clean.",price:30,image:nukerImg("Controls/Touch Panel L")}
@@ -286,14 +286,14 @@ const productStep={
   }))
 };
 
-// bring your own option
+// bring your own option, byoDetail swaps out the blurb
 function byoOption(product,spec){
-  return{value:"byo",name:"Bring Your Own",detail:"Ships without one, so you can fit your own.",price:-spec.byo,image:spec.byoImage||product.image};
+  return{value:"byo",name:"Bring Your Own",detail:spec.byoDetail||"Ships without one, so you can fit your own.",price:-spec.byo,image:spec.byoImage||product.image};
 }
 
 function stepsFor(product,build){
-  const diyImage=product.diyImage||IMG.wide;
-  const prebuiltImage=product.prebuiltImage||IMG.wide;
+  const diyImage=product.diyImage||IMG.laptop;
+  const prebuiltImage=product.prebuiltImage||IMG.laptop;
   return[
     productStep,
     {key:"build",title:"Build",question:"Who's putting it together?",help:"Same parts either way. It's your build, your parts, your call.",layout:"cards",options:[
@@ -506,10 +506,10 @@ function nameProduct(){
   document.querySelectorAll("[data-buy-from]").forEach(el=>{el.textContent=money(product.base);});
   document.title="Buy "+product.name;
   heroImg.src=product.image;
-  heroImg.alt=stageImg.alt=product.alt||product.name+", placeholder image";
-  // closing banner, placeholder until a product has its own shot
-  bannerImg.src=product.banner||IMG.wide;
-  bannerImg.alt=product.banner?product.name:"Placeholder image";
+  heroImg.alt=stageImg.alt=product.alt||product.name;
+  // closing banner
+  bannerImg.src=product.banner||IMG.laptop;
+  bannerImg.alt=product.name;
   learnLink.setAttribute("href",product.page);
 }
 

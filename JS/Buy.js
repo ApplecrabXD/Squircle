@@ -503,7 +503,6 @@ function switchBuild(wasDiy){
 
 function nameProduct(){
   document.querySelectorAll("[data-buy-name]").forEach(el=>{el.textContent=product.name;});
-  document.querySelectorAll("[data-buy-from]").forEach(el=>{el.textContent=money(product.base);});
   document.title="Buy "+product.name;
   heroImg.src=product.image;
   heroImg.alt=stageImg.alt=product.alt||product.name;

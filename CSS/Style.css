@@ -1173,9 +1173,7 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
   width:100vw;
 
-  display:flex;
-  flex-direction:column;
-  gap:16px;
+  display:grid;
 
   transform:translate(-50%,-50%);
   opacity:0;
@@ -1183,6 +1181,12 @@ html[data-zone="orange"] .hero-title span{color:var(--whiteline);}
 
   will-change:transform,opacity;
 }
+
+/* both marquees in the same grid cell, tilted opposite ways so they cross like a flat X
+   a bit wider than the screen so the tilted ends don't show, bump the margin if the tilt goes up */
+.hero-behind .marquee{grid-area:1 / 1; margin:0 -3%;}
+.hero-behind .marquee-a{rotate:-8deg;}
+.hero-behind .marquee-b{rotate:8deg;}
 
 .marquee{overflow:hidden;padding:16px 0;}
 

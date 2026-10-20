@@ -12,11 +12,9 @@ const reducedMotion=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // catalogue
 
-// placeholder art for now
+// shared art
 const IMG={
   laptop:"../Assets/Lappy/Logo%20in%20laptop.png",
-  wide:"../Assets/Temp/16x9.png",
-  tall:"../Assets/Temp/9x16.jpg",
   diy:"../Assets/DIY/diy.png" // pixel art screwdriver, every diy card uses it
 };
 
@@ -72,8 +70,8 @@ const buyProducts={
       ]},
       {key:"cards",title:"Expansion Cards",question:"Which ports do you want?",help:"Four swappable bays. Change your mind any time.",byo:40,options:[
         {value:"essentials",name:"Essentials",detail:"2× USB-C, USB-A and HDMI.",price:0,image:IMG.laptop},
-        {value:"creator",name:"Creator",detail:"2× USB-C, SD card reader and DisplayPort.",price:40,image:IMG.wide},
-        {value:"everything",name:"Everything",detail:"Four cards, plus two spares in the box.",price:90,image:IMG.tall}
+        {value:"creator",name:"Creator",detail:"2× USB-C, SD card reader and DisplayPort.",price:40,image:lappyImg("Views/Bottom L")},
+        {value:"everything",name:"Everything",detail:"Four cards, plus two spares in the box.",price:90,image:lappyImg("Views/Top L")}
       ]}
     ]
   },
@@ -292,8 +290,8 @@ function byoOption(product,spec){
 }
 
 function stepsFor(product,build){
-  const diyImage=product.diyImage||IMG.wide;
-  const prebuiltImage=product.prebuiltImage||IMG.wide;
+  const diyImage=product.diyImage||IMG.laptop;
+  const prebuiltImage=product.prebuiltImage||IMG.laptop;
   return[
     productStep,
     {key:"build",title:"Build",question:"Who's putting it together?",help:"Same parts either way. It's your build, your parts, your call.",layout:"cards",options:[
@@ -508,7 +506,7 @@ function nameProduct(){
   heroImg.src=product.image;
   heroImg.alt=stageImg.alt=product.alt||product.name+", placeholder image";
   // closing banner, placeholder until a product has its own shot
-  bannerImg.src=product.banner||IMG.wide;
+  bannerImg.src=product.banner||IMG.laptop;
   bannerImg.alt=product.banner?product.name:"Placeholder image";
   learnLink.setAttribute("href",product.page);
 }

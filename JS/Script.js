@@ -825,16 +825,16 @@ if(lappyReveals.length && "IntersectionObserver" in window){
 }
 
 // diy screwdriver keeps spinning while the mouse is over it, then settles back upright
-// (product pages + the buy page, buy.js draws its cards later so this listens on the whole document)
+// (product pages, the buy page + the home page, buy.js draws its cards later so this listens on the whole document)
 const diySpinReduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const diySpinTime=3; // seconds for one full turn, bigger is slower
 
 // the screwdriver this pointer just came onto or left, null if it only moved inside the card
 function diySpinImg(e){
   if(e.pointerType==="touch")return null; // mouse over only
-  const host=e.target.closest(".lappy-option-media--diy, .buy-option");
+  const host=e.target.closest(".lappy-option-media--diy, .buy-option, .about-media-diy");
   if(!host || host.contains(e.relatedTarget) || host.closest(".is-locked"))return null;
-  return host.querySelector(".lappy-option-media--diy img, .buy-option-thumb--icon img");
+  return host.querySelector(".lappy-option-media--diy img, .buy-option-thumb--icon img, .about-media-diy img");
 }
 
 // gsap only counts --diy-turn up (the css turns it into rotate), so the card's css hover zoom still works
